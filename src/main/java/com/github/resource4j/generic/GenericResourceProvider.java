@@ -1,5 +1,7 @@
 package com.github.resource4j.generic;
 
+import java.util.Locale;
+
 import javax.swing.Icon;
 
 import com.github.resource4j.OptionalString;
@@ -25,11 +27,11 @@ public class GenericResourceProvider implements ResourceProvider {
 	}
 
 	@Override
-	public OptionalString get(String name) {
-		OptionalString string = resources.get(resourceKey.child(name));
+	public OptionalString get(String name, Locale locale) {
+		OptionalString string = resources.get(resourceKey.child(name), locale);
 		if (string.asIs() == null) {
 			for (ResourceKey defaultKey : defaultKeys) {
-				string = resources.get(defaultKey.child(name));
+				string = resources.get(defaultKey.child(name), locale);
 				if (string.asIs() != null) break;
 			}
 		}
@@ -37,11 +39,11 @@ public class GenericResourceProvider implements ResourceProvider {
 	}
 
 	@Override
-	public OptionalValue<Icon> icon(String name) {
-		OptionalValue<Icon> icon = resources.icon(resourceKey.child(name));
+	public OptionalValue<Icon> icon(String name, Locale locale) {
+		OptionalValue<Icon> icon = resources.icon(resourceKey.child(name), locale);
 		if (icon.asIs() == null) {
 			for (ResourceKey defaultKey : defaultKeys) {
-				icon = resources.icon(defaultKey.child(name));
+				icon = resources.icon(defaultKey.child(name), locale);
 				if (icon.asIs() != null) break;
 			}
 		}

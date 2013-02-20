@@ -4,6 +4,8 @@ import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.ResourceKey.key;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -26,58 +28,63 @@ public class DefaultResources implements Resources {
 	private final static ResourceKey DEFAULT_FRAMEWORK_RESOURCES = bundle("com.esoftworks.framework.default");
 	private final static ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("resources"); 
 	
-	private Map<String,ResourceBundle> bundles = new WeakHashMap<String,ResourceBundle>();
-	
-	private Map<ResourceKey,String> cachedResources = new WeakHashMap<ResourceKey, String>();
+	private Map<Locale, Map<ResourceKey,String>> cachedResources = new HashMap<Locale, Map<ResourceKey, String>>();
 	
 	public DefaultResources() {
 	}
 	
 	@Override
-	public OptionalString get(String key) {
-		return get(DEFAULT_APPLICATION_RESOURCES.child(key));
+	public OptionalString get(String key, Locale locale) {
+		return get(DEFAULT_APPLICATION_RESOURCES.child(key), locale);
 	}
 
 	@Override
-	public OptionalString get(ResourceKey key) {
-		String result = lookup(key);
+	public OptionalString get(ResourceKey key, Locale locale) {
+		String result = lookup(key, locale);
 		return new GenericOptionalString(key, result);
 	}
 
-	protected String lookup(ResourceKey key) {
-		String result = cachedResources.get(key);
+	protected Map<ResourceKey,String> getCache(Locale locale) {
+	    Map<ResourceKey, String> cache = cachedResources.get(locale);
+	    if (cache == null) {
+	        cache = new WeakHashMap<ResourceKey, String>();
+	        cachedResources.put(locale, cache);
+	    }
+	    return cache;
+	}
+	
+	protected String lookup(ResourceKey key, Locale locale) {
+		Map<ResourceKey, String> cache = getCache(locale);
+        String result = cache.get(key);
 		if (result != null) return result;
-		result = doLookup(key);
+		result = doLookup(key, locale);
 		if (result == null) {
-			result = doLookup(DEFAULT_APPLICATION_RESOURCES.child(key.getBundle()).child(key.getId()));
+			result = doLookup(DEFAULT_APPLICATION_RESOURCES.child(key.getBundle()).child(key.getId()), locale);
 		}
 		if (result == null) {
-			result = doLookup(DEFAULT_APPLICATION_RESOURCES.child(key.getId()));
+			result = doLookup(DEFAULT_APPLICATION_RESOURCES.child(key.getId()), locale);
 		}
 		if (result == null) {
-			result = doLookup(DEFAULT_FRAMEWORK_RESOURCES.child(key.getId()));
+			result = doLookup(DEFAULT_FRAMEWORK_RESOURCES.child(key.getId()), locale);
 		}
 		if (result != null) {
-			cachedResources.put(key, result);
+			cache.put(key, result);
 		}
 		return result;
 	}
 	
-	protected String doLookup(ResourceKey key) {
+	protected String doLookup(ResourceKey key, Locale locale) {
 		String baseName = key.getBundle();
-		ResourceBundle bundle = bundles.get(baseName);
-		if (bundle == null) {
-			try {
-				bundle = ResourceBundle.getBundle(baseName);
-				bundles.put(baseName, bundle);
-			} catch (MissingResourceException e) {
-				LOG.trace(e.getMessage());
-			}
+		ResourceBundle bundle = null;
+		try {
+			bundle = ResourceBundle.getBundle(baseName, locale);
+		} catch (MissingResourceException e) {
+			LOG.trace(e.getMessage());
 		}
 		if (bundle != null) {
 			try {
 				return bundle.getString(key.getId());
-			} catch (Exception e) {
+			} catch (MissingResourceException e) {
 				LOG.trace("Value not found in bundle: {} - {}", key, e.getMessage());
 			}
 		}
@@ -85,23 +92,23 @@ public class DefaultResources implements Resources {
 	}
 
 	@Override
-	public <T> OptionalString get(Class<T> clazz, String key) {
-		return get(key(clazz, key));
+	public <T> OptionalString get(Class<T> clazz, String key, Locale locale) {
+		return get(key(clazz, key), locale);
 	}
 
 	@Override
-	public <E extends Enum<E>> OptionalString get(E value, String key) {
-		return get(key(value.getClass(), value.name()).child(key));
+	public <E extends Enum<E>> OptionalString get(E value, String key, Locale locale) {
+		return get(key(value.getClass(), value.name()).child(key), locale);
 	}
 
 	@Override
-	public OptionalValue<Icon> icon(ResourceKey key) {
-		String iconName = lookup(key);
+	public OptionalValue<Icon> icon(ResourceKey key, Locale locale) {
+		String iconName = lookup(key, locale);
 		if (iconName != null)  {
 			URL url = getClass().getResource(iconName);
 			if (url == null) {
 				// try to find image in default location
-				String prefix = get(DEFAULT_FRAMEWORK_RESOURCES.child("location.images")).asIs();
+				String prefix = get(DEFAULT_FRAMEWORK_RESOURCES.child("location.images"), locale).asIs();
 				url = getClass().getResource(prefix+"/"+iconName);
 			}
 			if (url != null) {
