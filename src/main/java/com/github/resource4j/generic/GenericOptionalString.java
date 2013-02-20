@@ -1,10 +1,10 @@
-package com.esoftworks.framework.resource.generic;
+package com.github.resource4j.generic;
 
-import com.esoftworks.framework.resource.MandatoryString;
-import com.esoftworks.framework.resource.MissingValueException;
-import com.esoftworks.framework.resource.OptionalString;
-import com.esoftworks.framework.resource.OptionalValue;
-import com.esoftworks.framework.resource.ResourceKey;
+import com.github.resource4j.MandatoryString;
+import com.github.resource4j.MissingValueException;
+import com.github.resource4j.OptionalString;
+import com.github.resource4j.OptionalValue;
+import com.github.resource4j.ResourceKey;
 
 public class GenericOptionalString extends GenericResourceString implements OptionalString {
 

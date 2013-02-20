@@ -1,12 +1,12 @@
-package com.esoftworks.framework.resource.generic;
+package com.github.resource4j.generic;
 
 import javax.swing.Icon;
 
-import com.esoftworks.framework.resource.OptionalString;
-import com.esoftworks.framework.resource.OptionalValue;
-import com.esoftworks.framework.resource.ResourceKey;
-import com.esoftworks.framework.resource.ResourceProvider;
-import com.esoftworks.framework.resource.Resources;
+import com.github.resource4j.OptionalString;
+import com.github.resource4j.OptionalValue;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceProvider;
+import com.github.resource4j.Resources;
 
 
 public class GenericResourceProvider implements ResourceProvider {

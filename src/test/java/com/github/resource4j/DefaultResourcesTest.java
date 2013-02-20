@@ -1,9 +1,12 @@
-package com.esoftworks.framework.resource;
+package com.github.resource4j;
 
-import static com.esoftworks.framework.resource.ResourceKey.key;
+import static com.github.resource4j.ResourceKey.key;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import com.github.resource4j.DefaultResources;
+import com.github.resource4j.OptionalString;
 
 import example.impl.ConcreteAction;
 

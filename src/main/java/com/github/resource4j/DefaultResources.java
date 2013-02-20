@@ -1,7 +1,7 @@
-package com.esoftworks.framework.resource;
+package com.github.resource4j;
 
-import static com.esoftworks.framework.resource.ResourceKey.bundle;
-import static com.esoftworks.framework.resource.ResourceKey.key;
+import static com.github.resource4j.ResourceKey.bundle;
+import static com.github.resource4j.ResourceKey.key;
 
 import java.net.URL;
 import java.util.Map;
@@ -15,9 +15,9 @@ import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.esoftworks.framework.resource.generic.GenericResourceProvider;
-import com.esoftworks.framework.resource.generic.GenericOptionalString;
-import com.esoftworks.framework.resource.generic.GenericOptionalValue;
+import com.github.resource4j.generic.GenericOptionalString;
+import com.github.resource4j.generic.GenericOptionalValue;
+import com.github.resource4j.generic.GenericResourceProvider;
 
 public class DefaultResources implements Resources {
 

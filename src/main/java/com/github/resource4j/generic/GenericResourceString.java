@@ -1,10 +1,10 @@
-package com.esoftworks.framework.resource.generic;
+package com.github.resource4j.generic;
 
 import java.text.Format;
 
-import com.esoftworks.framework.resource.ResourceKey;
-import com.esoftworks.framework.resource.ResourceString;
-import com.esoftworks.framework.resource.util.TypeConverter;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceString;
+import com.github.resource4j.util.TypeConverter;
 
 public abstract class GenericResourceString extends GenericResourceValue<String> implements ResourceString {
 

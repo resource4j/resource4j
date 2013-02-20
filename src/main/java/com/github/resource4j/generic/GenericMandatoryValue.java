@@ -1,8 +1,8 @@
-package com.esoftworks.framework.resource.generic;
+package com.github.resource4j.generic;
 
-import com.esoftworks.framework.resource.MandatoryValue;
-import com.esoftworks.framework.resource.MissingValueException;
-import com.esoftworks.framework.resource.ResourceKey;
+import com.github.resource4j.MandatoryValue;
+import com.github.resource4j.MissingValueException;
+import com.github.resource4j.ResourceKey;
 
 public class GenericMandatoryValue<V> extends GenericResourceValue<V> implements MandatoryValue<V> {
 

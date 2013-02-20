@@ -1,7 +1,7 @@
-package com.esoftworks.framework.resource.generic;
+package com.github.resource4j.generic;
 
-import com.esoftworks.framework.resource.ResourceKey;
-import com.esoftworks.framework.resource.ResourceValue;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceValue;
 
 public abstract class GenericResourceValue<V> implements ResourceValue<V> {
 

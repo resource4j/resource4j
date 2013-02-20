@@ -1,4 +1,4 @@
-package com.esoftworks.framework.resource;
+package com.github.resource4j;
 
 
 public interface ResourceValue<V> {

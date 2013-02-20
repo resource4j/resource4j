@@ -1,4 +1,4 @@
-package com.esoftworks.framework.resource.util;
+package com.github.resource4j.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.junit.Test;
+
+import com.github.resource4j.util.TypeConverter;
 
 public class TypeCastTest {
 

@@ -1,4 +1,4 @@
-package com.esoftworks.framework.resource.util;
+package com.github.resource4j.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
