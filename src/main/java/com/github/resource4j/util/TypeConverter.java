@@ -19,6 +19,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ *
+ * @author Ivan Gammel
+ * @since 1.0
+ */
 public final class TypeConverter {
 
     /**
@@ -103,7 +108,7 @@ public final class TypeConverter {
     //
 
     /**
-     * 
+     *
      * @param type
      * @param pattern
      * @param format
@@ -147,7 +152,7 @@ public final class TypeConverter {
     }
 
     /**
-     * 
+     *
      * @param object
      * @param formatter
      * @return
@@ -172,7 +177,7 @@ public final class TypeConverter {
     }
 
     /**
-     * 
+     *
      * @param type
      * @param format
      * @param value
@@ -250,7 +255,7 @@ public final class TypeConverter {
     }
 
     /**
-     * 
+     *
      * @param clazz
      * @param format
      * @param value
@@ -281,7 +286,7 @@ public final class TypeConverter {
     }
 
     /**
-     * 
+     *
      * @param type
      * @param value
      * @return
@@ -317,7 +322,7 @@ public final class TypeConverter {
     }
 
     /**
-     * 
+     *
      * @param type
      * @param value
      * @return

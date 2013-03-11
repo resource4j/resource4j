@@ -5,13 +5,18 @@ import java.awt.Graphics;
 
 import javax.swing.Icon;
 
+/**
+ *
+ * @author Ivan Gammel
+ * @since 1.0
+ */
 public class Icons {
-	
-	public static Icon empty(int width, int height) {
-		return new EmptyIcon(width, height);
-	}
-	
-	private static class EmptyIcon implements Icon {
+
+    public static Icon empty(int width, int height) {
+        return new EmptyIcon(width, height);
+    }
+
+    private static class EmptyIcon implements Icon {
         private int iconWidth;
         private int iconHeight;
 

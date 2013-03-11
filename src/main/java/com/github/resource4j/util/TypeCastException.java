@@ -2,14 +2,15 @@ package com.github.resource4j.util;
 
 /**
  * @author Ivan Gammel
+ * @since 1.0
  */
 public class TypeCastException extends RuntimeException {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
-    
+
     private Class<?> valueType;
     private Class<?> expectedType;
     private Object value;

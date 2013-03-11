@@ -3,6 +3,11 @@ package com.github.resource4j;
 import java.text.Format;
 import java.text.MessageFormat;
 
+/**
+ *
+ * @author Ivan Gammel
+ * @since 1.0
+ */
 public interface ResourceString extends ResourceValue<String> {
 
     <T> ResourceValue<T> ofType(Class<T> type);

@@ -21,6 +21,11 @@ import com.github.resource4j.generic.GenericOptionalString;
 import com.github.resource4j.generic.GenericOptionalValue;
 import com.github.resource4j.generic.GenericResourceProvider;
 
+/**
+ *
+ * @author Ivan Gammel
+ * @since 1.0
+ */
 public class DefaultResources implements Resources {
 
     private final static Logger LOG = LoggerFactory.getLogger(Resources.class);
@@ -46,6 +51,9 @@ public class DefaultResources implements Resources {
 
     @Override
     public OptionalString get(ResourceKey key, Locale locale) {
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
         String result = lookup(key, locale);
         return new GenericOptionalString(key, result);
     }
