@@ -1,7 +1,6 @@
 package com.github.resource4j;
 
 import static com.github.resource4j.ResourceKey.bundle;
-import static com.github.resource4j.ResourceKey.key;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -11,51 +10,26 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.resource4j.generic.GenericOptionalString;
-import com.github.resource4j.generic.GenericOptionalValue;
-import com.github.resource4j.generic.GenericResourceProvider;
+import com.github.resource4j.files.ResourceFile;
 
 /**
  *
  * @author Ivan Gammel
  * @since 1.0
  */
-public class DefaultResources implements Resources {
-
-    private final static Logger LOG = LoggerFactory.getLogger(Resources.class);
+public class DefaultResources extends AbstractResources {
 
     private final static ResourceKey DEFAULT_FRAMEWORK_RESOURCES = bundle("com.github.resource4j.default");
-    private final static ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
 
     private Map<Locale, Map<ResourceKey,String>> cachedResources = new HashMap<Locale, Map<ResourceKey, String>>();
-
-    private ResourceKey defaultResourceBundle = DEFAULT_APPLICATION_RESOURCES;
 
     public DefaultResources() {
     }
 
     public DefaultResources(String defaultBundle) {
-        this.defaultResourceBundle = bundle(defaultBundle);
-    }
-
-    @Override
-    public OptionalString get(String key, Locale locale) {
-        return get(defaultResourceBundle.child(key), locale);
-    }
-
-    @Override
-    public OptionalString get(ResourceKey key, Locale locale) {
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-        String result = lookup(key, locale);
-        return new GenericOptionalString(key, result);
+        super(defaultBundle);
     }
 
     protected Map<ResourceKey,String> getCache(Locale locale) {
@@ -105,38 +79,22 @@ public class DefaultResources implements Resources {
         return null;
     }
 
-    @Override
-    public <T> OptionalString get(Class<T> clazz, String key, Locale locale) {
-        return get(key(clazz, key), locale);
-    }
-
-    @Override
-    public <E extends Enum<E>> OptionalString get(E value, String key, Locale locale) {
-        return get(key(value.getClass(), value.name()).child(key), locale);
-    }
-
-    @Override
-    public OptionalValue<Icon> icon(ResourceKey key, Locale locale) {
-        String iconName = lookup(key, locale);
-        if (iconName != null)  {
-            URL url = getClass().getResource(iconName);
-            if (url == null) {
-                // try to find image in default location
-                String prefix = get(defaultResourceBundle.child("location.images"), locale).asIs();
-                if (prefix == null) prefix = "i18n/images";
-                url = getClass().getResource(prefix+"/"+iconName);
-            }
-            if (url != null) {
-                return new GenericOptionalValue<Icon>(key, new ImageIcon(url));
-            }
+    /**
+     * @param locale
+     * @param iconName
+     * @return
+     */
+    protected ImageIcon lookupIcon(Locale locale, String iconName) {
+        URL url = getClass().getResource(iconName);
+        ImageIcon icon = null;
+        if (url != null) {
+            icon = new ImageIcon(url);
         }
-        LOG.trace("Missing icon: {}", key);
-        return new GenericOptionalValue<Icon>(key, null);
+        return icon;
     }
 
     @Override
-    public ResourceProvider forKey(ResourceKey key) {
-        return new GenericResourceProvider(this, key);
+    public ResourceFile contentOf(ResourceKey key, Locale locale) {
+        return null;
     }
-
 }

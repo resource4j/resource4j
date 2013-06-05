@@ -2,7 +2,7 @@ package com.github.resource4j;
 
 import java.util.Locale;
 
-import javax.swing.Icon;
+import com.github.resource4j.files.ResourceFile;
 
 /**
  *
@@ -11,8 +11,21 @@ import javax.swing.Icon;
  */
 public interface ResourceProvider {
 
+    /**
+     *
+     * @param name
+     * @param locale
+     * @return
+     */
     OptionalString get(String name, Locale locale);
 
-    OptionalValue<Icon> icon(String name, Locale locale);
+    /**
+     *
+     * @param name
+     * @param locale
+     * @return
+     * @since 1.1
+     */
+    ResourceFile contentOf(String name, Locale locale);
 
 }
