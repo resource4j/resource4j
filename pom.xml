@@ -6,6 +6,21 @@
     <artifactId>resource4j-api</artifactId>
     <version>1.1</version>
 
+    <name>Resource4J</name>
+    <description>
+        Simple Java library for loading localization resources and accessing them in convenient way via internal DSL.
+    </description>
+    <url>https://github.com/ivan-gammel/resource4j</url>
+
+    <licenses>
+        <license>
+            <name>Modified BSD License</name>
+            <url>https://github.com/ivan-gammel/resource4j/blob/master/LICENSE.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
     <build>
         <plugins>
             <plugin>
@@ -27,6 +42,8 @@
             </plugin>
         </plugins>
     </build>
+
+
 
     <scm>
         <connection>scm:git:https://github.com/ivan-gammel/resource4j.git</connection>
