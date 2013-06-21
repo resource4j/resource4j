@@ -5,7 +5,7 @@ package com.github.resource4j;
  * @author Ivan Gammel
  * @since 1.0
  */
-public class MissingValueException extends RuntimeException {
+public class MissingValueException extends ResourceException {
 
     /**
      *
@@ -14,8 +14,8 @@ public class MissingValueException extends RuntimeException {
 
     private ResourceKey key;
 
-    public MissingValueException(ResourceKey key) {
-        super(String.valueOf(key));
+    public MissingValueException(ResourceKey key, Throwable cause) {
+        super(String.valueOf(key), cause);
         this.key = key;
     }
 

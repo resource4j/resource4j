@@ -1,21 +1,13 @@
-package com.github.resource4j.generic;
+package com.github.resource4j.resources;
 
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.ResourceProvider;
-import com.github.resource4j.Resources;
-import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
 
 
 public class GenericResourceProvider implements ResourceProvider {
-
-    private final static Logger LOG = LoggerFactory.getLogger(GenericResourceProvider.class);
 
     private Resources resources;
 
@@ -48,15 +40,7 @@ public class GenericResourceProvider implements ResourceProvider {
 
     @Override
     public ResourceFile contentOf(String name, Locale locale) {
-        for (ResourceKey bundle : bundles) {
-            ResourceKey key = bundle.child(name);
-            try {
-                return resources.contentOf(key, locale);
-            } catch (MissingResourceFileException e) {
-                LOG.trace("Missing resource file: {}", key);
-            }
-        }
-        throw new MissingResourceFileException(bundles[0].child(name));
+        return resources.contentOf(name, locale);
     }
 
 }

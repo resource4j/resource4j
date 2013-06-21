@@ -6,9 +6,13 @@ import com.github.resource4j.ResourceKey;
 
 public class GenericMandatoryValue<V> extends GenericResourceValue<V> implements MandatoryValue<V> {
 
-	protected GenericMandatoryValue(ResourceKey key, V value) {
-		super(key, value);
-		if (value == null) throw new MissingValueException(key); 
-	}
+    protected GenericMandatoryValue(ResourceKey key, V value) {
+        this(key, value, null);
+    }
+
+    protected GenericMandatoryValue(ResourceKey key, V value, Throwable suppressedException) {
+        super(key, value);
+        if (value == null) throw new MissingValueException(key, suppressedException);
+    }
 
 }

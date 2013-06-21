@@ -6,7 +6,7 @@ import java.net.URL;
 
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.generic.GenericOptionalValue;
+import com.github.resource4j.files.parsers.ResourceParser;
 
 public class URLResourceFile implements ResourceFile {
 
@@ -16,6 +16,8 @@ public class URLResourceFile implements ResourceFile {
 
     public URLResourceFile(ResourceKey key, URL url) {
         super();
+        if (url == null) throw new NullPointerException("File url cannot be null");
+        if (key == null) throw new NullPointerException("Resource file key cannot be null");
         this.key = key;
         this.url = url;
     }
@@ -35,9 +37,8 @@ public class URLResourceFile implements ResourceFile {
     }
 
     @Override
-    public <T> OptionalValue<T> parsedTo(ResourceParser<T> parser) {
-        T value = parser.parse(asStream());
-        return new GenericOptionalValue<T>(key, value);
+    public <T,V extends OptionalValue<T>> V parsedTo(ResourceParser<T,V> parser) {
+        return parser.parse(key, asStream());
     }
 
 }

@@ -13,9 +13,13 @@ import com.github.resource4j.ResourceKey;
 public class GenericMandatoryString extends GenericResourceString implements MandatoryString {
 
     protected GenericMandatoryString(ResourceKey key, String value) {
+        this(key, value, null);
+    }
+
+    protected GenericMandatoryString(ResourceKey key, String value, Throwable cause) {
         super(key, value);
         if (value == null) {
-            throw new MissingValueException(key);
+            throw new MissingValueException(key, cause);
         }
     }
 

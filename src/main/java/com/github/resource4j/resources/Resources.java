@@ -1,7 +1,9 @@
-package com.github.resource4j;
+package com.github.resource4j.resources;
 
 import java.util.Locale;
 
+import com.github.resource4j.OptionalString;
+import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.ResourceFile;
 
 /**
@@ -9,15 +11,22 @@ import com.github.resource4j.files.ResourceFile;
  * @author Ivan Gammel
  * @since 1.0
  */
-public interface ResourceProvider {
+public interface Resources {
 
     /**
      *
-     * @param name
+     * @param key
+     * @return
+     */
+    ResourceProvider forKey(ResourceKey key);
+
+    /**
+     *
+     * @param key
      * @param locale
      * @return
      */
-    OptionalString get(String name, Locale locale);
+    OptionalString get(ResourceKey key, Locale locale);
 
     /**
      *
@@ -27,5 +36,6 @@ public interface ResourceProvider {
      * @since 1.1
      */
     ResourceFile contentOf(String name, Locale locale);
+
 
 }

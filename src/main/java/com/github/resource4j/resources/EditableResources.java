@@ -1,6 +1,8 @@
-package com.github.resource4j;
+package com.github.resource4j.resources;
 
 import java.util.Locale;
+
+import com.github.resource4j.ResourceKey;
 
 /**
  *

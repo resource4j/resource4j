@@ -1,11 +1,13 @@
-package com.github.resource4j;
+package com.github.resource4j.resources;
+
+import static com.github.resource4j.ResourceKey.bundle;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
 
 /**
@@ -27,23 +29,26 @@ public class InMemoryResources extends AbstractResources implements EditableReso
 
     @Override
     public void remove(ResourceKey key, Locale locale) {
+        Map<ResourceKey, String> localeResources = storage.get(locale);
+        if (localeResources == null) {
+            return;
+        }
+        localeResources.remove(key);
     }
 
     @Override
     protected String lookup(ResourceKey key, Locale locale) {
-        return null;
+        Map<ResourceKey, String> localeResources = storage.get(locale);
+        if (localeResources == null) {
+            return null;
+        }
+        return localeResources.get(key);
     }
 
     @Override
-    public ResourceFile contentOf(ResourceKey key, Locale locale) {
-        // TODO Auto-generated method stub
-        return null;
+    public ResourceFile contentOf(String name, Locale locale) {
+        throw new MissingResourceFileException(bundle(name));
     }
 
-    @Override
-    protected ImageIcon lookupIcon(Locale locale, String iconName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

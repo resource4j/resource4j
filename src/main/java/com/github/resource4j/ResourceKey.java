@@ -40,8 +40,21 @@ public class ResourceKey implements java.io.Serializable {
         return new ResourceKey(bundle, null);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public static ResourceKey key(String key) {
         return new ResourceKey(null, key);
+    }
+
+    /**
+     * @param value
+     * @return
+     */
+    public static ResourceKey key(Enum<?> value) {
+        return new ResourceKey(value.getClass().getName(), value.name());
     }
 
     /**
@@ -54,6 +67,15 @@ public class ResourceKey implements java.io.Serializable {
         return new ResourceKey(clazz.getName(), id);
     }
 
+    /**
+     *
+     * @param clazz
+     * @param value
+     * @return
+     */
+    public static ResourceKey key(Class<?> clazz, Enum<?> value) {
+        return new ResourceKey(clazz.getName(), value.name());
+    }
     /**
      *
      * @param bundle

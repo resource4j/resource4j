@@ -8,8 +8,15 @@ import com.github.resource4j.ResourceKey;
 
 public class GenericOptionalString extends GenericResourceString implements OptionalString {
 
+    private Throwable suppressedException;
+
     public GenericOptionalString(ResourceKey key, String value) {
         super(key, value);
+    }
+
+    public GenericOptionalString(ResourceKey key, String value, Throwable suppressedException) {
+        super(key, value);
+        this.suppressedException = suppressedException;
     }
 
     @Override
@@ -27,12 +34,20 @@ public class GenericOptionalString extends GenericResourceString implements Opti
 
     @Override
     public MandatoryString notNull() throws MissingValueException {
-        return new GenericMandatoryString(key, value);
+        return new GenericMandatoryString(key, value, suppressedException);
     }
 
     @Override
     public <T> OptionalValue<T> ofType(Class<T> type) {
-        return new GenericOptionalValue<T>(key, as(type));
+        T as = null;
+        if (suppressedException == null) {
+            as = as(type);
+        }
+        if (suppressedException == null) {
+            return new GenericOptionalValue<T>(key, as);
+        } else {
+            return new GenericOptionalValue<T>(key, suppressedException);
+        }
     }
 
 }

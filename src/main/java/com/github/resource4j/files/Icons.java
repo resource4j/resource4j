@@ -1,4 +1,4 @@
-package com.github.resource4j;
+package com.github.resource4j.files;
 
 import java.awt.Component;
 import java.awt.Graphics;
@@ -12,7 +12,13 @@ import javax.swing.Icon;
  */
 public class Icons {
 
-    public static Icon empty(int width, int height) {
+    private static final int DEFAULT_ICON_SIZE = 16/* px */;
+
+    public static Icon emptyIcon() {
+        return emptyIcon(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
+    }
+
+    public static Icon emptyIcon(int width, int height) {
         return new EmptyIcon(width, height);
     }
 
