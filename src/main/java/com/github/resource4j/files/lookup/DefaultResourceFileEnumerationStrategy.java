@@ -56,16 +56,24 @@ public class DefaultResourceFileEnumerationStrategy implements ResourceFileEnume
                 for (String contextOption : contextOptions) {
                     int dot = fileName.indexOf('.');
                     StringBuilder builder = new StringBuilder();
-                    if (dot > 0) {
+                    if (dot >= 0) {
                         builder.append(fileName.substring(0, dot));
+                    } else {
+                        builder.append(fileName);
                     }
                     if (contextOption.length() > 0) {
-                        builder.append(sectionSeparator).append(contextOption);
+                        if (builder.length() > 0) {
+                            builder.append(sectionSeparator);
+                        }
+                        builder.append(contextOption);
                     }
                     if (localeOption.length() > 0) {
-                        builder.append(sectionSeparator).append(localeOption);
+                        if (builder.length() > 0) {
+                            builder.append(sectionSeparator);
+                        }
+                        builder.append(localeOption);
                     }
-                    if ((dot >= 0) && (dot < fileName.length())) {
+                    if ((dot >= 0) && (dot < fileName.length()-1)) {
                         builder.append('.');
                         builder.append(fileName.substring(dot+1));
                     }

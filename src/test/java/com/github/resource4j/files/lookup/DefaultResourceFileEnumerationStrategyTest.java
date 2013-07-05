@@ -75,6 +75,32 @@ public class DefaultResourceFileEnumerationStrategyTest {
     }
 
     @Test
+    public void testEnumerateFileNameOptionsWithoutExtensionAndContext() {
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test" }, Locale.US);
+        assertEquals(3, options.size());
+        assertEquals("test-en_US", options.get(0));
+        assertEquals("test-en", options.get(1));
+        assertEquals("test", options.get(2));
+    }
+
+    @Test
+    public void testEnumerateFileNameOptionsWithDotWithoutExtensionAndContext() {
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test." }, Locale.US);
+        assertEquals(3, options.size());
+        assertEquals("test-en_US", options.get(0));
+        assertEquals("test-en", options.get(1));
+        assertEquals("test", options.get(2));
+    }
+
+    @Test
+    public void testEnumerateFileNameOptionsWithExtensionOnlyWithoutContext() {
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { ".config" }, Locale.US);
+        assertEquals(3, options.size());
+        assertEquals("en_US.config", options.get(0));
+        assertEquals("en.config", options.get(1));
+        assertEquals(".config", options.get(2));
+    }
+    @Test
     public void testEnumerateFileNameOptionsWithDefaultBundleWithoutContext() {
         List<String> options = strategy.enumerateFileNameOptions(new String[] {
                 "resource.properties",
