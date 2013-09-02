@@ -57,7 +57,9 @@ public class DefaultResources extends CustomizableResources {
         synchronized (valueCache) {
             String bundleName = bundleParser.getResourceFileName(key);
             String defaultBundleName = bundleParser.getResourceFileName(defaultResourceBundle);
-            String[] bundleOptions = new String[] { bundleName, defaultBundleName };
+            String[] bundleOptions = bundleName != null
+                    ? new String[] { bundleName, defaultBundleName }
+                    : new String[] { defaultBundleName };
             List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, locale);
             for (String option : options) {
                 try {
