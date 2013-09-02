@@ -14,6 +14,9 @@ public class PropertyResourceBundleParser implements ResourceBundleParser {
     @Override
     public String getResourceFileName(ResourceKey key) {
         String bundleName = key.getBundle();
+        if (bundleName == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder(bundleName.length() + 1 + EXTENSION.length());
         sb.append(bundleName.replace('.', '/')).append('.').append(EXTENSION);
         return sb.toString();

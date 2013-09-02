@@ -24,11 +24,10 @@ import com.github.resource4j.files.lookup.ResourceFileFactory;
  */
 public class CustomizableResources extends AbstractResources {
 
-
     /**
      *
      */
-    public final static ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
+    public static final ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
 
     /**
      *
@@ -66,50 +65,51 @@ public class CustomizableResources extends AbstractResources {
     }
 
     /**
-    *
-    * @param key
-    * @param locale
-    * @return
-    */
-   protected String lookup(ResourceKey key, Locale locale) {
-       String bundleName = bundleParser.getResourceFileName(key);
-       String defaultBundleName = bundleParser.getResourceFileName(defaultResourceBundle);
-       String[] bundleOptions = new String[] { bundleName, defaultBundleName };
-       String fullKey = key.getBundle()+'.'+key.getId();
-       String shortKey = key.getId();
-       List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, locale);
-       for (String option : options) {
-           try {
-               ResourceFile file = fileFactory.getFile(key, option);
-               Map<String, String> properties = bundleParser.parse(file);
-               if (properties.containsKey(fullKey)) {
-                   return properties.get(fullKey);
-               }
-               if (properties.containsKey(shortKey)) {
-                   return properties.get(shortKey);
-               }
-           } catch (MissingResourceFileException e) {
+     *
+     * @param key
+     * @param locale
+     * @return
+     */
+    protected String lookup(ResourceKey key, Locale locale) {
+        String bundleName = bundleParser.getResourceFileName(key);
+        String defaultBundleName = bundleParser.getResourceFileName(defaultResourceBundle);
+        String[] bundleOptions = bundleName != null
+                ? new String[] { bundleName, defaultBundleName }
+                : new String[] { defaultBundleName };
+        String fullKey = key.getBundle() + '.' + key.getId();
+        String shortKey = key.getId();
+        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, locale);
+        for (String option : options) {
+            try {
+                ResourceFile file = fileFactory.getFile(key, option);
+                Map<String, String> properties = bundleParser.parse(file);
+                if (properties.containsKey(fullKey)) {
+                    return properties.get(fullKey);
+                }
+                if (properties.containsKey(shortKey)) {
+                    return properties.get(shortKey);
+                }
+            } catch (MissingResourceFileException e) {
+                // ignore it
+            }
+        }
+        return null;
+    }
 
-           }
-       }
-       return null;
-   }
-
-   @Override
-   public ResourceFile contentOf(String name, Locale locale) {
-       ResourceKey key = bundle(name);
-       List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, locale);
-       for (String option : options) {
-           try {
-               ResourceFile file = fileFactory.getFile(key, option);
-               file.asStream().close();
-               return file;
-           } catch (MissingResourceFileException e) {
-           } catch (IOException e) {
-           }
-       }
-       throw new MissingResourceFileException(key);
-   }
-
+    @Override
+    public ResourceFile contentOf(String name, Locale locale) {
+        ResourceKey key = bundle(name);
+        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, locale);
+        for (String option : options) {
+            try {
+                ResourceFile file = fileFactory.getFile(key, option);
+                file.asStream().close();
+                return file;
+            } catch (MissingResourceFileException e) {
+            } catch (IOException e) {
+            }
+        }
+        throw new MissingResourceFileException(key);
+    }
 
 }

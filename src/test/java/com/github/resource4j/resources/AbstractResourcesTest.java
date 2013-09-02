@@ -36,6 +36,12 @@ public abstract class AbstractResourcesTest {
     }
 
     @Test
+    public void testGetValueFromDefaultBundleIfBundleNotSpecified() {
+        MandatoryString value = resources.get(key("defaultValue"), Locale.US).notNull();
+        assertEquals("success", value.asIs());
+    }
+
+    @Test
     public void testGetValueFromDefaultBundleWhenSearchingInExistingBundle() {
         MandatoryString value = resources.get(key("test", "defaultValue"), Locale.US).notNull();
         assertEquals("success", value.asIs());
