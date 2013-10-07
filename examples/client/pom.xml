@@ -4,15 +4,15 @@
 
 	<parent>
 		<groupId>com.github.resource4j</groupId>
-		<artifactId>resource4j-integration</artifactId>
+		<artifactId>resource4j-examples</artifactId>
 		<version>1.2</version>
 	</parent>
 
-    <artifactId>resource4j-spring</artifactId>
+    <artifactId>resource4j-example-client</artifactId>
 
-    <name>Resource4J Spring Integration</name>
+    <name>Resource4J Client-side example</name>
     <description>
-        Integration of Resource4J with Spring Framework
+        Integration of Resource4J with Google Guice
     </description>
 
     <licenses>
@@ -28,14 +28,7 @@
     
     	<dependency>
     		<groupId>com.github.resource4j</groupId>
-    		<artifactId>resource4j-core</artifactId>
-    	</dependency>
-    
-    	<dependency>
-    		<groupId>org.springframework</groupId>
-    		<artifactId>spring-core</artifactId>
-    		<version>3.2.3.RELEASE</version>
-    		<scope>provided</scope>
+    		<artifactId>resource4j-guice</artifactId>
     	</dependency>
     
         <!-- logging -->
