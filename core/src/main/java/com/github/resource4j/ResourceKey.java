@@ -21,7 +21,29 @@ public class ResourceKey implements java.io.Serializable {
     //
     // Factory methods
     //
-
+    /**
+     * Constructs new resource key from plain string according to following rules:<ul>
+     * <li>Last dot in the string separates key bundle from key id.</li> 
+     * <li>Strings starting from the dot represent a key with <code>null</code> bundle (default bundle).</li>
+     * <li>Strings ending with a dot represent keys with <code>null</code> id (bundles).</li> 
+     * </ul>
+     * This operation is reverse to {@link #toString()} method, that is following statements are true:<ul>
+     * <li>string.equals(plain(string).toString())</li>
+     * <li>key.equals(plain(key.toString()))</li>
+     * </ul>
+     * @param key string representation of a key
+     * @return a key corresponding to given string
+     */
+	public static final ResourceKey plain(String key) {
+		int idx = key.lastIndexOf('.');
+		if (idx < 0) {
+			return new ResourceKey(null, key);
+		}
+		String bundle = idx > 0 ? key.substring(0, idx) : null;
+		String id = idx < key.length() - 1 ? key.substring(idx + 1) : null;
+		return key(bundle, id);
+	}
+	
     /**
      *
      * @param clazz
@@ -139,7 +161,7 @@ public class ResourceKey implements java.io.Serializable {
     }
 
     /**
-     *
+     * Two keys are equal if they have same bundle and same id.
      */
     @Override
     public boolean equals(Object obj) {
@@ -164,11 +186,12 @@ public class ResourceKey implements java.io.Serializable {
     }
 
     /**
-     * Returns string representation of this key.
+     * This method is reverse to {@link #plain(String)}.
+     * @return string representation of this key. 
      */
     @Override
     public String toString() {
-        return (bundle != null ? bundle : "<default>")+(id != null ? "#"+id : "(bundle)");
+        return (bundle != null ? bundle : "") + '.' + (id != null ? id : "");
     }
 
 }

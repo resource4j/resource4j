@@ -26,7 +26,10 @@ public class StringParser extends AbstractParser<String, OptionalString> {
     @Override
     public String parse(InputStream stream) throws IOException {
         // Here's the nice solution from StackOverflow: http://stackoverflow.com/a/5445161
-        java.util.Scanner s = new java.util.Scanner(stream).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+    	// (implemented in Java 7 style)
+    	try (java.util.Scanner s = new java.util.Scanner(stream)) {
+    		s.useDelimiter("\\A");
+    		return s.hasNext() ? s.next() : "";
+    	}
     }
 }
