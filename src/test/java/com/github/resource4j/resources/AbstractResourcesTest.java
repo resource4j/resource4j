@@ -74,13 +74,13 @@ public abstract class AbstractResourcesTest {
     @Test
     public void testGetBinaryDataFromExistingBundle() {
         assertEquals("value=success",
-                resources.contentOf("test.properties", Locale.US).parsedTo(string()).asIs().trim());
+                resources.contentOf("test.properties", Locale.US).parsedTo(string("iso-8859-1")).asIs().trim());
     }
 
     @Test
     public void testGetBinaryDataFromExistingBundleForSpecificLocale() {
         assertEquals("value=Erfolg",
-                resources.contentOf("test.properties", Locale.GERMANY).parsedTo(string()).asIs().trim());
+                resources.contentOf("test.properties", Locale.GERMANY).parsedTo(string("iso-8859-1")).asIs().trim());
     }
 
 }
