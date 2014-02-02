@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="fileFactory" class="com.github.resource4j.spring.SpringResourceFileFactory" />
+
+	<bean id="resources" class="com.github.resource4j.resources.DefaultResources">
+		<property name="fileFactory" ref="fileFactory" />
+	</bean>
+
+	<bean id="resourceResolver" class="com.github.resource4j.thymeleaf.Resource4jResourceResolver">
+		<constructor-arg ref="resources" />
+	</bean>
+
+	<bean id="messageResolver" class="com.github.resource4j.thymeleaf.Resource4jMessageResolver">
+		<constructor-arg ref="resources" />
+	</bean>
+
+	<bean id="templateResolver" class="org.thymeleaf.templateresolver.TemplateResolver">
+		<property name="resourceResolver" ref="resourceResolver" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML5" />
+	</bean>
+
+	<bean id="templateEngine" class="org.thymeleaf.TemplateEngine">
+		<property name="templateResolver" ref="templateResolver" />
+		<property name="messageResolver" ref="messageResolver" />
+	</bean>
+
+</beans>

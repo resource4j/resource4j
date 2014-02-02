@@ -6,7 +6,6 @@ import static com.github.resource4j.resources.cache.CachedValue.missingValue;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import com.github.resource4j.ResourceKey;
@@ -15,6 +14,7 @@ import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.resources.cache.CachedValue;
 import com.github.resource4j.resources.cache.ResourceCache;
 import com.github.resource4j.resources.cache.SimpleResourceCache;
+import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
  *
@@ -46,9 +46,9 @@ public class DefaultResources extends CustomizableResources {
      * @param locale
      * @return
      */
-    protected String lookup(ResourceKey key, Locale locale) {
+    protected String lookup(ResourceKey key, ResourceResolutionContext context) {
         // first, try to get the value from cache
-        CachedValue<String> cachedValue = valueCache.get(key, locale);
+        CachedValue<String> cachedValue = valueCache.get(key, context);
         if (cachedValue != null) {
             return cachedValue.get();
         }
@@ -60,7 +60,7 @@ public class DefaultResources extends CustomizableResources {
             String[] bundleOptions = bundleName != null
                     ? new String[] { bundleName, defaultBundleName }
                     : new String[] { defaultBundleName };
-            List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, locale);
+            List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, context);
             for (String option : options) {
                 try {
                     ResourceFile file = fileFactory.getFile(key, option);
@@ -70,28 +70,28 @@ public class DefaultResources extends CustomizableResources {
                         String id = property.getKey();
                         ResourceKey propertyKey = bundle(bundle).child(id);
                         String propertyValue = property.getValue();
-                        valueCache.putIfAbsent(propertyKey, locale, cached(propertyValue));
+                        valueCache.putIfAbsent(propertyKey, context, cached(propertyValue));
                     }
                 } catch (MissingResourceFileException e) {
                 }
             }
+	        // finally, try again - we might load the value during the caching of the bundles
+	        cachedValue = valueCache.get(key, context);
+	        if (cachedValue != null) {
+	            return cachedValue.get();
+	        }
+	
+	        // value not found: record this search result to cache
+	        valueCache.put(key, context, missingValue(String.class));
         }
-        // finally, try again - we might load the value during the caching of the bundles
-        cachedValue = valueCache.get(key, locale);
-        if (cachedValue != null) {
-            return cachedValue.get();
-        }
-
-        // value not found: record this search result to cache
-        valueCache.put(key, locale, missingValue(String.class));
         return null;
     }
 
     @Override
-    public ResourceFile contentOf(String name, Locale locale) {
+    public ResourceFile contentOf(String name, ResourceResolutionContext context) {
         ResourceKey key = bundle(name);
         // first, try to find the file in cache
-        CachedValue<ResourceFile> cachedFile = fileCache.get(key, locale);
+        CachedValue<ResourceFile> cachedFile = fileCache.get(key, context);
         if (cachedFile != null) {
             if (cachedFile.isMissing()) {
                 throw new MissingResourceFileException(key);
@@ -100,19 +100,19 @@ public class DefaultResources extends CustomizableResources {
             }
         }
         // not cached, try to find it
-        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, locale);
+        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
             try {
                 ResourceFile file = fileFactory.getFile(key, option);
                 file.asStream().close();
-                fileCache.put(key, locale, cached(file));
+                fileCache.put(key, context, cached(file));
                 return file;
             } catch (MissingResourceFileException e) {
             } catch (IOException e) {
             }
         }
         // file not found: record this search result in cache
-        fileCache.put(key, locale, missingValue(ResourceFile.class));
+        fileCache.put(key, context, missingValue(ResourceFile.class));
         throw new MissingResourceFileException(key);
     }
 }

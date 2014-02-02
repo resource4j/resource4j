@@ -1,6 +1,7 @@
 package com.github.resource4j.files.lookup;
 
-import static org.junit.Assert.*;
+import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Locale;
@@ -9,13 +10,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DefaultResourceFileEnumerationStrategyTest {
+public class BasicResourceFileEnumerationStrategyTest {
 
-    private DefaultResourceFileEnumerationStrategy strategy;
+    private BasicResourceFileEnumerationStrategy strategy;
 
     @Before
     public void setup() {
-        strategy = new DefaultResourceFileEnumerationStrategy();
+        strategy = new BasicResourceFileEnumerationStrategy();
     }
 
     @After
@@ -54,12 +55,11 @@ public class DefaultResourceFileEnumerationStrategyTest {
 
     @Test
     public void testEnumerateFileNameOptionsWithContext() {
-        givenDefinedContext("WEB");
-        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test.html" }, Locale.US);
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test.html" }, in(Locale.US, "WEB"));
         assertEquals(6, options.size());
-        assertEquals("test-WEB-en_US.html", options.get(0));
+        assertEquals("test-en_US-WEB.html", options.get(0));
         assertEquals("test-en_US.html", options.get(1));
-        assertEquals("test-WEB-en.html", options.get(2));
+        assertEquals("test-en-WEB.html", options.get(2));
         assertEquals("test-en.html", options.get(3));
         assertEquals("test-WEB.html", options.get(4));
         assertEquals("test.html", options.get(5));
@@ -67,7 +67,7 @@ public class DefaultResourceFileEnumerationStrategyTest {
 
     @Test
     public void testEnumerateFileNameOptionsWithoutContext() {
-        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test.html" }, Locale.US);
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test.html" }, in(Locale.US));
         assertEquals(3, options.size());
         assertEquals("test-en_US.html", options.get(0));
         assertEquals("test-en.html", options.get(1));
@@ -76,7 +76,7 @@ public class DefaultResourceFileEnumerationStrategyTest {
 
     @Test
     public void testEnumerateFileNameOptionsWithoutExtensionAndContext() {
-        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test" }, Locale.US);
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test" }, in(Locale.US));
         assertEquals(3, options.size());
         assertEquals("test-en_US", options.get(0));
         assertEquals("test-en", options.get(1));
@@ -85,7 +85,7 @@ public class DefaultResourceFileEnumerationStrategyTest {
 
     @Test
     public void testEnumerateFileNameOptionsWithDotWithoutExtensionAndContext() {
-        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test." }, Locale.US);
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { "test." }, in(Locale.US));
         assertEquals(3, options.size());
         assertEquals("test-en_US", options.get(0));
         assertEquals("test-en", options.get(1));
@@ -94,7 +94,7 @@ public class DefaultResourceFileEnumerationStrategyTest {
 
     @Test
     public void testEnumerateFileNameOptionsWithExtensionOnlyWithoutContext() {
-        List<String> options = strategy.enumerateFileNameOptions(new String[] { ".config" }, Locale.US);
+        List<String> options = strategy.enumerateFileNameOptions(new String[] { ".config" }, in(Locale.US));
         assertEquals(3, options.size());
         assertEquals("en_US.config", options.get(0));
         assertEquals("en.config", options.get(1));
@@ -105,7 +105,7 @@ public class DefaultResourceFileEnumerationStrategyTest {
         List<String> options = strategy.enumerateFileNameOptions(new String[] {
                 "resource.properties",
                 "default.properties"
-        }, Locale.US);
+        }, in(Locale.US));
         assertEquals(6, options.size());
         assertEquals("resource-en_US.properties", options.get(0));
         assertEquals("default-en_US.properties", options.get(1));
@@ -117,34 +117,23 @@ public class DefaultResourceFileEnumerationStrategyTest {
 
     @Test
     public void testEnumerateFileNameOptionsWithDefaultBundleWithContext() {
-        givenDefinedContext("WEB");
         List<String> options = strategy.enumerateFileNameOptions(new String[] {
                 "resource.properties",
                 "default.properties"
-        }, Locale.US);
+        }, in(Locale.US, "WEB"));
         assertEquals(12, options.size());
-        assertEquals("resource-WEB-en_US.properties", options.get(0));
+        assertEquals("resource-en_US-WEB.properties", options.get(0));
         assertEquals("resource-en_US.properties", options.get(1));
-        assertEquals("default-WEB-en_US.properties", options.get(2));
+        assertEquals("default-en_US-WEB.properties", options.get(2));
         assertEquals("default-en_US.properties", options.get(3));
-        assertEquals("resource-WEB-en.properties", options.get(4));
+        assertEquals("resource-en-WEB.properties", options.get(4));
         assertEquals("resource-en.properties", options.get(5));
-        assertEquals("default-WEB-en.properties", options.get(6));
+        assertEquals("default-en-WEB.properties", options.get(6));
         assertEquals("default-en.properties", options.get(7));
         assertEquals("resource-WEB.properties", options.get(8));
         assertEquals("resource.properties", options.get(9));
         assertEquals("default-WEB.properties", options.get(10));
         assertEquals("default.properties", options.get(11));
-    }
-
-
-    private void givenDefinedContext(final String context) {
-        strategy.setContextProvider(new ResourceContextProvider() {
-            @Override
-            public String getResourceContext() {
-                return context;
-            }
-        });
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.resource4j.resources;
 
 import static com.github.resource4j.ResourceKey.bundle;
+import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -9,6 +10,7 @@ import java.util.Map;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
  *
@@ -16,37 +18,46 @@ import com.github.resource4j.files.ResourceFile;
  */
 public class InMemoryResources extends AbstractResources implements EditableResources {
 
-    private Map<Locale, Map<ResourceKey,String>> storage = new HashMap<Locale, Map<ResourceKey, String>>();
+    private Map<ResourceResolutionContext, Map<ResourceKey,String>> storage = new HashMap<>();
 
     @Override
     public void put(ResourceKey key, Locale locale, Object value) {
-        Map<ResourceKey, String> localeResources = storage.get(locale);
+    	put(key, in(locale), value);
+    }
+
+    @Override
+    public void put(ResourceKey key, ResourceResolutionContext context, Object value) {
+        Map<ResourceKey, String> localeResources = storage.get(context);
         if (localeResources == null) {
             localeResources = new HashMap<ResourceKey, String>();
-            storage.put(locale, localeResources);
+            storage.put(context, localeResources);
         }
     }
 
     @Override
     public void remove(ResourceKey key, Locale locale) {
-        Map<ResourceKey, String> localeResources = storage.get(locale);
+    	remove(key, in(locale));
+    }
+    
+    @Override
+    public void remove(ResourceKey key, ResourceResolutionContext context) {
+        Map<ResourceKey, String> localeResources = storage.get(context);
         if (localeResources == null) {
             return;
         }
         localeResources.remove(key);
     }
-
     @Override
-    protected String lookup(ResourceKey key, Locale locale) {
-        Map<ResourceKey, String> localeResources = storage.get(locale);
-        if (localeResources == null) {
+    protected String lookup(ResourceKey key, ResourceResolutionContext context) {
+        Map<ResourceKey, String> contextResources = storage.get(context);
+        if (contextResources == null) {
             return null;
         }
-        return localeResources.get(key);
+        return contextResources.get(key);
     }
 
     @Override
-    public ResourceFile contentOf(String name, Locale locale) {
+    public ResourceFile contentOf(String name, ResourceResolutionContext context) {
         throw new MissingResourceFileException(bundle(name));
     }
 

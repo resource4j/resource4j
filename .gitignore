@@ -7,5 +7,5 @@ target/
 */.settings/*
 **/.classpath
 **/.project
+**/.springBeans
 **/.settings/*
-examples/server/.springBeans

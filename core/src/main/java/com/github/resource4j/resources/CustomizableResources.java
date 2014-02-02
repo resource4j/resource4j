@@ -4,18 +4,16 @@ import static com.github.resource4j.ResourceKey.bundle;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.lookup.ClasspathResourceFileFactory;
-import com.github.resource4j.files.lookup.DefaultResourceFileEnumerationStrategy;
-import com.github.resource4j.files.lookup.PropertyResourceBundleParser;
-import com.github.resource4j.files.lookup.ResourceBundleParser;
-import com.github.resource4j.files.lookup.ResourceFileEnumerationStrategy;
-import com.github.resource4j.files.lookup.ResourceFileFactory;
+import com.github.resource4j.files.lookup.*;
+import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
  *
@@ -29,12 +27,14 @@ public class CustomizableResources extends AbstractResources {
      */
     public static final ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
 
+    protected final Logger LOG = LoggerFactory.getLogger(getClass());
+    
     /**
      *
      */
     protected ResourceKey defaultResourceBundle;
 
-    protected ResourceFileEnumerationStrategy fileEnumerationStrategy = new DefaultResourceFileEnumerationStrategy();
+    protected ResourceFileEnumerationStrategy fileEnumerationStrategy = new BasicResourceFileEnumerationStrategy();
 
     protected ResourceFileFactory fileFactory = new ClasspathResourceFileFactory();
 
@@ -46,22 +46,27 @@ public class CustomizableResources extends AbstractResources {
 
     public CustomizableResources(String defaultBundle) {
         this.defaultResourceBundle = ResourceKey.bundle(defaultBundle);
+        LOG.debug("Configured default resource bundle: {}", defaultBundle);
     }
 
     public void setDefaultResourceBundle(String defaultBundle) {
         this.defaultResourceBundle = ResourceKey.bundle(defaultBundle);
+        LOG.debug("Configured default resource bundle: {}", defaultBundle);
     }
 
     public void setFileEnumerationStrategy(ResourceFileEnumerationStrategy fileEnumerationStrategy) {
         this.fileEnumerationStrategy = fileEnumerationStrategy;
+        LOG.debug("Configured file enumeration strategy: {}", fileEnumerationStrategy.getClass().getSimpleName());
     }
 
     public void setFileFactory(ResourceFileFactory fileFactory) {
         this.fileFactory = fileFactory;
+        LOG.debug("Configured file factory: {}", fileFactory.getClass().getSimpleName());
     }
 
     public void setBundleParser(ResourceBundleParser bundleParser) {
         this.bundleParser = bundleParser;
+        LOG.debug("Configured resource bundle parser: {}", bundleParser.getClass().getSimpleName());
     }
 
     /**
@@ -70,7 +75,7 @@ public class CustomizableResources extends AbstractResources {
      * @param locale
      * @return
      */
-    protected String lookup(ResourceKey key, Locale locale) {
+    protected String lookup(ResourceKey key, ResourceResolutionContext context) {
         String bundleName = bundleParser.getResourceFileName(key);
         String defaultBundleName = bundleParser.getResourceFileName(defaultResourceBundle);
         String[] bundleOptions = bundleName != null
@@ -78,7 +83,7 @@ public class CustomizableResources extends AbstractResources {
                 : new String[] { defaultBundleName };
         String fullKey = key.getBundle() + '.' + key.getId();
         String shortKey = key.getId();
-        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, locale);
+        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, context);
         for (String option : options) {
             try {
                 ResourceFile file = fileFactory.getFile(key, option);
@@ -97,9 +102,9 @@ public class CustomizableResources extends AbstractResources {
     }
 
     @Override
-    public ResourceFile contentOf(String name, Locale locale) {
+    public ResourceFile contentOf(String name, ResourceResolutionContext context) {
         ResourceKey key = bundle(name);
-        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, locale);
+        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
             try {
                 ResourceFile file = fileFactory.getFile(key, option);

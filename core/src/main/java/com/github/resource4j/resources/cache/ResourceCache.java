@@ -1,18 +1,17 @@
 package com.github.resource4j.resources.cache;
 
-import java.util.Locale;
-
 import com.github.resource4j.ResourceKey;
+import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 public interface ResourceCache<V> {
 
-    CachedValue<V> get(ResourceKey key, Locale locale);
+    CachedValue<V> get(ResourceKey key, ResourceResolutionContext context);
 
-    void put(ResourceKey key, Locale locale, CachedValue<V> value);
+    void put(ResourceKey key, ResourceResolutionContext context, CachedValue<V> value);
 
-    void putIfAbsent(ResourceKey key, Locale locale, CachedValue<V> value);
+    void putIfAbsent(ResourceKey key, ResourceResolutionContext context, CachedValue<V> value);
 
-    void evict(ResourceKey key, Locale locale);
+    void evict(ResourceKey key, ResourceResolutionContext context);
 
     void clear();
 

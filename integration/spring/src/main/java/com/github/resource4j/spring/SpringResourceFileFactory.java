@@ -27,7 +27,7 @@ public class SpringResourceFileFactory implements ResourceFileFactory, Applicati
 			throw new IllegalStateException("SpringResourceFileFactory not initialized: application context required.");
 		}
 		Resource resource = applicationContext.getResource(actualName);
-		if (!resource.exists()) {
+		if (!resource.exists() || !resource.isReadable()) {
 			throw new MissingResourceFileException(key, actualName);
 		}
 		return new SpringResourceFile(key, resource);

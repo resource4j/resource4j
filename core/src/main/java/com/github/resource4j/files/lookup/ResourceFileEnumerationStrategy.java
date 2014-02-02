@@ -1,10 +1,11 @@
 package com.github.resource4j.files.lookup;
 
 import java.util.List;
-import java.util.Locale;
+
+import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 public interface ResourceFileEnumerationStrategy {
 
-    List<String> enumerateFileNameOptions(String[] fileNames, Locale locale);
+    List<String> enumerateFileNameOptions(String[] fileNames, ResourceResolutionContext context);
 
 }

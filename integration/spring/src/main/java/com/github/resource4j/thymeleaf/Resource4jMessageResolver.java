@@ -21,7 +21,7 @@ public class Resource4jMessageResolver extends AbstractMessageResolver {
 	
 	private Resources resources;
 	
-	public void setResources(Resources resources) {
+	public Resource4jMessageResolver(Resources resources) {
 		this.resources = resources;
 	}
 
