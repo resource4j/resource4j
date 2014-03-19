@@ -39,6 +39,7 @@
 		<!-- Integration -->
 		<springframework.version>4.0.0.RELEASE</springframework.version>
 		<aspectj.version>1.6.10</aspectj.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
 	</properties>
 
 	<build>
