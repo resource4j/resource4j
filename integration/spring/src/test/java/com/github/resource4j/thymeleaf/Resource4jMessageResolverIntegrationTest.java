@@ -13,7 +13,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/META-INF/spring/thymeleafContext.xml")
+@ContextConfiguration(classes={ ThymeleafResourceConfiguration.class })
 public class Resource4jMessageResolverIntegrationTest {
 	
 	@Autowired
@@ -22,7 +22,7 @@ public class Resource4jMessageResolverIntegrationTest {
 	@Test
 	public void testRenderRussianPageSubstitutesRussianString() {
 		String content = engine.process("page", new Context(new Locale("ru", "RU")));
-		assertTrue(content.contains("Пример страницы"));
+		assertTrue(content.contains("\u041F\u0440\u0438\u043C\u0435\u0440 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B"));
 	}
 	
 	@Test

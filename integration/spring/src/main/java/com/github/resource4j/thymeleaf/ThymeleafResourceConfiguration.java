@@ -39,8 +39,9 @@ public class ThymeleafResourceConfiguration {
 	@Bean
 	public TemplateResolver defaultTemplateResolver() {
 		TemplateResolver resolver = new TemplateResolver();
+		resolver.setCacheable(false);
 		resolver.setResourceResolver(resourceResolver());
-		resolver.setTemplateMode(StandardTemplateModeHandlers.LEGACYHTML5.getTemplateModeName());
+		resolver.setTemplateMode(StandardTemplateModeHandlers.HTML5.getTemplateModeName());
 		resolver.setCharacterEncoding("UTF-8");
 		resolver.setSuffix(".html");
 		return resolver;

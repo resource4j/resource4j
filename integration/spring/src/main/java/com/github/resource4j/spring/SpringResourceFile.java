@@ -39,4 +39,9 @@ public class SpringResourceFile implements ResourceFile {
 		return parser.parse(key, asStream());
 	}
 
+	@Override
+	public String toString() {
+		return resource.getFilename();
+	}
+	
 }

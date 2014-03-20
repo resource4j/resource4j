@@ -71,9 +71,10 @@ public final class ResourceResolutionContext implements Serializable {
 			List<String> sections = component.sections();
 			boolean skipSeparator = true;
 			for (String section : sections) {
-				if (!skipSeparator) {
-					builder.append('_');
+				if (skipSeparator) {
 					skipSeparator = false;
+				} else {
+					builder.append('_');
 				}
 				builder.append(section);
 			}
