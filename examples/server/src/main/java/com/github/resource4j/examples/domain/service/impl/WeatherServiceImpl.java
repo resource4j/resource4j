@@ -1,5 +1,7 @@
 package com.github.resource4j.examples.domain.service.impl;
 
+import java.util.Random;
+
 import javax.inject.Named;
 
 import com.github.resource4j.examples.domain.model.WeatherEnum;
@@ -10,7 +12,8 @@ public class WeatherServiceImpl implements WeatherService {
 
 	@Override
 	public WeatherEnum getCurrentWeather() {
-		return null;
+		WeatherEnum[] values = WeatherEnum.values();
+		return values[new Random().nextInt(values.length)];
 	}
 
 }

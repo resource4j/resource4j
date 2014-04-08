@@ -36,9 +36,10 @@ public class Resource4jMessageResolver extends AbstractMessageResolver {
         String templateName = arguments.getTemplateName();
 		LOG.trace("[THYMELEAF][{}] Resolving message with key \"{}\" for template \"{}\" and locale \"{}\". Messages will be retrieved from Spring's MessageSource infrastructure.", new Object[] {TemplateEngine.threadIndex(), key, templateName, locale});
         try {
-            final String resolvedMessage = resources.get(plain(key), locale)
+            String resolvedMessage = resources.get(plain(key), locale)
             		.notNull()
             		.asFormatted(messageParameters);
+            resolvedMessage.replace("'", "\\'");
             return new MessageResolution(resolvedMessage);
         } catch (MissingValueException e) {
         	// According to contract for message resolver
