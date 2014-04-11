@@ -120,7 +120,7 @@ public class BasicResourceFileEnumerationStrategy implements ResourceFileEnumera
         List<String> localeOptions = new ArrayList<String>();
         if (locale != null) {
             String compact = locale.getLanguage();
-            String medium = compact+sectionSeparator+locale.getCountry();
+            String medium = compact + sectionSeparator + locale.getCountry();
             String full = medium + sectionSeparator + locale.getVariant();
             if (!locale.getVariant().isEmpty()) {
                 localeOptions.add(full);

@@ -7,5 +7,5 @@ import com.github.resource4j.files.ResourceFile;
 public interface ResourceFileFactory {
 
     ResourceFile getFile(ResourceKey key, String actualName) throws MissingResourceFileException;
-
+    
 }
