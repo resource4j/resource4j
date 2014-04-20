@@ -3,7 +3,10 @@ package com.github.resource4j.examples.web;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -14,11 +17,12 @@ import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.spring3.view.ThymeleafViewResolver;
 
 import com.github.resource4j.examples.domain.CoreConfiguration;
+import com.github.resource4j.thymeleaf.ThymeleafResourceConfiguration;
 
 @Configuration
 @ComponentScan(basePackages="com.github.resource4j.examples.web.controller")
 @EnableWebMvc
-@Import(CoreConfiguration.class)
+@Import({ CoreConfiguration.class, ThymeleafResourceConfiguration.class })
 public class WebConfiguration extends WebMvcConfigurerAdapter {
 
 	@Autowired

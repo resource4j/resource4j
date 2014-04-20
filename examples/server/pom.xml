@@ -10,7 +10,7 @@
 	
 	<artifactId>resource4j-example-server</artifactId>
 	
-	<name>resource4j-example-server</name>
+	<name>Resource4J Example Web Application with Spring and Thymeleaf</name>
 	<packaging>war</packaging>
 	
 	<dependencies>
