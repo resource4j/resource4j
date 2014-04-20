@@ -1,6 +1,5 @@
 package com.github.resource4j.resources.cache;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -13,50 +12,30 @@ public class SimpleResourceCache<T> implements ResourceCache<T> {
 
 	private Logger log = LoggerFactory.getLogger(SimpleResourceCache.class); 
 	
-    private Map<ResourceResolutionContext,Map<ResourceKey,CachedValue<T>>> cachedResources =
+	private ConcurrentHashMap<SimpleResourceCacheKey,CachedValue<T>> cachedResources =
             new ConcurrentHashMap<>();
 
-    /**
-     * @param context
-     * @return
-     */
-    protected Map<ResourceKey, CachedValue<T>> getContextResources(ResourceResolutionContext context) {
-        Map<ResourceKey, CachedValue<T>> contextResources = cachedResources.get(context);
-        if (contextResources == null) {
-            contextResources = new ConcurrentHashMap<ResourceKey, CachedValue<T>>();
-            cachedResources.put(context, contextResources);
-        }
-        return contextResources;
-    }
 
     @Override
     public CachedValue<T> get(ResourceKey key, ResourceResolutionContext context) {
-        Map<ResourceKey, CachedValue<T>> contextResources = cachedResources.get(context);
-        if (contextResources == null) return null;
-        CachedValue<T> value = contextResources.get(key);
+        CachedValue<T> value = cachedResources.get(new SimpleResourceCacheKey(context, key));
         log.trace("Found resource {} in context {}: {}", key, context, value);
 		return value;
     }
 
     @Override
     public void put(ResourceKey key, ResourceResolutionContext context, CachedValue<T> value) {
-        Map<ResourceKey, CachedValue<T>> contextResources = getContextResources(context);
-        contextResources.put(key, value);
+        cachedResources.put(new SimpleResourceCacheKey(context, key), value);
         log.trace("Cached resource {} in context {}: {}", key, context, value);
         
     }
 
     @Override
     public void evict(ResourceKey key, ResourceResolutionContext context) {
-        Map<ResourceKey, CachedValue<T>> contextResources = cachedResources.get(context);
-        if (contextResources == null) {
-            return;
-        }
-        contextResources.remove(key);
-        if (contextResources.isEmpty()) {
-            cachedResources.remove(context);
-            log.trace("Resource {} in context {} evicted from cache.", key, context);
-        }
+    	CachedValue<T> value = cachedResources.remove(new SimpleResourceCacheKey(context, key));
+    	if (value != null) {
+    		log.trace("Resource {} in context {} evicted from cache.", key, context);
+    	}
     }
 
     @Override
@@ -66,9 +45,8 @@ public class SimpleResourceCache<T> implements ResourceCache<T> {
 
     @Override
     public void putIfAbsent(ResourceKey key, ResourceResolutionContext context, CachedValue<T> value) {
-        Map<ResourceKey, CachedValue<T>> contextResources = getContextResources(context);
-        if (!contextResources.containsKey(key)) {
-            contextResources.put(key, value);
+    	CachedValue<T> prevValue = cachedResources.putIfAbsent(new SimpleResourceCacheKey(context, key), value);
+        if (prevValue == null) {
             log.trace("Cached resource {} in context {}: {}", key, context);
         }
     }
