@@ -55,16 +55,16 @@ public class DefaultResources extends CustomizableResources {
 
         // value not in cache, load related bundles to cache
         synchronized (valueCache) {
-            String bundleName = bundleParser.getResourceFileName(key);
-            String defaultBundleName = bundleParser.getResourceFileName(defaultResourceBundle);
+            String bundleName = getBundleParser().getResourceFileName(key);
+            String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
             String[] bundleOptions = bundleName != null
                     ? new String[] { bundleName, defaultBundleName }
                     : new String[] { defaultBundleName };
-            List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, context);
+            List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
             for (String option : options) {
                 try {
-                    ResourceFile file = fileFactory.getFile(key, option);
-                    Map<String, String> properties = bundleParser.parse(file);
+                    ResourceFile file = getFileFactory().getFile(key, option);
+                    Map<String, String> properties = getBundleParser().parse(file);
                     for (Map.Entry<String, String> property : properties.entrySet()) {
                         String bundle = key.getBundle();
                         String id = property.getKey();
@@ -100,10 +100,10 @@ public class DefaultResources extends CustomizableResources {
             }
         }
         // not cached, try to find it
-        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, context);
+        List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
             try {
-                ResourceFile file = fileFactory.getFile(key, option);
+                ResourceFile file = getFileFactory().getFile(key, option);
                 file.asStream().close();
                 fileCache.put(key, context, cached(file));
                 return file;

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,19 +36,27 @@ public class CustomizableResources extends AbstractResources {
      */
     protected ResourceKey defaultResourceBundle;
 
-    protected ResourceFileEnumerationStrategy fileEnumerationStrategy = new BasicResourceFileEnumerationStrategy();
+    private ResourceFileEnumerationStrategy fileEnumerationStrategy;
 
-    protected ResourceFileFactory fileFactory = new ClasspathResourceFileFactory();
+    private ResourceFileFactory fileFactory;
 
-    protected ResourceBundleParser bundleParser = new PropertyResourceBundleParser();
+    private ResourceBundleParser bundleParser;
 
     public CustomizableResources() {
         this.defaultResourceBundle = DEFAULT_APPLICATION_RESOURCES;
+        LOG.debug("Configured default resource bundle: {}", defaultResourceBundle);
     }
 
     public CustomizableResources(String defaultBundle) {
         this.defaultResourceBundle = ResourceKey.bundle(defaultBundle);
         LOG.debug("Configured default resource bundle: {}", defaultBundle);
+    }
+    
+    @PostConstruct
+    public void verifyConfiguration() {
+    	getFileEnumerationStrategy();
+    	getFileFactory();
+    	getBundleParser();
     }
 
     public void setDefaultResourceBundle(String defaultBundle) {
@@ -58,10 +68,24 @@ public class CustomizableResources extends AbstractResources {
         this.fileEnumerationStrategy = fileEnumerationStrategy;
         LOG.debug("Configured file enumeration strategy: {}", fileEnumerationStrategy.getClass().getSimpleName());
     }
+    
+    public ResourceFileEnumerationStrategy getFileEnumerationStrategy() {
+    	if (fileEnumerationStrategy == null) {
+    		setFileEnumerationStrategy(new BasicResourceFileEnumerationStrategy());
+    	}
+    	return fileEnumerationStrategy;
+    }
 
     public void setFileFactory(ResourceFileFactory fileFactory) {
         this.fileFactory = fileFactory;
         LOG.debug("Configured file factory: {}", fileFactory.getClass().getSimpleName());
+    }
+    
+    public ResourceFileFactory getFileFactory() {
+    	if (fileFactory == null) {
+    		setFileFactory(new ClasspathResourceFileFactory());
+    	}
+    	return fileFactory;
     }
 
     public void setBundleParser(ResourceBundleParser bundleParser) {
@@ -69,6 +93,13 @@ public class CustomizableResources extends AbstractResources {
         LOG.debug("Configured resource bundle parser: {}", bundleParser.getClass().getSimpleName());
     }
 
+    public ResourceBundleParser getBundleParser() {
+    	if (bundleParser == null) {
+    		setBundleParser(new PropertyResourceBundleParser());
+    	}
+    	return bundleParser;
+    }
+    
     /**
      *
      * @param key
@@ -76,18 +107,18 @@ public class CustomizableResources extends AbstractResources {
      * @return
      */
     protected String lookup(ResourceKey key, ResourceResolutionContext context) {
-        String bundleName = bundleParser.getResourceFileName(key);
-        String defaultBundleName = bundleParser.getResourceFileName(defaultResourceBundle);
+        String bundleName = getBundleParser().getResourceFileName(key);
+        String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
         String[] bundleOptions = bundleName != null
                 ? new String[] { bundleName, defaultBundleName }
                 : new String[] { defaultBundleName };
         String fullKey = key.getBundle() + '.' + key.getId();
         String shortKey = key.getId();
-        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(bundleOptions, context);
+        List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
         for (String option : options) {
             try {
-                ResourceFile file = fileFactory.getFile(key, option);
-                Map<String, String> properties = bundleParser.parse(file);
+                ResourceFile file = getFileFactory().getFile(key, option);
+                Map<String, String> properties = getBundleParser().parse(file);
                 if (properties.containsKey(fullKey)) {
                     return properties.get(fullKey);
                 }
@@ -104,10 +135,10 @@ public class CustomizableResources extends AbstractResources {
     @Override
     public ResourceFile contentOf(String name, ResourceResolutionContext context) {
         ResourceKey key = bundle(name);
-        List<String> options = fileEnumerationStrategy.enumerateFileNameOptions(new String[] { name }, context);
+        List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
             try {
-                ResourceFile file = fileFactory.getFile(key, option);
+                ResourceFile file = getFileFactory().getFile(key, option);
                 file.asStream().close();
                 return file;
             } catch (MissingResourceFileException e) {

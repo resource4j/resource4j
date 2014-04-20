@@ -68,9 +68,8 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
-	private ResourceKey buildKey(final Object bean, Field field) {
-		String name = field.getAnnotation(AutowiredResource.class)
-				.value();
+	private static ResourceKey buildKey(final Object bean, Field field) {
+		String name = field.getAnnotation(AutowiredResource.class).value();
 		if (name.length() == 0) {
 			name = field.getName();
 		}
