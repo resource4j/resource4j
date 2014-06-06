@@ -17,6 +17,7 @@ import com.github.resource4j.files.lookup.MappingResourceFileFactory;
 import com.github.resource4j.files.lookup.ResourceFileFactory;
 import com.github.resource4j.resources.DefaultResources;
 import com.github.resource4j.resources.Resources;
+import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 import com.github.resource4j.spring.SpringResourceFileFactory;
 
 @Configuration
@@ -70,6 +71,11 @@ public class ThymeleafResourceConfiguration implements ApplicationContextAware {
 		engine.setTemplateResolver(defaultTemplateResolver());
 		engine.setMessageResolver(messageResolver());
 		return engine;
+	}
+	
+	@Bean
+	public ResourceValueBeanPostProcessor resourceValueBeanPostProcessor() {
+		return new ResourceValueBeanPostProcessor();
 	}
 
 	@Override
