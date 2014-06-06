@@ -1,5 +1,6 @@
 package com.github.resource4j.files;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -26,13 +27,20 @@ public class URLResourceFile implements ResourceFile {
     public ResourceKey key() {
         return key;
     }
-
+    
     @Override
+	public String resolvedName() {
+		return url.toString();
+	}
+
+	@Override
     public InputStream asStream() {
         try {
             return url.openStream();
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             throw new MissingResourceFileException(key, e);
+        } catch (IOException e) {
+        	throw new InaccessibleResourceException(this, e);
         }
     }
 
@@ -41,4 +49,9 @@ public class URLResourceFile implements ResourceFile {
         return parser.parse(key, asStream());
     }
 
+    @Override
+    public String toString() {
+    	return resolvedName();
+    }
+    
 }

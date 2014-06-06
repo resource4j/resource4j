@@ -28,9 +28,9 @@ public class DefaultResources extends CustomizableResources {
      */
     public final static ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
 
-    private ResourceCache<String> valueCache = new SimpleResourceCache<String>();
+    private ResourceCache<String> valueCache = new SimpleResourceCache<>();
 
-    private ResourceCache<ResourceFile> fileCache = new SimpleResourceCache<ResourceFile>();
+    private ResourceCache<ResourceFile> fileCache = new SimpleResourceCache<>();
 
     public DefaultResources() {
         this.defaultResourceBundle = DEFAULT_APPLICATION_RESOURCES;

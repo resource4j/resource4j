@@ -25,7 +25,7 @@ public class GenericMandatoryString extends GenericResourceString implements Man
 
     @Override
     public <T> MandatoryValue<T> ofType(Class<T> type) {
-        return new GenericMandatoryValue<T>(key, as(type));
+        return new GenericMandatoryValue<>(key, as(type));
     }
 
 }

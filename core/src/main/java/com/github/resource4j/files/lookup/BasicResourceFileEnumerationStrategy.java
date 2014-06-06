@@ -65,7 +65,7 @@ public class BasicResourceFileEnumerationStrategy implements ResourceFileEnumera
 	}
 
     public List<String> enumerateFileNameOptions(String[] fileNames, String before, Locale locale, String after) {
-        List<String> nameOptions = new ArrayList<String>();
+        List<String> nameOptions = new ArrayList<>();
         String[] beforeOptions = EMPTY_CONTEXT_OPTIONS;
         if (before.length() > 0) {
             beforeOptions = new String[] { before, EMPTY_SECTION };
@@ -117,7 +117,7 @@ public class BasicResourceFileEnumerationStrategy implements ResourceFileEnumera
     }
 
     public List<String> enumerateLocaleOptions(Locale locale) {
-        List<String> localeOptions = new ArrayList<String>();
+        List<String> localeOptions = new ArrayList<>();
         if (locale != null) {
             String compact = locale.getLanguage();
             String medium = compact + sectionSeparator + locale.getCountry();

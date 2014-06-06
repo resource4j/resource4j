@@ -43,5 +43,10 @@ public class SpringResourceFile implements ResourceFile {
 	public String toString() {
 		return resource.getFilename();
 	}
+
+	@Override
+	public String resolvedName() {
+		return resource.getFilename();
+	}
 	
 }

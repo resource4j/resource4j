@@ -13,21 +13,23 @@ import com.github.resource4j.files.parsers.ResourceParser;
 public interface ResourceFile {
 
     /**
-     *
-     * @return
+     * @return the key used to request this file
      */
     ResourceKey key();
 
     /**
-     *
-     * @return
+     * @return resolved name of this resource file
+     */
+    String resolvedName();
+
+    /**
+     * @return content of this file as input stream
      */
     InputStream asStream();
 
     /**
-     *
-     * @param parser
-     * @return
+     * @param parser a parser to use
+     * @return returns content of this file parsed using given parser.
      */
     <T, V extends OptionalValue<T>> V parsedTo(ResourceParser<T, V> parser);
 

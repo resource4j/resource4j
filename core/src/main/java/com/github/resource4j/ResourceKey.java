@@ -9,9 +9,9 @@ public class ResourceKey implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String bundle;
+    private final String bundle;
 
-    private String id;
+    private final String id;
 
     protected ResourceKey(String bundle, String id) {
         this.bundle = bundle;

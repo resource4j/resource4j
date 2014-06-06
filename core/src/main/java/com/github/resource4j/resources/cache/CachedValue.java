@@ -7,11 +7,11 @@ public final class CachedValue<T> {
     private final boolean missing;
 
     public static <T> CachedValue<T> cached(T value) {
-        return new CachedValue<T>(value);
+        return new CachedValue<>(value);
     }
 
     public static <T> CachedValue<T> missingValue(Class<T> type) {
-        return new CachedValue<T>();
+        return new CachedValue<>();
     }
 
     protected CachedValue() {

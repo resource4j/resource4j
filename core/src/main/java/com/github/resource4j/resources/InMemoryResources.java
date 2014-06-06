@@ -29,7 +29,7 @@ public class InMemoryResources extends AbstractResources implements EditableReso
     public void put(ResourceKey key, ResourceResolutionContext context, Object value) {
         Map<ResourceKey, String> localeResources = storage.get(context);
         if (localeResources == null) {
-            localeResources = new HashMap<ResourceKey, String>();
+            localeResources = new HashMap<>();
             storage.put(context, localeResources);
         }
     }

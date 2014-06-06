@@ -44,9 +44,9 @@ public class GenericOptionalString extends GenericResourceString implements Opti
             as = as(type);
         }
         if (suppressedException == null) {
-            return new GenericOptionalValue<T>(key, as);
+            return new GenericOptionalValue<>(key, as);
         } else {
-            return new GenericOptionalValue<T>(key, suppressedException);
+            return new GenericOptionalValue<>(key, suppressedException);
         }
     }
 

@@ -112,18 +112,17 @@ public class CustomizableResources extends AbstractResources {
         String[] bundleOptions = bundleName != null
                 ? new String[] { bundleName, defaultBundleName }
                 : new String[] { defaultBundleName };
-        String fullKey = key.getBundle() + '.' + key.getId();
+        String fullKey = key.getBundle() + '#' + key.getId();
         String shortKey = key.getId();
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
         for (String option : options) {
             try {
                 ResourceFile file = getFileFactory().getFile(key, option);
                 Map<String, String> properties = getBundleParser().parse(file);
-                if (properties.containsKey(fullKey)) {
-                    return properties.get(fullKey);
-                }
                 if (properties.containsKey(shortKey)) {
                     return properties.get(shortKey);
+                } else if (properties.containsKey(fullKey)) {
+                	return properties.get(fullKey);
                 }
             } catch (MissingResourceFileException e) {
                 // ignore it

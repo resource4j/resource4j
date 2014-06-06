@@ -28,11 +28,11 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
     @Override
     public MandatoryValue<V> or(V defaultValue) {
         if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
-        return new GenericMandatoryValue<V>(key, value == null ? defaultValue : value);
+        return new GenericMandatoryValue<>(key, value == null ? defaultValue : value);
     }
 
     @Override
     public MandatoryValue<V> notNull() throws MissingValueException {
-        return new GenericMandatoryValue<V>(key, value, suppressedException);
+        return new GenericMandatoryValue<>(key, value, suppressedException);
     }
 }
