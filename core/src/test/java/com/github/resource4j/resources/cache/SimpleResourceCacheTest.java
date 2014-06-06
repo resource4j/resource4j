@@ -24,7 +24,7 @@ public class SimpleResourceCacheTest {
 
     @Before
     public void setup() {
-        cache = new SimpleResourceCache<String>();
+        cache = new SimpleResourceCache<>();
     }
 
     @After

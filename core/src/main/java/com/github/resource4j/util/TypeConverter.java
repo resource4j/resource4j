@@ -46,7 +46,7 @@ public final class TypeConverter {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_MAPPING;
 
     static {
-        Map<Class<?>, Class<?>> map = new HashMap<Class<?>, Class<?>>();
+        Map<Class<?>, Class<?>> map = new HashMap<>();
         map.put(Boolean.TYPE, Boolean.class);
         map.put(Character.TYPE, Character.class);
         map.put(Byte.TYPE, Byte.class);
@@ -57,7 +57,7 @@ public final class TypeConverter {
         map.put(Double.TYPE, Double.class);
         PRIMITIVE_TYPE_MAPPING = Collections.unmodifiableMap(map);
 
-        Set<String> trueValues = new HashSet<String>();
+        Set<String> trueValues = new HashSet<>();
         trueValues.add("true");
         trueValues.add("on");
         trueValues.add("1");
