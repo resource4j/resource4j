@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.generic.GenericOptionalString;
 import com.github.resource4j.resources.cache.CachedValue;
 import com.github.resource4j.resources.cache.ResourceCache;
 import com.github.resource4j.resources.cache.SimpleResourceCache;
@@ -28,7 +30,7 @@ public class DefaultResources extends CustomizableResources {
      */
     public final static ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
 
-    private ResourceCache<String> valueCache = new SimpleResourceCache<>();
+    private ResourceCache<OptionalString> valueCache = new SimpleResourceCache<>();
 
     private ResourceCache<ResourceFile> fileCache = new SimpleResourceCache<>();
 
@@ -46,46 +48,63 @@ public class DefaultResources extends CustomizableResources {
      * @param locale
      * @return
      */
-    protected String lookup(ResourceKey key, ResourceResolutionContext context) {
+    @Override
+	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
         // first, try to get the value from cache
-        CachedValue<String> cachedValue = valueCache.get(key, context);
+        CachedValue<OptionalString> cachedValue = valueCache.get(key, context);
+        OptionalString result = null;
         if (cachedValue != null) {
-            return cachedValue.get();
+        	result = cachedValue.get();
         }
 
-        // value not in cache, load related bundles to cache
+        Throwable suppressedException = null;
         synchronized (valueCache) {
-            String bundleName = getBundleParser().getResourceFileName(key);
-            String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
-            String[] bundleOptions = bundleName != null
-                    ? new String[] { bundleName, defaultBundleName }
-                    : new String[] { defaultBundleName };
-            List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
-            for (String option : options) {
-                try {
-                    ResourceFile file = getFileFactory().getFile(key, option);
-                    Map<String, String> properties = getBundleParser().parse(file);
-                    for (Map.Entry<String, String> property : properties.entrySet()) {
-                        String bundle = key.getBundle();
-                        String id = property.getKey();
-                        ResourceKey propertyKey = bundle(bundle).child(id);
-                        String propertyValue = property.getValue();
-                        valueCache.putIfAbsent(propertyKey, context, cached(propertyValue));
-                    }
-                } catch (MissingResourceFileException e) {
-                }
-            }
-	        // finally, try again - we might load the value during the caching of the bundles
+            // value not in cache, load related bundles to cache
+            suppressedException = tryLoadToCache(key, context);
+	        // finally, try again
 	        cachedValue = valueCache.get(key, context);
 	        if (cachedValue != null) {
-	            return cachedValue.get();
+	            result = cachedValue.get();
 	        }
-	
 	        // value not found: record this search result to cache
-	        valueCache.put(key, context, missingValue(String.class));
+	        valueCache.put(key, context, missingValue(OptionalString.class));
         }
-        return null;
+        if (result == null) {
+        	result = new GenericOptionalString(null, key, null, suppressedException);
+        } 
+        return result;
     }
+
+	private Throwable tryLoadToCache(ResourceKey key, ResourceResolutionContext context) {
+		String bundleName = getBundleParser().getResourceFileName(key);
+		String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
+		String[] bundleOptions = bundleName != null
+		        ? new String[] { bundleName, defaultBundleName }
+		        : new String[] { defaultBundleName };
+		List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
+		Throwable suppressedException = null;
+		boolean found = false;
+		for (String option : options) {
+		    try {
+		        ResourceFile file = getFileFactory().getFile(key, option);
+		        Map<String, String> properties = getBundleParser().parse(file);
+		        for (Map.Entry<String, String> property : properties.entrySet()) {
+		            String bundle = key.getBundle();
+		            String id = property.getKey();
+		            ResourceKey propertyKey = bundle(bundle).child(id);
+		            String propertyValue = property.getValue();
+		            OptionalString string = new GenericOptionalString(file.resolvedName(), key, propertyValue);
+		            valueCache.putIfAbsent(propertyKey, context, cached(string));
+		            if (key.equals(propertyKey)) {
+		            	found = true;
+		            }
+		        }
+		    } catch (MissingResourceFileException e) {
+		    	suppressedException = e;
+		    }
+		}
+		return found ? null : suppressedException;
+	}
 
     @Override
     public ResourceFile contentOf(String name, ResourceResolutionContext context) {

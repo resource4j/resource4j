@@ -9,12 +9,12 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
 
     private Throwable suppressedException;
 
-    public GenericOptionalValue(ResourceKey key, V value) {
-        super(key, value);
+    public GenericOptionalValue(String resolvedSource, ResourceKey key, V value) {
+        super(resolvedSource, key, value);
     }
 
-    public GenericOptionalValue(ResourceKey key, Throwable suppressedException) {
-        super(key, null);
+    public GenericOptionalValue(String resolvedSource, ResourceKey key, Throwable suppressedException) {
+        super(resolvedSource, key, null);
         this.suppressedException = suppressedException;
     }
 
@@ -28,11 +28,11 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
     @Override
     public MandatoryValue<V> or(V defaultValue) {
         if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
-        return new GenericMandatoryValue<>(key, value == null ? defaultValue : value);
+        return new GenericMandatoryValue<>(resolvedSource, key, value == null ? defaultValue : value);
     }
 
     @Override
     public MandatoryValue<V> notNull() throws MissingValueException {
-        return new GenericMandatoryValue<>(key, value, suppressedException);
+        return new GenericMandatoryValue<>(resolvedSource, key, value, suppressedException);
     }
 }

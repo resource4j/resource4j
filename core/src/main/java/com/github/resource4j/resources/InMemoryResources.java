@@ -7,9 +7,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.generic.GenericOptionalString;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
@@ -18,8 +20,10 @@ import com.github.resource4j.resources.resolution.ResourceResolutionContext;
  */
 public class InMemoryResources extends AbstractResources implements EditableResources {
 
+    private final String instanceId = "memory:" + hashCode();
+	
     private Map<ResourceResolutionContext, Map<ResourceKey,String>> storage = new HashMap<>();
-
+    
     @Override
     public void put(ResourceKey key, Locale locale, Object value) {
     	put(key, in(locale), value);
@@ -48,12 +52,13 @@ public class InMemoryResources extends AbstractResources implements EditableReso
         localeResources.remove(key);
     }
     @Override
-    protected String lookup(ResourceKey key, ResourceResolutionContext context) {
+	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
+    	String value = null;
         Map<ResourceKey, String> contextResources = storage.get(context);
-        if (contextResources == null) {
-            return null;
+        if (contextResources != null) {
+        	value = contextResources.get(key);
         }
-        return contextResources.get(key);
+		return new GenericOptionalString(instanceId, key, value);
     }
 
     @Override

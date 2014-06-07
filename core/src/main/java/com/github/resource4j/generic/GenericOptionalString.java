@@ -10,12 +10,13 @@ public class GenericOptionalString extends GenericResourceString implements Opti
 
     private Throwable suppressedException;
 
-    public GenericOptionalString(ResourceKey key, String value) {
-        super(key, value);
+    public GenericOptionalString(String resolvedSource, ResourceKey key, String value) {
+        super(resolvedSource, key, value);
     }
 
-    public GenericOptionalString(ResourceKey key, String value, Throwable suppressedException) {
-        super(key, value);
+    public GenericOptionalString(String resolvedSource, ResourceKey key, 
+    		String value, Throwable suppressedException) {
+        super(resolvedSource, key, value);
         this.suppressedException = suppressedException;
     }
 
@@ -29,12 +30,12 @@ public class GenericOptionalString extends GenericResourceString implements Opti
     @Override
     public MandatoryString or(String defaultValue) {
         if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
-        return new GenericMandatoryString(key, value == null ? defaultValue : value);
+        return new GenericMandatoryString(resolvedSource, key, value == null ? defaultValue : value);
     }
 
     @Override
     public MandatoryString notNull() throws MissingValueException {
-        return new GenericMandatoryString(key, value, suppressedException);
+        return new GenericMandatoryString(resolvedSource, key, value, suppressedException);
     }
 
     @Override
@@ -44,9 +45,9 @@ public class GenericOptionalString extends GenericResourceString implements Opti
             as = as(type);
         }
         if (suppressedException == null) {
-            return new GenericOptionalValue<>(key, as);
+            return new GenericOptionalValue<>(resolvedSource, key, as);
         } else {
-            return new GenericOptionalValue<>(key, suppressedException);
+            return new GenericOptionalValue<>(resolvedSource, key, suppressedException);
         }
     }
 

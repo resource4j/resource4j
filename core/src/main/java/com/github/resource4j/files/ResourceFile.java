@@ -19,6 +19,7 @@ public interface ResourceFile {
 
     /**
      * @return resolved name of this resource file
+     * @since 2.0
      */
     String resolvedName();
 

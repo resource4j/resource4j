@@ -4,14 +4,12 @@ import static com.github.resource4j.resources.resolution.ResourceResolutionConte
 
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.generic.GenericOptionalString;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -50,16 +48,6 @@ public abstract class AbstractResources implements Resources {
 
     /*
      * (non-Javadoc)
-     * @see com.github.resource4j.resources.Resources#get(com.github.resource4j.ResourceKey, com.github.resource4j.resources.resolution.ResourceResolutionContext)
-     */
-    @Override
-	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
-        String result = lookup(key, context);
-        return new GenericOptionalString(key, result);
-	}
-
-    /*
-     * (non-Javadoc)
      * @see com.github.resource4j.resources.Resources#contentOf(java.lang.String, java.util.Locale)
      */
 	@Override
@@ -69,16 +57,5 @@ public abstract class AbstractResources implements Resources {
         }
         return contentOf(name, in(locale));
 	}
-
-	//
-    // Details of implementation to be defined in subclasses
-    //
-    /**
-     *
-     * @param key
-     * @param context
-     * @return
-     */
-    protected abstract String lookup(ResourceKey key, ResourceResolutionContext context);
 
 }

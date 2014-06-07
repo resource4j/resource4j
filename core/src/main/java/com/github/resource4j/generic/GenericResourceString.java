@@ -9,8 +9,8 @@ import com.github.resource4j.util.TypeConverter;
 
 public abstract class GenericResourceString extends GenericResourceValue<String> implements ResourceString {
 
-    protected GenericResourceString(ResourceKey key, String value) {
-        super(key, value);
+    protected GenericResourceString(String resolvedSource, ResourceKey key, String value) {
+        super(resolvedSource, key, value);
     }
 
     @Override

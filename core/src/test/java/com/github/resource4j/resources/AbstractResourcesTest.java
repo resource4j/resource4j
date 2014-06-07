@@ -2,17 +2,18 @@ package com.github.resource4j.resources;
 
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.files.parsers.ResourceParsers.string;
+import static org.hamcrest.CoreMatchers.endsWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.Locale;
 
-import com.github.resource4j.MandatoryString;
-import com.github.resource4j.resources.Resources;
-
-import example.impl.ConcreteAction;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.resource4j.MandatoryString;
+
+import example.impl.ConcreteAction;
 
 public abstract class AbstractResourcesTest {
 
@@ -52,13 +53,25 @@ public abstract class AbstractResourcesTest {
         MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.US).notNull();
         assertEquals("Concrete Action", value.asIs());
     }
-
+    
+    @Test
+    public void testValueSourceFromExistingBundleSpecifiedByClass() {
+        MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.US).notNull();
+        assertThat(value.resolvedSource(), endsWith("ConcreteAction.properties"));
+    }
+   
     @Test
     public void testGetValueFromExistingBundleSpecifiedByClassAndExistingCountryLocale() {
         MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMANY).notNull();
         assertEquals("Aktion", value.asIs());
     }
 
+    @Test
+    public void testValueSourceFromExistingBundleSpecifiedByClassAndExistingCountryLocale() {
+        MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMANY).notNull();
+        assertThat(value.resolvedSource(), endsWith("ConcreteAction-de_DE.properties"));
+    }
+    
     @Test
     public void testGetValueFromExistingBundleSpecifiedByClassAndExistingLanguageLocale() {
         MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMAN).notNull();
@@ -80,7 +93,10 @@ public abstract class AbstractResourcesTest {
     @Test
     public void testGetBinaryDataFromExistingBundleForSpecificLocale() {
         assertEquals("value=Erfolg",
-                resources.contentOf("test.properties", Locale.GERMANY).parsedTo(string("iso-8859-1")).asIs().trim());
+                resources.contentOf("test.properties", Locale.GERMANY)
+                	.parsedTo(string("iso-8859-1"))
+                	.asIs()
+                	.trim());
     }
 
 }

@@ -11,10 +11,12 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.files.lookup.*;
+import com.github.resource4j.generic.GenericOptionalString;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
@@ -99,14 +101,10 @@ public class CustomizableResources extends AbstractResources {
     	}
     	return bundleParser;
     }
-    
-    /**
-     *
-     * @param key
-     * @param locale
-     * @return
-     */
-    protected String lookup(ResourceKey key, ResourceResolutionContext context) {
+
+
+	@Override
+	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
         String bundleName = getBundleParser().getResourceFileName(key);
         String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
         String[] bundleOptions = bundleName != null
@@ -115,20 +113,29 @@ public class CustomizableResources extends AbstractResources {
         String fullKey = key.getBundle() + '#' + key.getId();
         String shortKey = key.getId();
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
+        
+        Throwable suppressedException = null;
+        String value = null;
+        String resolvedSource = null;
+        
         for (String option : options) {
             try {
                 ResourceFile file = getFileFactory().getFile(key, option);
                 Map<String, String> properties = getBundleParser().parse(file);
                 if (properties.containsKey(shortKey)) {
-                    return properties.get(shortKey);
+                    value = properties.get(shortKey);
+                    resolvedSource = file.resolvedName();
+					break;
                 } else if (properties.containsKey(fullKey)) {
-                	return properties.get(fullKey);
+                	value = properties.get(fullKey);
+                    resolvedSource = file.resolvedName();
+                	break;
                 }
             } catch (MissingResourceFileException e) {
-                // ignore it
+                suppressedException = e;
             }
         }
-        return null;
+        return new GenericOptionalString(resolvedSource, key, value, suppressedException);
     }
 
     @Override

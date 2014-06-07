@@ -10,16 +10,16 @@ package com.github.resource4j;
  * @see ResourceKey
  */
 public interface ResourceValue<V> {
-
+	
     /**
-     *
-     * @return
+     * @return the key identifying this value.
+     * @since 1.0
      */
     ResourceKey key();
 
     /**
-     *
-     * @return
+     * @return the wrapper value "as is", that is, without any type conversions.
+     * @since 1.0
      */
     V asIs();
 

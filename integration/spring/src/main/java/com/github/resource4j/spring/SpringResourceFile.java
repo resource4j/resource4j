@@ -36,7 +36,7 @@ public class SpringResourceFile implements ResourceFile {
 
 	@Override
 	public <T, V extends OptionalValue<T>> V parsedTo(ResourceParser<T, V> parser) {
-		return parser.parse(key, asStream());
+		return parser.parse(key, this);
 	}
 
 	@Override

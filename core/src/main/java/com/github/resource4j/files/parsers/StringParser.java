@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
+import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.generic.GenericOptionalString;
 
 /**
@@ -34,8 +35,8 @@ public class StringParser extends AbstractParser<String, OptionalString> {
     }
 
     @Override
-    protected OptionalString createValue(ResourceKey key, String value, Throwable suppressedException) {
-        return new GenericOptionalString(key, value, suppressedException);
+    protected OptionalString createValue(ResourceFile file, ResourceKey key, String value, Throwable suppressedException) {
+        return new GenericOptionalString(file.resolvedName(), key, value, suppressedException);
     }
 
     @Override
