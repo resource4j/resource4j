@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="ru">
+<head>
+	<meta charset="utf-8" />
+	<title>Resource4J Demo</title>
+</head>
+<body>
+	<menu>
+		<li><a href="#" th:href="@{/?lang=ru_RU}">Russian</a></li>
+		<li><a href="#" th:href="@{/?lang=en_US}">English</a></li>
+	</menu>
+	<h1 th:text="#{pages.home.header}">Page header</h1>
+	<p>
+		<span th:text="#{domain.weather.current}">Current weather:</span>
+		<span th:text="#{'domain.weather.' + ${weather}}"></span>
+	</p>
+	<p>
+		<span th:text="${message}">Message:</span>
+		<span th:text="${answer}">value</span>
+	</p>
+</body>
+</html>
