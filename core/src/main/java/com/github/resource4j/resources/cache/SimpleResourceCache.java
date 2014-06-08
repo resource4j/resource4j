@@ -8,6 +8,11 @@ import org.slf4j.LoggerFactory;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
+/**
+ * Implementation of resource cache based on {@link ConcurrentHashMap}
+ * @author igammel
+ * @param <T> type of the values in resource cache
+ */
 public class SimpleResourceCache<T> implements ResourceCache<T> {
 
 	private Logger log = LoggerFactory.getLogger(SimpleResourceCache.class); 

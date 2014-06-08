@@ -131,6 +131,10 @@ public class ResourceKey implements java.io.Serializable {
         return new ResourceKey(bundle, id == null ? childId : id+'.'+childId);
     }
 
+    public ResourceKey bundle() {
+    	return new ResourceKey(bundle, null);
+    }
+    
     /**
      *
      * @return

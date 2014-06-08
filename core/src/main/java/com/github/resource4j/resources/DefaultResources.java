@@ -41,7 +41,7 @@ public class DefaultResources extends CustomizableResources {
     public DefaultResources(String defaultBundle) {
         this.defaultResourceBundle = ResourceKey.bundle(defaultBundle);
     }
-
+    
     /**
      *
      * @param key
@@ -50,60 +50,69 @@ public class DefaultResources extends CustomizableResources {
      */
     @Override
 	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
+    	OptionalString result = lookup(key, context);
+    	if (result == null) {
+    		result = new GenericOptionalString(null, key, null); 
+    	}
+    	return result;
+    }
+
+    protected OptionalString lookup(ResourceKey key, ResourceResolutionContext context) {
         // first, try to get the value from cache
         CachedValue<OptionalString> cachedValue = valueCache.get(key, context);
-        OptionalString result = null;
         if (cachedValue != null) {
-        	result = cachedValue.get();
+        	return cachedValue.get();
         }
-
-        Throwable suppressedException = null;
+        
+        // synchronizing on write
         synchronized (valueCache) {
-            // value not in cache, load related bundles to cache
-            suppressedException = tryLoadToCache(key, context);
+        	// second check after synchronization
+            cachedValue = valueCache.get(key, context);
+            if (cachedValue != null) {
+            	return cachedValue.get();
+            }
+        	
+        	// value is still not in cache, load related bundles to cache
+            tryLoadToCache(key.bundle(), context);
+            
 	        // finally, try again
 	        cachedValue = valueCache.get(key, context);
 	        if (cachedValue != null) {
-	            result = cachedValue.get();
+	            return cachedValue.get();
 	        }
 	        // value not found: record this search result to cache
 	        valueCache.put(key, context, missingValue(OptionalString.class));
         }
-        if (result == null) {
-        	result = new GenericOptionalString(null, key, null, suppressedException);
-        } 
-        return result;
+        return null;
     }
-
-	private Throwable tryLoadToCache(ResourceKey key, ResourceResolutionContext context) {
-		String bundleName = getBundleParser().getResourceFileName(key);
-		String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
-		String[] bundleOptions = bundleName != null
-		        ? new String[] { bundleName, defaultBundleName }
-		        : new String[] { defaultBundleName };
+	protected void tryLoadToCache(ResourceKey bundle, 
+			ResourceResolutionContext context) throws MissingResourceFileException {
+		String fileName = getBundleParser().getResourceFileName(bundle);
+		String defaultFileName = getBundleParser().getResourceFileName(defaultResourceBundle);
+		String[] bundleOptions = fileName != null
+		        ? new String[] { fileName, defaultFileName }
+		        : new String[] { defaultFileName };
 		List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(bundleOptions, context);
-		Throwable suppressedException = null;
 		boolean found = false;
 		for (String option : options) {
 		    try {
-		        ResourceFile file = getFileFactory().getFile(key, option);
+		        ResourceFile file = getFileFactory().getFile(bundle, option);
 		        Map<String, String> properties = getBundleParser().parse(file);
 		        for (Map.Entry<String, String> property : properties.entrySet()) {
-		            String bundle = key.getBundle();
 		            String id = property.getKey();
-		            ResourceKey propertyKey = bundle(bundle).child(id);
+		            ResourceKey propertyKey = bundle.child(id);
 		            String propertyValue = property.getValue();
-		            OptionalString string = new GenericOptionalString(file.resolvedName(), key, propertyValue);
+		            OptionalString string = new GenericOptionalString(file.resolvedName(), bundle, propertyValue);
 		            valueCache.putIfAbsent(propertyKey, context, cached(string));
-		            if (key.equals(propertyKey)) {
-		            	found = true;
-		            }
 		        }
+		        found = true;
 		    } catch (MissingResourceFileException e) {
-		    	suppressedException = e;
+		    	// ignore, since we are processing multiple options
 		    }
 		}
-		return found ? null : suppressedException;
+		if (!found) {
+			throw new MissingResourceFileException(bundle);
+		}
 	}
 
     @Override
