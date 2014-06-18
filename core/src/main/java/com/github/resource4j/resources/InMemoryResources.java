@@ -6,9 +6,13 @@ import static com.github.resource4j.resources.resolution.ResourceResolutionConte
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
+import com.github.resource4j.files.ByteArrayResourceFile;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.generic.GenericOptionalString;
@@ -22,30 +26,52 @@ public class InMemoryResources extends AbstractResources implements EditableReso
 
     private final String instanceId = "memory:" + hashCode();
 	
-    private Map<ResourceResolutionContext, Map<ResourceKey,String>> storage = new HashMap<>();
+    private Map<ResourceResolutionContext, Map<String, byte[]>> files = new ConcurrentHashMap<>();
+    
+    private Map<ResourceResolutionContext, Map<ResourceKey,String>> properties = new ConcurrentHashMap<>();
+    
+    private Map<ResourceResolutionContext, SortedSet<ResourceResolutionContext>> matchingContexts = new HashMap<>();
     
     @Override
-    public void put(ResourceKey key, Locale locale, Object value) {
+    public void put(ResourceKey key, Locale locale, String value) {
     	put(key, in(locale), value);
     }
 
     @Override
-    public void put(ResourceKey key, ResourceResolutionContext context, Object value) {
-        Map<ResourceKey, String> localeResources = storage.get(context);
+    public void put(ResourceKey key, ResourceResolutionContext context, String value) {
+        Map<ResourceKey, String> localeResources = properties.get(context);
         if (localeResources == null) {
-            localeResources = new HashMap<>();
-            storage.put(context, localeResources);
+            localeResources = new ConcurrentHashMap<>();
+            properties.put(context, localeResources);
         }
+        localeResources.put(key, value);
+        registerContext(context);
     }
 
-    @Override
+    private void registerContext(ResourceResolutionContext context) {
+		SortedSet<ResourceResolutionContext> matches = new TreeSet<>(ResourceResolutionContext.COMPARATOR);
+		for (ResourceResolutionContext ctx : properties.keySet()) {
+			if (ctx.contains(context)) {
+				matches.add(ctx);
+			}
+		}
+		matchingContexts.put(context, matches);
+		for (ResourceResolutionContext ctx : properties.keySet()) {
+			if (context.contains(ctx)) {
+				SortedSet<ResourceResolutionContext> thatMatches = matchingContexts.get(ctx);
+				thatMatches.add(context);
+			}
+		}
+	}
+
+	@Override
     public void remove(ResourceKey key, Locale locale) {
     	remove(key, in(locale));
     }
     
     @Override
     public void remove(ResourceKey key, ResourceResolutionContext context) {
-        Map<ResourceKey, String> localeResources = storage.get(context);
+        Map<ResourceKey, String> localeResources = properties.get(context);
         if (localeResources == null) {
             return;
         }
@@ -53,18 +79,83 @@ public class InMemoryResources extends AbstractResources implements EditableReso
     }
     @Override
 	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
-    	String value = null;
-        Map<ResourceKey, String> contextResources = storage.get(context);
-        if (contextResources != null) {
-        	value = contextResources.get(key);
+    	String value = doGet(key, context);
+        if (value == null) {
+        	synchronized (properties) {
+        		value = doGet(key, context);
+	        	SortedSet<ResourceResolutionContext> matches = matchingContexts.get(context);
+	        	if (matches == null) {
+	        		registerContext(context);
+	        		matches = matchingContexts.get(context);
+	        	}
+        		for (ResourceResolutionContext ctx : matches) {
+        			value = doGet(key, ctx);
+        			if (value != null) {
+        				break;
+        			}
+        		}
+        	}
         }
 		return new GenericOptionalString(instanceId, key, value);
     }
 
+	private String doGet(ResourceKey key, ResourceResolutionContext context) {
+		String value = null;
+        Map<ResourceKey, String> contextResources = properties.get(context);
+        if (contextResources != null) {
+        	value = contextResources.get(key);
+        }
+		return value;
+	}
+
     @Override
     public ResourceFile contentOf(String name, ResourceResolutionContext context) {
-        throw new MissingResourceFileException(bundle(name));
+    	byte[] value = doGet(name, context);
+        if (value == null) {
+        	synchronized (properties) {
+        		value = doGet(name, context);
+	        	SortedSet<ResourceResolutionContext> matches = matchingContexts.get(context);
+	        	if (matches == null) {
+	        		registerContext(context);
+	        		matches = matchingContexts.get(context);
+	        	}
+        		for (ResourceResolutionContext ctx : matches) {
+        			value = doGet(name, ctx);
+        			if (value != null) {
+        				break;
+        			}
+        		}
+        	}
+        }
+        if (value == null) {
+        	throw new MissingResourceFileException(bundle(name));
+        }
+		return new ByteArrayResourceFile(bundle(name), value);
     }
 
+	private byte[] doGet(String name, ResourceResolutionContext context) {
+		byte[] value = null;
+        Map<String, byte[]> contextResources = files.get(context);
+        if (contextResources != null) {
+        	value = contextResources.get(name);
+        }
+		return value;
+	}
+
+	@Override
+	public void put(String name, Locale locale, byte[] content) {
+		put(name, in(locale), content);
+	}
+
+	@Override
+	public void put(String name, ResourceResolutionContext context, byte[] content) {
+		Map<String, byte[]> localeResources = files.get(context);
+        if (localeResources == null) {
+            localeResources = new ConcurrentHashMap<>();
+            files.put(context, localeResources);
+        }
+        localeResources.put(name, content);
+        registerContext(context);	
+    }
 
 }

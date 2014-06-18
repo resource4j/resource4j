@@ -2,12 +2,23 @@ package com.github.resource4j.resources.resolution;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 public final class ResourceResolutionContext implements Serializable {
 
 	private static final long serialVersionUID = "2.0".hashCode();
+	
+	public static final Comparator<ResourceResolutionContext> COMPARATOR = new Comparator<ResourceResolutionContext>() {
+		@Override
+		public int compare(ResourceResolutionContext c1,
+				ResourceResolutionContext c2) {
+			if (c1.contains(c2)) return 1;
+			if (c2.contains(c1)) return -1;
+			return 0;
+		}
+	};
 	
 	public static ResourceResolutionContext in(Object... objects) {
 		ResourceResolutionComponent[] components = new ResourceResolutionComponent[objects.length];
@@ -80,6 +91,25 @@ public final class ResourceResolutionContext implements Serializable {
 			}
 		}
 		return builder.toString();
+	}
+
+	public boolean contains(ResourceResolutionContext child) {
+		if (child.components.length < this.components.length) {
+			return false;
+		}
+		for (int i = 0; i < components.length; i++) {
+			List<String> thisSections = this.components[i].sections();
+			List<String> thatSections = child.components[i].sections();
+			if (thatSections.size() < thisSections.size()) {
+				return false;
+			}
+			for (int j = 0; j < thisSections.size(); j++) {
+				if (!thisSections.get(j).equals(thatSections.get(j))) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 }

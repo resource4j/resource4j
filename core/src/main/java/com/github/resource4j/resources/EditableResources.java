@@ -17,8 +17,17 @@ public interface EditableResources extends Resources {
      * @param locale
      * @param value
      */
-    void put(ResourceKey key, Locale locale, Object value);
+    void put(ResourceKey key, Locale locale, String value);
 
+    /**
+     * 
+     * @param name
+     * @param locale
+     * @param content
+     * @since 2.0
+     */
+    void put(String name, Locale locale, byte[] content);
+    
     /**
     *
     * @param key
@@ -27,8 +36,16 @@ public interface EditableResources extends Resources {
     * @since 2.0
     * 
     */
-   void put(ResourceKey key, ResourceResolutionContext context, Object value);
+   void put(ResourceKey key, ResourceResolutionContext context, String value);
 
+   /**
+    * 
+    * @param name
+    * @param context
+    * @param content
+    */
+   void put(String name, ResourceResolutionContext context, byte[] content);
+   
    /**
      *
      * @param key
