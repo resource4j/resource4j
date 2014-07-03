@@ -59,6 +59,12 @@ public abstract class AbstractResourcesTest {
         MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.US).notNull();
         assertThat(value.resolvedSource(), endsWith("ConcreteAction.properties"));
     }
+    
+    @Test
+    public void testValueFormatIndependentFromBundleLocale() {
+        int value = resources.get(key(ConcreteAction.class, "number"), Locale.US).notNull().as(Integer.class);
+        assertEquals(3000000, value);
+    }
    
     @Test
     public void testGetValueFromExistingBundleSpecifiedByClassAndExistingCountryLocale() {

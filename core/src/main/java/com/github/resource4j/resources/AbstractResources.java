@@ -1,6 +1,7 @@
 package com.github.resource4j.resources;
 
 import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
 
 import java.util.Locale;
 
@@ -24,12 +25,13 @@ public abstract class AbstractResources implements Resources {
 
     protected AbstractResources() {
     }
-
-    /*
-     * (non-Javadoc)
-     * @see com.github.resource4j.Resources#get(com.github.resource4j.ResourceKey, java.util.Locale)
-     */
+    
     @Override
+	public OptionalString get(ResourceKey key) {
+		return get(key, withoutContext());
+	}
+
+	@Override
     public OptionalString get(ResourceKey key, Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
@@ -57,5 +59,12 @@ public abstract class AbstractResources implements Resources {
         }
         return contentOf(name, in(locale));
 	}
+
+	@Override
+	public ResourceFile contentOf(String name) {
+		return contentOf(name, withoutContext());
+	}
+	
+	
 
 }

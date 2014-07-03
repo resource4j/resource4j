@@ -1,10 +1,13 @@
 package com.github.resource4j.generic;
 
+import java.text.Format;
+
 import com.github.resource4j.MandatoryString;
 import com.github.resource4j.MissingValueException;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
+import com.github.resource4j.util.TypeConverter;
 
 public class GenericOptionalString extends GenericResourceString implements OptionalString {
 
@@ -37,12 +40,38 @@ public class GenericOptionalString extends GenericResourceString implements Opti
     public MandatoryString notNull() throws MissingValueException {
         return new GenericMandatoryString(resolvedSource, key, value, suppressedException);
     }
+    
+    @Override
+    public <T> OptionalValue<T> ofType(Class<T> type, Format format) {
+        T as = null;
+        if (suppressedException == null) {
+            as = TypeConverter.convert(value, type, format);
+        }
+        if (suppressedException == null) {
+            return new GenericOptionalValue<>(resolvedSource, key, as);
+        } else {
+            return new GenericOptionalValue<>(resolvedSource, key, suppressedException);
+        }
+    }
+    
+    @Override
+    public <T> OptionalValue<T> ofType(Class<T> type, String format) {
+        T as = null;
+        if (suppressedException == null) {
+            as = TypeConverter.convert(value, type, format);
+        }
+        if (suppressedException == null) {
+            return new GenericOptionalValue<>(resolvedSource, key, as);
+        } else {
+            return new GenericOptionalValue<>(resolvedSource, key, suppressedException);
+        }
+    }
 
     @Override
     public <T> OptionalValue<T> ofType(Class<T> type) {
         T as = null;
         if (suppressedException == null) {
-            as = as(type);
+            as = TypeConverter.convert(value, type);
         }
         if (suppressedException == null) {
             return new GenericOptionalValue<>(resolvedSource, key, as);

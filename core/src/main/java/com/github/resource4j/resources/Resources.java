@@ -22,6 +22,12 @@ public interface Resources {
     ResourceProvider forKey(ResourceKey key);
 
     /**
+     * Returns value with no resolution context specified.
+     * @since 2.0
+     */
+    OptionalString get(ResourceKey key);
+    
+    /**
      *
      * @param key
      * @param locale
@@ -59,5 +65,11 @@ public interface Resources {
      */
     ResourceFile contentOf(String name, ResourceResolutionContext context);
     
+    /**
+     * @param name
+     * @return
+     * @since 2.0
+     */
+    ResourceFile contentOf(String name);
 
 }

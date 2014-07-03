@@ -23,34 +23,21 @@ public class BasicResourceFileEnumerationStrategyTest {
     public void shutdown() {
         strategy = null;
     }
-
+    
     @Test
-    public void testEnumerateUSLocaleOptions() {
-        Locale locale = Locale.US;
-        List<String> options = strategy.enumerateLocaleOptions(locale);
-        assertEquals(3, options.size());
-        assertEquals("en_US", options.get(0));
-        assertEquals("en", options.get(1));
-        assertEquals("", options.get(2));
-    }
+    public void testEnumerateFileNameOptionsWithComplexContext() {
+        List<String> options = strategy.enumerateFileNameOptions(
+        		new String[] { "config.xml" }, in("localhost", "application", "debug"));
+        assertEquals(8, options.size());
+        assertEquals("config-localhost-application-debug.xml", options.get(0));
+        assertEquals("config-application-debug.xml", options.get(1));
+        assertEquals("config-localhost-debug.xml", options.get(2));
+        assertEquals("config-debug.xml", options.get(3));
+        assertEquals("config-localhost-application.xml", options.get(4));
+        assertEquals("config-application.xml", options.get(5));
+        assertEquals("config-localhost.xml", options.get(6));
+        assertEquals("config.xml", options.get(7));
 
-    @Test
-    public void testEnumerateLocaleWithVariantOptions() {
-        Locale locale = new Locale("ru", "RU", "cp1251");
-        List<String> options = strategy.enumerateLocaleOptions(locale);
-        assertEquals(4, options.size());
-        assertEquals("ru_RU_cp1251", options.get(0));
-        assertEquals("ru_RU", options.get(1));
-        assertEquals("ru", options.get(2));
-        assertEquals("", options.get(3));
-    }
-
-    @Test
-    public void testEnumerateNoLocaleOptions() {
-        Locale locale = null;
-        List<String> options = strategy.enumerateLocaleOptions(locale);
-        assertEquals(1, options.size());
-        assertEquals("", options.get(0));
     }
 
     @Test
@@ -58,10 +45,10 @@ public class BasicResourceFileEnumerationStrategyTest {
         List<String> options = strategy.enumerateFileNameOptions(new String[] { "test.html" }, in(Locale.US, "WEB"));
         assertEquals(6, options.size());
         assertEquals("test-en_US-WEB.html", options.get(0));
-        assertEquals("test-en_US.html", options.get(1));
-        assertEquals("test-en-WEB.html", options.get(2));
-        assertEquals("test-en.html", options.get(3));
-        assertEquals("test-WEB.html", options.get(4));
+        assertEquals("test-en-WEB.html", options.get(1));
+        assertEquals("test-WEB.html", options.get(2));
+        assertEquals("test-en_US.html", options.get(3));
+        assertEquals("test-en.html", options.get(4));
         assertEquals("test.html", options.get(5));
     }
 
@@ -87,9 +74,9 @@ public class BasicResourceFileEnumerationStrategyTest {
     public void testEnumerateFileNameOptionsWithDotWithoutExtensionAndContext() {
         List<String> options = strategy.enumerateFileNameOptions(new String[] { "test." }, in(Locale.US));
         assertEquals(3, options.size());
-        assertEquals("test-en_US", options.get(0));
-        assertEquals("test-en", options.get(1));
-        assertEquals("test", options.get(2));
+        assertEquals("test-en_US.", options.get(0));
+        assertEquals("test-en.", options.get(1));
+        assertEquals("test.", options.get(2));
     }
 
     @Test
@@ -108,10 +95,10 @@ public class BasicResourceFileEnumerationStrategyTest {
         }, in(Locale.US));
         assertEquals(6, options.size());
         assertEquals("resource-en_US.properties", options.get(0));
-        assertEquals("default-en_US.properties", options.get(1));
-        assertEquals("resource-en.properties", options.get(2));
-        assertEquals("default-en.properties", options.get(3));
-        assertEquals("resource.properties", options.get(4));
+        assertEquals("resource-en.properties", options.get(1));
+        assertEquals("resource.properties", options.get(2));
+        assertEquals("default-en_US.properties", options.get(3));
+        assertEquals("default-en.properties", options.get(4));
         assertEquals("default.properties", options.get(5));
     }
 
@@ -123,16 +110,16 @@ public class BasicResourceFileEnumerationStrategyTest {
         }, in(Locale.US, "WEB"));
         assertEquals(12, options.size());
         assertEquals("resource-en_US-WEB.properties", options.get(0));
-        assertEquals("resource-en_US.properties", options.get(1));
-        assertEquals("default-en_US-WEB.properties", options.get(2));
-        assertEquals("default-en_US.properties", options.get(3));
-        assertEquals("resource-en-WEB.properties", options.get(4));
-        assertEquals("resource-en.properties", options.get(5));
-        assertEquals("default-en-WEB.properties", options.get(6));
-        assertEquals("default-en.properties", options.get(7));
-        assertEquals("resource-WEB.properties", options.get(8));
-        assertEquals("resource.properties", options.get(9));
-        assertEquals("default-WEB.properties", options.get(10));
+        assertEquals("resource-en-WEB.properties", options.get(1));
+        assertEquals("resource-WEB.properties", options.get(2));
+        assertEquals("resource-en_US.properties", options.get(3));
+        assertEquals("resource-en.properties", options.get(4));
+        assertEquals("resource.properties", options.get(5));
+        assertEquals("default-en_US-WEB.properties", options.get(6));
+        assertEquals("default-en-WEB.properties", options.get(7));
+        assertEquals("default-WEB.properties", options.get(8));
+        assertEquals("default-en_US.properties", options.get(9));
+        assertEquals("default-en.properties", options.get(10));
         assertEquals("default.properties", options.get(11));
     }
 

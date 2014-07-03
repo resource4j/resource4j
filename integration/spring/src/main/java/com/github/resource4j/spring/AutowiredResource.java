@@ -11,4 +11,6 @@ public @interface AutowiredResource {
 
 	String context() default "";
 	
+	boolean localized() default false;
+	
 }

@@ -5,6 +5,9 @@ import static com.github.resource4j.resources.resolution.ResourceResolutionConte
 import static org.springframework.util.ReflectionUtils.doWithFields;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +48,16 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor {
 				} else if (ResourceProvider.class.equals(field.getType())) {
 					field.set(bean, resources.forKey(key));
 				} else {
-					String context = field.getAnnotation(AutowiredResource.class).context();
-					OptionalString string = resources.get(key, in(context));
+					AutowiredResource autowired = field.getAnnotation(AutowiredResource.class);
+					String contextString = autowired.context();
+					List<Object> components = new ArrayList<>();
+					if (autowired.localized()) {
+						components.add(getCurrentLocale());
+					}
+					if (contextString.length() > 0) {
+						components.add(contextString);
+					}
+					OptionalString string = resources.get(key, in(components.toArray()));
 					if (OptionalString.class.equals(field.getType())) {
 						value = string;
 					} else if (MandatoryString.class.equals(field.getType())) {
@@ -66,6 +77,12 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor {
 			}
 		});
 		return bean;
+	}
+
+	// TODO: add support for localization of session-scoped beans here
+	@SuppressWarnings("static-method")
+	private Locale getCurrentLocale() {
+		return Locale.getDefault();
 	}
 
 	private static ResourceKey buildKey(final Object bean, Field field) {

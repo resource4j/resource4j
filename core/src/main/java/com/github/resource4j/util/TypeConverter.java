@@ -124,17 +124,25 @@ public final class TypeConverter {
             return (T) value;
         if (PRIMITIVE_TYPE_MAPPING.get(type) == value.getClass())
             return (T) value;
-        if (type == String.class)
+        if (type == String.class) {
             return (T) toString(value, format);
-
-        if (value instanceof String)
+    	} else if (value instanceof String) {
             return fromString(type, pattern, format, (String) value);
-        if (value instanceof Number)
+        } else if (value instanceof Number) {
             return fromNumber(type, (Number) value);
-        if (value instanceof Calendar)
+        } else if (value instanceof Calendar) {
+        	if (type.isAssignableFrom(java.util.Date.class)) {
+				return (T) ((Calendar) value).getTime();
+        	}
             return fromNumber(type, ((Calendar) value).getTimeInMillis());
-        if (value instanceof java.util.Date)
+        } else if (value instanceof java.util.Date) {
+        	if (type.isAssignableFrom(GregorianCalendar.class)) {
+        		GregorianCalendar calendar = new GregorianCalendar();
+        		calendar.setTime((Date) value);
+				return (T) calendar;
+        	}
             return fromNumber(type, ((Date) value).getTime());
+        }
 
         Constructor<?> ctor = null;
         try {

@@ -8,6 +8,8 @@ public interface ResourceValueReference {
 
 	ResourceKey key();
 	
+	OptionalString in(Object... components);
+	
 	OptionalString fetch(ResourceResolutionContext context);
 	
 }

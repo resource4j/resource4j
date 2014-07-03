@@ -5,10 +5,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -16,6 +20,13 @@ import com.github.resource4j.util.TypeConverter;
 
 public class TypeCastTest {
 
+	@Test
+	public void testParseIntInLocale() throws ParseException {
+		Long value = TypeConverter.convert("3,000,000", Long.class, DecimalFormat.getNumberInstance(Locale.US));
+		assertNotNull(value);
+		assertEquals(3000000L, value.longValue());
+	}
+	
     @Test
     public void testParseLong() throws ParseException {
         Long value = TypeConverter.convert("12345", Long.TYPE);
@@ -135,5 +146,18 @@ public class TypeCastTest {
         Calendar result = TypeConverter.convert(value, Calendar.class);
         assertEquals(calendar, result);
     }
+    
+    @Test
+    public void testConversionWithDateFormat() {
+    	Calendar calendar = new GregorianCalendar(2014, Calendar.JULY, 26);
+    	DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.US);
+    	
+    	String toString = TypeConverter.convert(calendar, String.class, format);
+    	Calendar fromString = TypeConverter.convert(toString, Calendar.class, format);
+    	assertEquals(calendar.get(Calendar.DATE), fromString.get(Calendar.DATE));
+    	assertEquals(calendar.get(Calendar.MONTH), fromString.get(Calendar.MONTH));
+    	assertEquals(calendar.get(Calendar.YEAR), fromString.get(Calendar.YEAR));
+    }
+    
 
 }

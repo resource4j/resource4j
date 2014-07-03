@@ -33,4 +33,9 @@ public class GenericResourceValueReference implements ResourceValueReference {
 		return resources.get(key, context);
 	}
 
+	@Override
+	public OptionalString in(Object... components) {
+		return fetch(ResourceResolutionContext.in(components));
+	}
+
 }

@@ -20,6 +20,10 @@ public final class ResourceResolutionContext implements Serializable {
 		}
 	};
 	
+	public static ResourceResolutionContext withoutContext() {
+		return new ResourceResolutionContext(new ResourceResolutionComponent[0]);
+	}
+	
 	public static ResourceResolutionContext in(Object... objects) {
 		ResourceResolutionComponent[] components = new ResourceResolutionComponent[objects.length];
 		for (int i = 0; i < objects.length; i++) {
