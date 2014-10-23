@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -25,6 +27,8 @@ import com.github.resource4j.resources.references.ResourceValueReference;
 
 public class ResourceValueBeanPostProcessor implements BeanPostProcessor {
 
+	private static final Logger LOG = LoggerFactory.getLogger(ResourceValueBeanPostProcessor.class); 
+	
 	@Autowired
 	private Resources resources;
 
@@ -69,6 +73,10 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor {
 				field.setAccessible(true);
 				field.set(bean, value);
 				field.setAccessible(false);
+				LOG.trace("Autowired {}#{} as {}", 
+						field.getDeclaringClass().getName(), 
+						field.getName(), 
+						key);
 			}
 		}, new FieldFilter() {
 			@Override
@@ -86,11 +94,28 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor {
 	}
 
 	private static ResourceKey buildKey(final Object bean, Field field) {
-		String name = field.getAnnotation(AutowiredResource.class).value();
+		AutowiredResource annotation = field.getAnnotation(AutowiredResource.class);
+		String name = annotation.value();
 		if (name.length() == 0) {
 			name = field.getName();
 		}
-		ResourceKey key = key(bean.getClass(), name);
+		String bundleName = annotation.bundle().length() > 0 ? annotation.bundle() : null;
+		Class<?> bundleClass = annotation.bundleClass().equals(Object.class) ? null : annotation.bundleClass();
+		if ((bundleName != null) && (bundleClass != null)) {
+			LOG.warn("{}#{} declares both bundle name and class for autowiring resource value. "
+					+ "Bundle name {} will be used.", 
+					field.getDeclaringClass().getName(), 
+					field.getName(), 
+					bundleName);
+		}
+		ResourceKey key = null;
+		if (bundleName != null) {
+			key = key(bundleName, name);
+		} else if (bundleClass != null) {
+			key = key(bundleClass, name);
+		} else {
+			key = key(bean.getClass(), name);
+		}
 		return key;
 	}
 

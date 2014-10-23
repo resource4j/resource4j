@@ -6,6 +6,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AutowiredResource {
+	
+	String bundle() default "";
+	
+	Class<?> bundleClass() default Object.class;
 
 	String value() default "";
 
