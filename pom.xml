@@ -2,6 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
+
 	<groupId>com.github.resource4j</groupId>
 	<artifactId>resource4j-parent</artifactId>
 	<version>2.0.2-SNAPSHOT</version>
@@ -27,6 +33,22 @@
 			<comments>A business-friendly OSS license</comments>
 		</license>
 	</licenses>
+
+	<developers>
+		<developer>
+			<name>Ivan Gammel</name>
+			<email>ivan.gammel@gmail.com</email>
+			<organization>Align Technology, Inc.</organization>
+			<organizationUrl>http://www.aligntech.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:resource4j/resource4j.git</connection>
+		<developerConnection>scm:git:git@github.com:resource4j/resource4j.git</developerConnection>
+		<url>git@github.com:resource4j/resource4j.git</url>
+	</scm>
+	
 
 	<properties>
 		<java.version>1.7</java.version>
@@ -58,11 +80,26 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.4</version><!--$NO-MVN-MAN-VER$-->
 				<configuration>
 					<tagNameFormat>release-@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

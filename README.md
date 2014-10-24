@@ -31,14 +31,14 @@ If you are using Maven, please, add following lines to your POM file:
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-core</artifactId>
-		<version>2.0.0</version>
+		<version>2.0.2</version>
 	</dependency>
 For integration with Spring and (optionally) Thymeleaf, add following:
 
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-spring</artifactId>
-		<version>2.0.0</version>
+		<version>2.0.2</version>
 	</dependency>
 	
 Resources
