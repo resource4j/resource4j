@@ -103,12 +103,6 @@
 		</plugins>
 	</build>
 
-	<scm>
-		<connection>scm:git:https://github.com/resource4j/resource4j.git</connection>
-		<developerConnection>scm:git:https://github.com/resource4j/resource4j.git</developerConnection>
-		<url>https://github.com/resource4j/resource4j</url>
-	</scm>
-
 	<dependencyManagement>
 
 		<dependencies>
