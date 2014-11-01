@@ -29,6 +29,22 @@ public class ResourceValueBeanPostProcessorIntegrationTest implements Applicatio
 	}
 	
 	@Test
+	public void testAutowiredBundleClassInjection() {
+		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		AutowireBundleExample bean = new AutowireBundleExample();
+		beanFactory.initializeBean(bean, "autowireBundle");
+		assertEquals("Success", bean.getValue());
+	}
+	
+	@Test
+	public void testAutowiredBundleNameInjection() {
+		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
+		AutowireBundleExample bean = new AutowireBundleExample();
+		beanFactory.initializeBean(bean, "autowireBundle");
+		assertEquals("New Zealand", bean.getCountry());
+	}
+	
+	@Test
 	public void testMandatoryValueInjection() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
 		ExampleBean bean = new ExampleBean();

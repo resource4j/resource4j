@@ -1,7 +1,9 @@
 package com.github.resource4j.files.parsers;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
@@ -31,6 +33,14 @@ public class StringParser extends AbstractParser<String, OptionalString> {
         if (charsetName == null) {
             throw new IllegalArgumentException("charsetName cannot be null");
         }
+        // Validate charset: this will be done by Scanner during parsing anyway, 
+        // but since charset problem is a system error, it's better to detect 
+        // it as early as possible.
+        try {
+            Charset.forName(charsetName);
+        } catch (IllegalCharsetNameException|UnsupportedCharsetException e) {
+            throw new IllegalArgumentException(e);
+        }
         this.charsetName = charsetName;
     }
 
@@ -40,9 +50,9 @@ public class StringParser extends AbstractParser<String, OptionalString> {
     }
 
     @Override
-    public String parse(InputStream stream) throws IOException {
+    public String parse(ResourceFile file) throws IOException {
         // Here's the nice solution from StackOverflow: http://stackoverflow.com/a/5445161
-    	try (java.util.Scanner s = new java.util.Scanner(stream, charsetName)) {
+    	try (java.util.Scanner s = new java.util.Scanner(file.asStream(), charsetName)) {
     		s.useDelimiter("\\A");
             return s.hasNext() ? s.next() : "";
     	}

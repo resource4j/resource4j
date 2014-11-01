@@ -26,16 +26,10 @@ import com.github.resource4j.resources.resolution.ResourceResolutionContext;
  */
 public class CustomizableResources extends AbstractResources {
 
-    /**
-     *
-     */
     public static final ResourceKey DEFAULT_APPLICATION_RESOURCES = bundle("i18n.resources");
 
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
-    
-    /**
-     *
-     */
+
     protected ResourceKey defaultResourceBundle;
 
     private ResourceFileEnumerationStrategy fileEnumerationStrategy;

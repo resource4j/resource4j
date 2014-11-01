@@ -1,10 +1,11 @@
 package com.github.resource4j;
 
 /**
- *
+ * Not-null representation of resource value, i.e. successfully resolved in a resolution context and, 
+ * thus, contains information about resolved source.
  * @author Ivan Gammel
  * @since 1.0
- * @param <V>
+ * @param <V> type of the managed value
  */
 public interface MandatoryValue<V> extends ResourceValue<V> {
 

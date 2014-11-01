@@ -1,5 +1,12 @@
 package com.github.resource4j;
 
+import com.github.resource4j.resources.Resources;
+
+/**
+ * Abstract superclass for all resource resolution related exceptions.
+ * @author Ivan Gammel
+ * @see Resources
+ */
 public abstract class ResourceException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

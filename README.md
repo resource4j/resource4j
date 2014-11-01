@@ -2,7 +2,14 @@ resource4j - resource loader for Java
 =====================================
 Overview
 --------
-Resource4j library provides an API for loading key/value pairs and arbitrary content from application resource files stored in classpath, file system or (with custom code) from any other source. This library extends the functionality of resource bundles in Java SE with fluent DSL for enforcing not-null constraints and type conversions and allows to customize file name resolution for specific locale (or even define own resolution context). 
+Resource4j library provides an API for loading key/value pairs and arbitrary content from application resource files stored in classpath, file system or (with custom code) from any other source. Key features of this library:
+
+ * Support of **Java SE resource bundles**, **custom resource file formats** and **data sources**
+ * Fluent **DSL** for type conversions and enforcing not-null constraints
+ * Locale-based and custom resolution of values
+ * **Spring Framework** and **Thymeleaf** integration
+ * Full support of **Test-Driven Development** 
+
 **resource4j-example-server** module is a good example of how this library can be used to localize resources and page templates in web applications.
 
 Quick Start
@@ -31,14 +38,14 @@ If you are using Maven, please, add following lines to your POM file:
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-core</artifactId>
-		<version>2.0.0</version>
+		<version>2.0.2</version>
 	</dependency>
 For integration with Spring and (optionally) Thymeleaf, add following:
 
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-spring</artifactId>
-		<version>2.0.0</version>
+		<version>2.0.2</version>
 	</dependency>
 	
 Resources
@@ -121,7 +128,7 @@ You can even implement your own parser (below is the example that uses XStream f
 	public class MyConfig {
 	}
 
-	public class ConfigParser extends AbstractValueParser<MyEntity> {
+	public class ConfigParser extends AbstractValueParser<MyConfig> {
 		private final static ConfigParser INSTANCE = new ConfigParser(); 
 		private XStream xstream = new XStream();
 		{
@@ -130,8 +137,8 @@ You can even implement your own parser (below is the example that uses XStream f
 		public static ConfigParser configuration() {
 			return INSTANCE;
 		}
-		protected MyConfig parse(InputStream stream) throws IOException {
-			return (MyConfig) xstream.fromXML(stream);	
+		protected MyConfig parse(ResourceFile file) throws IOException {
+			return (MyConfig) xstream.fromXML(file.asStream());	
 		}	
 	}
 	...
