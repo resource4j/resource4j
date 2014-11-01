@@ -3,6 +3,7 @@ package com.github.resource4j.files.lookup;
 import static java.util.regex.Pattern.compile;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -11,13 +12,22 @@ import com.github.resource4j.ResourceKey;
 import com.github.resource4j.files.MissingResourceFileException;
 import com.github.resource4j.files.ResourceFile;
 
+/**
+ * This file factory provides a mechanism to load resource files from different contexts using pattern matching.
+ * E.g. you can set ".properties" files to be loaded from classpath, ".html" files to be loaded 
+ * from web appplication root folder etc.
+ * 
+ * @author Ivan Gammel
+ */
 public class MappingResourceFileFactory implements ResourceFileFactory {
 
 	private List<Mapping> mappings;
 	
 	/**
-	 * NB: this method relies on LinkedHashMap as default
-	 * @param mappings
+	 * Specify list of pattern to resource file factory mappings. Note, that if the actual file name 
+	 * matches two or more patterns, first one in the map will be used. You may use {@link LinkedHashMap} 
+	 * to specify exact order.
+	 * @param mappings a set of pattern-factory pairs stored in {@link Map}
 	 */
 	public void setMappings(Map<String,ResourceFileFactory> mappings) {
 		this.mappings = new ArrayList<>(mappings.size());

@@ -5,6 +5,12 @@ import com.github.resource4j.MissingValueException;
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
 
+/**
+ * Generic implementation of {@link OptionalValue}.
+ * @param <V> type of managed value
+ * @author Ivan Gammel
+ * @since 1.0
+ */
 public class GenericOptionalValue<V> extends GenericResourceValue<V> implements OptionalValue<V> {
 
     private Throwable suppressedException;
@@ -19,14 +25,14 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
     }
 
     @Override
-    public V orDefault(V defaultValue) {
+    public V orDefault(V defaultValue) throws IllegalArgumentException {
         if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
         if (value == null) return defaultValue;
         return value;
     }
 
     @Override
-    public MandatoryValue<V> or(V defaultValue) {
+    public MandatoryValue<V> or(V defaultValue) throws IllegalArgumentException {
         if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
         return new GenericMandatoryValue<>(resolvedSource, key, value == null ? defaultValue : value);
     }

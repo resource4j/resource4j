@@ -23,8 +23,8 @@ public interface ResourceBundleParser {
 
     /**
      * Parses the given resource file. Its actual name may differ
-     * @param file
-     * @return
+     * @param file the file to parse
+     * @return map of key-value pairs stored in given file
      */
     Map<String,String> parse(ResourceFile file);
 

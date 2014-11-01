@@ -7,11 +7,11 @@ import com.github.resource4j.MandatoryString;
 import com.github.resource4j.MandatoryValue;
 import com.github.resource4j.MissingValueException;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.ResourceValue;
+import com.github.resource4j.util.TypeCastException;
 import com.github.resource4j.util.TypeConverter;
 
 /**
- *
+ * Generic implementation of {@link MandatoryString}.
  * @author Ivan Gammel
  * @since 1.0
  */
@@ -48,7 +48,7 @@ public class GenericMandatoryString extends GenericResourceString implements Man
         return MessageFormat.format(value, arguments);
     }
     @Override
-    public <T> MandatoryValue<T> ofType(Class<T> type) {
+    public <T> MandatoryValue<T> ofType(Class<T> type) throws TypeCastException {
         return new GenericMandatoryValue<>(resolvedSource, key, TypeConverter.convert(value, type));
     }
 
@@ -58,12 +58,12 @@ public class GenericMandatoryString extends GenericResourceString implements Man
 	}
 
 	@Override
-	public <T> ResourceValue<T> ofType(Class<T> type, String format) {
+	public <T> MandatoryValue<T> ofType(Class<T> type, String format) throws TypeCastException {
         return new GenericMandatoryValue<>(resolvedSource, key, TypeConverter.convert(value, type, format));
 	}
 
 	@Override
-	public <T> ResourceValue<T> ofType(Class<T> type, Format format) {
+	public <T> MandatoryValue<T> ofType(Class<T> type, Format format) throws TypeCastException {
         return new GenericMandatoryValue<>(resolvedSource, key, TypeConverter.convert(value, type, format));
 	}
 

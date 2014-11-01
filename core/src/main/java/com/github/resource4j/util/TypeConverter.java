@@ -106,16 +106,6 @@ public final class TypeConverter {
     //
     // Implementation
     //
-
-    /**
-     *
-     * @param type
-     * @param pattern
-     * @param format
-     * @param value
-     * @return
-     * @throws TypeCastException
-     */
     @SuppressWarnings("unchecked")
     private static <T> T convert(Class<T> type, String pattern, Format format, Object value) throws TypeCastException {
         if (value == null)
@@ -159,12 +149,6 @@ public final class TypeConverter {
         throw new TypeCastException(value, value.getClass(), type);
     }
 
-    /**
-     *
-     * @param object
-     * @param formatter
-     * @return
-     */
     private static String toString(Object object, Format formatter) {
         if (object == null)
             return null;
@@ -184,14 +168,6 @@ public final class TypeConverter {
         return formatter != null ? formatter.format(object) : String.valueOf(object);
     }
 
-    /**
-     *
-     * @param type
-     * @param format
-     * @param value
-     * @return
-     * @throws TypeCastException
-     */
     @SuppressWarnings("unchecked")
     private static <T> T fromString(Class<T> type, String pattern, Format format, String value)
             throws TypeCastException {
@@ -262,13 +238,6 @@ public final class TypeConverter {
         throw new TypeCastException(value, value.getClass(), type);
     }
 
-    /**
-     *
-     * @param clazz
-     * @param format
-     * @param value
-     * @return
-     */
     private static <T> Format getFormatter(Class<T> clazz, String format, String value) {
         Format formatter = null;
         if (Number.class.isAssignableFrom(clazz)) {
@@ -293,13 +262,6 @@ public final class TypeConverter {
         return formatter;
     }
 
-    /**
-     *
-     * @param type
-     * @param value
-     * @return
-     * @throws TypeCastException
-     */
     @SuppressWarnings("unchecked")
     private static <T> T toDate(Class<T> type, Number value) throws TypeCastException {
         long millis = value.longValue();
@@ -329,13 +291,6 @@ public final class TypeConverter {
         throw new TypeCastException(value, value.getClass(), type);
     }
 
-    /**
-     *
-     * @param type
-     * @param value
-     * @return
-     * @throws TypeCastException
-     */
     @SuppressWarnings("unchecked")
     private static <T> T fromNumber(Class<T> type, Number value) throws TypeCastException {
         if (Calendar.class.isAssignableFrom(type) || java.util.Date.class.isAssignableFrom(type)) {

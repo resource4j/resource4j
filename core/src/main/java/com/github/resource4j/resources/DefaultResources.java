@@ -42,12 +42,6 @@ public class DefaultResources extends CustomizableResources {
         this.defaultResourceBundle = ResourceKey.bundle(defaultBundle);
     }
     
-    /**
-     *
-     * @param key
-     * @param locale
-     * @return
-     */
     @Override
 	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
     	OptionalString result = lookup(key, context);
