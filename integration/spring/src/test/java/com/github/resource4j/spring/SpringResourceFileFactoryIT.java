@@ -16,7 +16,7 @@ import com.github.resource4j.resources.Resources;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/META-INF/spring/testContext.xml")
-public class SpringResourceFileFactoryIntegrationTest {
+public class SpringResourceFileFactoryIT {
 
 	@Autowired
 	private Resources resources;

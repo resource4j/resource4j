@@ -14,7 +14,7 @@ import org.thymeleaf.context.Context;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/META-INF/spring/thymeleafContext.xml")
-public class Resource4jResourceResolverIntegrationTest {
+public class Resource4jResourceResolverIT {
 
 	@Autowired
 	private TemplateEngine engine;

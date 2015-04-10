@@ -42,6 +42,8 @@ public class HomeController {
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
+	 * @param locale resolved locale
+	 * @param model view model
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {

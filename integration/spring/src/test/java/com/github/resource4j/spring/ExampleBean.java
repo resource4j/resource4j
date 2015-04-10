@@ -14,6 +14,9 @@ public class ExampleBean {
 	@AutowiredResource(context="WEB")
 	private MandatoryString title;
 	
+	@AutowiredResource(source = "*.xml")
+	private String text;
+	
 	public MandatoryString getTitle() {
 		return title;
 	}
@@ -24,6 +27,10 @@ public class ExampleBean {
 
 	public ResourceValueReference getSecondValue() {
 		return secondValue;
+	}
+
+	public String getText() {
+		return text;
 	}
 	
 }
