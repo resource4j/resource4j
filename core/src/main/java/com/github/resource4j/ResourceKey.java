@@ -14,7 +14,7 @@ public class ResourceKey implements java.io.Serializable {
 
     public static final char BUNDLE_ID_SEPARATOR = '.';
 
-	public static final char ID_COMPONENT_DELIMITER = '.';
+	public static final char ID_COMPONENT_DELIMITER = '_';
 
 	private static final long serialVersionUID = 1L;
 
@@ -141,7 +141,7 @@ public class ResourceKey implements java.io.Serializable {
     /**
      * Derives new resource key from this key with identifier as defined below:
      * <pre>
-     * &lt;delimiter&gt; ::= '.'
+     * &lt;delimiter&gt; ::= '_'
      * &lt;id&gt; ::= &lt;this id&gt; &lt;delimiter&gt; &lt;child id&gt;
      * </pre>  
      * Example:
@@ -226,7 +226,7 @@ public class ResourceKey implements java.io.Serializable {
      */
     @Override
     public String toString() {
-        return (bundle != null ? bundle : "") + BUNDLE_ID_SEPARATOR + (id != null ? id : "");
+        return (bundle != null ? bundle : "") + BUNDLE_ID_SEPARATOR + (id != null ?  id : "");
     }
 
 }

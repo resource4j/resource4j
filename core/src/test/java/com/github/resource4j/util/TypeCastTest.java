@@ -1,9 +1,6 @@
 package com.github.resource4j.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -20,6 +17,11 @@ import com.github.resource4j.util.TypeConverter;
 
 public class TypeCastTest {
 
+	@Test
+	public void convertNullToAnything() throws ParseException {
+		assertNull(TypeConverter.convert(null, Object.class));
+	}
+	
 	@Test
 	public void testParseIntInLocale() throws ParseException {
 		Long value = TypeConverter.convert("3,000,000", Long.class, DecimalFormat.getNumberInstance(Locale.US));

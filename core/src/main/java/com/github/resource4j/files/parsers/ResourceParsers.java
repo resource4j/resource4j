@@ -51,4 +51,8 @@ public final class ResourceParsers {
         return PropertiesParser.getInstance();
     }
 
+	public static ByteArrayParser binary() {
+		return ByteArrayParser.getInstance();
+	}
+
 }

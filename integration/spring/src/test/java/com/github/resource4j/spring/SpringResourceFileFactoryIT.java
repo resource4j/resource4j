@@ -1,6 +1,8 @@
 package com.github.resource4j.spring;
 
+import static com.github.resource4j.files.parsers.ResourceParsers.string;
 import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
@@ -25,6 +27,7 @@ public class SpringResourceFileFactoryIT {
 	public void testResourceFileLoadedBySpringFactory() {
 		ResourceFile file = resources.contentOf("test.txt", in(Locale.US));
 		assertTrue(file instanceof SpringResourceFile);
+		assertEquals("Text for US locale", file.parsedTo(string()).notNull().asIs());
 	}
 	
 }

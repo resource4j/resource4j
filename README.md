@@ -2,34 +2,48 @@ resource4j - resource loader for Java
 =====================================
 Overview
 --------
-Resource4j library provides an API for loading key/value pairs and arbitrary content from application resource files stored in classpath, file system or (with custom code) from any other source. Key features of this library:
+Resource4j library is a replacement for Java ResourceBundle mechanism that supports complex i18n scenarios of large and legacy applications and provides safe access to key/value application configuration and arbitrary resource files. 
+With well-designed API based on fluent DSL it is a solution for i18n just like SLF4J is a solution for logging 
+abstraction.
+
+Key features of this library:
 
  * Support of **Java SE resource bundles**, **custom resource file formats** and **data sources**
  * Fluent **DSL** for type conversions and enforcing not-null constraints
  * Locale-based and custom resolution of values
  * **Spring Framework** and **Thymeleaf** integration
- * Full support of **Test-Driven Development** 
+ * Full support of **Test-Driven Development**
+ * **Modular architecture** allows to use only the part of implementation you really need 
 
-**resource4j-example-server** module is a good example of how this library can be used to localize resources and page templates in web applications.
+**resource4j-example-server** web application is a good example of how this library can be used to localize resources 
+and page templates in web applications.
 
 Quick Start
 -----------
 1. Add <code>resource4j-core.jar</code> to your classpath.
 2. Create new instance of DefaultResources:
-	<pre><code>	Resources resources = new DefaultResources();</code></pre>
+```Java
+Resources resources = new DefaultResources();
+```
 3. Add resource bundles and content files to your classpath:
     <pre><code>/com/mycompany/data/Country-en_US.properties:
-	population=300000000</code></pre>
-	<pre><code>/docs/readme.txt:
+	discount=0.1</code></pre>
+	<pre><code>/docs/EULA.txt:
 	Lorem ipsum dolorem sit amet.</code></pre>         	
 4. Get some value:
-	<pre><code>	int population = resources.get(key(Country.class, "population"), in(Locale.US))
+
+```Java 
+BigDecimal localDiscount = resources.get(key(Country.class, "discount"), in(Locale.US))
 			.notNull()
-			.as(Integer.class);</code></pre>
+			.as(BigDecimal.class);
+```			
 5. Load content:
-	<pre><code>	String text = resources.contentOf("/docs/readme.txt", in(Locale.US))
+
+```Java
+String eulaText = resources.contentOf("/docs/EULA.txt", in(Locale.US))
 			.parsedTo(string())
-			.asIs();</code></pre>
+			.asIs();
+```			
 
 Dependency management
 ---------------------
@@ -220,6 +234,7 @@ With ResourceValueBeanPostProcessor configured, it is possible to inject resourc
 resource value references and even the values of any type that can be instantiated from a string.
 Below is an example:
 
+```Java
 	public class MyService {
 
 		/*
@@ -241,9 +256,11 @@ Below is an example:
 		private String applicationName;
 
 	} 
+```
 
 Class **ResourceValueReference** is particularly useful in this scenario:
-		
+
+```Java		
 	/* 
 	 * value is injected for key(MyService.class, "population") 
 	 */
@@ -254,4 +271,24 @@ Class **ResourceValueReference** is particularly useful in this scenario:
 
 	// or simply...
 	System.out.println(population.in(Locale.US).notNull().asIs());
+```
+
+You may even inject file content:
+
+```Java
+package com.mycompany.legal;
+
+class EULA {
+    /* 
+     * Value is injected from /logo.jpg
+     */
+    @AutowiredResource(source = "/logo.jpg")
+    private byte[] logo;
 	
+	/* 
+     * Content will be loaded on demand from /com/mycompany/legal/EULA.txt
+     */
+    @AutowiredResource(source = "*.txt")
+    private ResourceFileReference content;
+}
+```
