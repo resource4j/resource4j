@@ -29,8 +29,8 @@ import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 
 /**
  * @author IvanGammel
- * @deprecated since 2.1 
  */
+@SuppressWarnings("deprecation")
 public final class AutowiredResourceCallback implements FieldCallback {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ResourceValueBeanPostProcessor.class); 
@@ -56,15 +56,15 @@ public final class AutowiredResourceCallback implements FieldCallback {
 		ResourceResolutionContext context = contextOf(autowired);
 
 		if (ResourceFileReference.class.equals(type)) {
-			String name = buildFileName(bean.getClass(), beanName, autowired.bundle());
+			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
 			value = new GenericResourceFileReference(resources, name);
 		} else if (ResourceFile.class.equals(type)) {
-			String name = buildFileName(bean.getClass(), beanName, autowired.bundle());
+			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
 			value = resources.contentOf(name, context);
 	    } else if (type.isArray() && (type.getComponentType() == Byte.TYPE)) {
-				String name = buildFileName(bean.getClass(), beanName, autowired.bundle());
+				String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 				id = name;
 				value = resources.contentOf(name, context).parsedTo(binary()).asIs();
 		} else {
@@ -114,18 +114,7 @@ public final class AutowiredResourceCallback implements FieldCallback {
 		return Locale.getDefault();
 	}
 
-	public static String buildFileName(Class<?> beanType, String beanName, String source) {
-		StringBuilder path = new StringBuilder();
-		if (!source.startsWith("/")) { // is relative path?
-			path.append('/').append(beanType.getPackage().getName().replace('.', '/')).append('/');
-		}
-		path.append(source);
-		int maskPosition = path.lastIndexOf("*");
-		if (maskPosition >= 0) {
-			path.replace(maskPosition, maskPosition+1, beanName != null ? beanName : beanType.getSimpleName());
-		}
-		return path.toString();
-	}
+
 
 	private static ResourceKey buildKey(final Object bean, Field field) {
 		AutowiredResource annotation = field.getAnnotation(AutowiredResource.class);

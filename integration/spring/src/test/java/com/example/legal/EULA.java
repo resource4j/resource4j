@@ -8,7 +8,7 @@ public class EULA {
 	@InjectResource("/logo.png")
 	private byte[] logo;
 	
-	@InjectResource("*.txt")
+	@InjectResource(value = "*.txt", required = false)
 	private ResourceFileReference content;
 
 	public byte[] getLogo() {

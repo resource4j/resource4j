@@ -6,8 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
-
 /**
  * Specifies resource provider for annotated class or package:
  * 
@@ -32,12 +30,5 @@ public @interface InjectBundle {
 	 * @return id part of resource key
 	 */
 	String id() default "";
-	
-	/**
-	 * Use given resolution context provider to resolve all the resource values in annotated bean
-	 * during autowiring process. This attribute can be used to specify dynamic resolution context 
-	 * provider for scoped beans, which may build resolution context from web sessions or requests.
-	 * @return type of resolution context provider to use for annotated bean
-	 */
-	Class<?> resolvedBy() default EmptyResolutionContextProvider.class;	
+
 }

@@ -1,6 +1,14 @@
 package com.github.resource4j.spring.annotations;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import com.github.resource4j.files.parsers.ResourceParser;
 import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
+import com.github.resource4j.spring.context.ResolutionContextProvider;
 
 /**
  * <p>Indicates that annotated field must be initialized from the specified resource file using 
@@ -29,6 +37,9 @@ import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
  * @author Ivan Gammel
  * @since 2.1
  */
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface InjectResource {
 	
 	/**
@@ -38,10 +49,17 @@ public @interface InjectResource {
 	String value();
 	
 	/**
+	 * Indicates whether this resource value is required (i.e. not null) or not.
+	 * @return <code>true</code> if injected value cannot be <code>null</code>, <code>false</code> otherwise.
+	 */
+	boolean required() default true;
+	
+	/**
 	 * Annotated resource is composite data type that must be parsed from string using given parser.
 	 * @return class of parser
 	 */
-	Class<?> parsedBy() default Object.class;
+	@SuppressWarnings("rawtypes")
+	Class<? extends ResourceParser> parsedBy() default ResourceParser.class;
 	
 	/**
 	 * Use given resolution context provider to resolve the resource value during autowiring. 
@@ -49,5 +67,5 @@ public @interface InjectResource {
 	 * beans, which may build resolution context from web sessions or requests.
 	 * @return type of resolution context provider to use for this value
 	 */
-	Class<?> resolvedBy() default EmptyResolutionContextProvider.class;	
+	Class<? extends ResolutionContextProvider> resolvedBy() default EmptyResolutionContextProvider.class;	
 }

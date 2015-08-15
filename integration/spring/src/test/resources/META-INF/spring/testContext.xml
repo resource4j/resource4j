@@ -10,5 +10,9 @@
 	</bean>
 
 	<bean class="com.github.resource4j.spring.ResourceValueBeanPostProcessor" />
+	
+	<bean class="com.github.resource4j.spring.context.RequestResolutionContextProvider">
+	   <constructor-arg value="WEB" />
+	</bean>
 
 </beans>

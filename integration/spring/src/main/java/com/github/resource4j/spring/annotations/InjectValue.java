@@ -1,5 +1,11 @@
 package com.github.resource4j.spring.annotations;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
@@ -11,6 +17,9 @@ import com.github.resource4j.spring.context.ResolutionContextProvider;
  * @see InjectBundle
  * @see ResourceValueBeanPostProcessor
  */
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface InjectValue {
 	
 	/**
@@ -18,6 +27,12 @@ public @interface InjectValue {
 	 * @return resource id
 	 */
 	String value() default "";
+	
+	/**
+	 * Indicates whether this resource value is required (i.e. not null) or not.
+	 * @return <code>true</code> if injected value cannot be <code>null</code>, <code>false</code> otherwise.
+	 */
+	boolean required() default true;
 	
 	/**
 	 * Resource bundle to look up in. If not set, {@link #bundleClass()} or bean class is 

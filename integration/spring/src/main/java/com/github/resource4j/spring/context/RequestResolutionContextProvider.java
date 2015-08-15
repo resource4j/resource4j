@@ -30,7 +30,7 @@ public class RequestResolutionContextProvider implements ResolutionContextProvid
 
 	@Override
 	public ResourceResolutionContext getContext() {
-		return in(LocaleContextHolder.getLocale(), WEB_CONTEXT);
+		return in(LocaleContextHolder.getLocale(), webContextName);
 	}
 
 }
