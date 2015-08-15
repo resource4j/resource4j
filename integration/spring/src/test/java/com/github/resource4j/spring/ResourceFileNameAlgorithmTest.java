@@ -1,6 +1,6 @@
 package com.github.resource4j.spring;
 
-import static com.github.resource4j.spring.ResourceValueBeanPostProcessor.buildFileName;
+import static com.github.resource4j.spring.annotations.support.AutowiredResourceCallback.buildFileName;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -18,25 +18,25 @@ public class ResourceFileNameAlgorithmTest {
 	@Test
 	public void testRelativePathPrecededByBeanPackage() {
 		String fileName = buildFileName(EULA.class, "beanName", "files/content.xml");
-		assertEquals("/examples/beans/files/content.xml", fileName);
+		assertEquals("/com/example/legal/files/content.xml", fileName);
 	}
 
 	@Test
 	public void testSimpleFileNamePrecededByBeanPackage() {
 		String fileName = buildFileName(EULA.class, "beanName", "content.xml");
-		assertEquals("/examples/beans/content.xml", fileName);
+		assertEquals("/com/example/legal/content.xml", fileName);
 	}
 	
 	@Test
 	public void testRelativePathAndMaskAppendedToClassNameAndProvidedExtension() {
 		String fileName = buildFileName(EULA.class, "beanName", "files/*.xml");
-		assertEquals("/examples/beans/files/beanName.xml", fileName);
+		assertEquals("/com/example/legal/files/beanName.xml", fileName);
 	}
 
 	@Test
 	public void testSimpleMaskAppendedToClassNameAndProvidedExtension() {
 		String fileName = buildFileName(EULA.class, "beanName", "*.xml");
-		assertEquals("/examples/beans/beanName.xml", fileName);
+		assertEquals("/com/example/legal/beanName.xml", fileName);
 	}
 	
 	@Test
@@ -48,13 +48,13 @@ public class ResourceFileNameAlgorithmTest {
 	@Test
 	public void testExtensionOnlyAppendedToBeanPackage() {
 		String fileName = buildFileName(EULA.class, "beanName", ".xml");
-		assertEquals("/examples/beans/.xml", fileName);
+		assertEquals("/com/example/legal/.xml", fileName);
 	}
 	
 	@Test
 	public void testMaskOnlyAppendedToBeanPackageAndReplacedWithBeanName() {
 		String fileName = buildFileName(EULA.class, "beanName", "*");
-		assertEquals("/examples/beans/beanName", fileName);
+		assertEquals("/com/example/legal/beanName", fileName);
 	}
 
 	@Test

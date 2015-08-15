@@ -44,7 +44,12 @@ public class AbsolutePathResourceFileFactoryTest {
 	public void testLoadingResourceFromFile() throws Exception {
 		ExistingFile file = givenExistsTextFile();
 		ResourceFile resourceFile = factory.getFile(bundle(file.name), file.name);
-		assertEquals(file.content, resourceFile.parsedTo(binary()).asIs());
+		
+		byte[] parsed = resourceFile.parsedTo(binary()).asIs();
+		assertEquals(file.content.length, parsed.length);
+		for (int i = 0; i < parsed.length; i++) {
+			assertEquals(file.content[i], parsed[i]);
+		}
 	}
 	
 	protected ExistingFile givenExistsTextFile() throws IOException {

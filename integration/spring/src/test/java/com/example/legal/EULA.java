@@ -1,14 +1,14 @@
 package com.example.legal;
 
 import com.github.resource4j.resources.references.ResourceFileReference;
-import com.github.resource4j.spring.AutowiredResource;
+import com.github.resource4j.spring.annotations.InjectResource;
 
 public class EULA {
 
-	@AutowiredResource(source = "/logo.jpg")
+	@InjectResource("/logo.png")
 	private byte[] logo;
 	
-	@AutowiredResource(source = "*.txt")
+	@InjectResource("*.txt")
 	private ResourceFileReference content;
 
 	public byte[] getLogo() {

@@ -54,6 +54,18 @@ public final class ResourceResolutionContext implements Serializable {
 		return this.components;
 	}
 	
+	public boolean isEmpty() {
+		return this.components.length == 0;
+	}
+	
+	public ResourceResolutionContext parent() {
+		ResourceResolutionComponent[] components = new ResourceResolutionComponent[this.components.length - 1];
+		for (int i = 0; i < this.components.length - 1; i++) {
+			components[i] = this.components[i];
+		}
+		return new ResourceResolutionContext(components);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

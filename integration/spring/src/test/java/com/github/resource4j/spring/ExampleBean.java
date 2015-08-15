@@ -2,19 +2,22 @@ package com.github.resource4j.spring;
 
 import com.github.resource4j.MandatoryString;
 import com.github.resource4j.resources.references.ResourceValueReference;
+import com.github.resource4j.spring.annotations.InjectResource;
+import com.github.resource4j.spring.annotations.InjectValue;
+import com.github.resource4j.spring.context.RequestResolutionContextProvider;
 
 public class ExampleBean {
 	
-	@AutowiredResource
+	@InjectValue
 	private String value;
 	
-	@AutowiredResource("second")
+	@InjectValue("second")
 	private ResourceValueReference secondValue;
 	
-	@AutowiredResource(context="WEB")
+	@InjectValue(resolvedBy = RequestResolutionContextProvider.class)
 	private MandatoryString title;
 	
-	@AutowiredResource(source = "*.xml")
+	@InjectResource("*.xml")
 	private String text;
 	
 	public MandatoryString getTitle() {

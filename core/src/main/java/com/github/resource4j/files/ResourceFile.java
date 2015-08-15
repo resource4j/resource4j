@@ -46,4 +46,12 @@ public interface ResourceFile {
      */
     <T, V extends OptionalValue<T>> V parsedTo(ResourceParser<T, V> parser);
 
+    /**
+     * Perform the check whether file exists or not. This may be expensive operation 
+     * depending on actual implementation of resource file. Subsequent reads via {@link #asStream()} are not
+     * guaranteed to succeed, because file may still be inacessible.
+     * @return <code>true</code> if resource file exists, <code>false</code> otherwise.
+     */
+	boolean exists();
+
 }

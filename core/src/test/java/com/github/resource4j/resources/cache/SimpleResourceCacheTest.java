@@ -20,6 +20,7 @@ public class SimpleResourceCacheTest {
     private static final String KEY_ID = "id";
     private static final String ANOTHER_KEY_ID = "id2";
     private static final String KEY_BUNDLE = "bundle";
+	private static final String ANY_SOURCE = "/tmp/example";
     private SimpleResourceCache<String> cache;
 
     @Before
@@ -34,7 +35,7 @@ public class SimpleResourceCacheTest {
 
     @Test
     public void testCachedValueAccessible() {
-        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE));
+        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE, ANY_SOURCE));
         CachedValue<String> cachedValue = cache.get(key(KEY_BUNDLE, KEY_ID), in(Locale.US));
         assertNotNull(cachedValue);
         assertEquals(VALUE, cachedValue.get());
@@ -42,8 +43,8 @@ public class SimpleResourceCacheTest {
 
     @Test
     public void testSecondPutReplacesPreviousValue() {
-        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE));
-        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(ANOTHER_VALUE));
+        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE, ANY_SOURCE));
+        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(ANOTHER_VALUE, ANY_SOURCE));
 
         CachedValue<String> cachedValue = cache.get(key(KEY_BUNDLE, KEY_ID), in(Locale.US));
         assertNotNull(cachedValue);
@@ -52,8 +53,8 @@ public class SimpleResourceCacheTest {
 
     @Test
     public void testPutIfAbsentDoesNotOverrideExistingValue() {
-        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE));
-        cache.putIfAbsent(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(ANOTHER_VALUE));
+        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE, ANY_SOURCE));
+        cache.putIfAbsent(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(ANOTHER_VALUE, ANY_SOURCE));
 
         CachedValue<String> cachedValue = cache.get(key(KEY_BUNDLE, KEY_ID), in(Locale.US));
         assertNotNull(cachedValue);
@@ -62,7 +63,7 @@ public class SimpleResourceCacheTest {
 
     @Test
     public void testValueNotInCacheAfterEvict() {
-        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE));
+        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE, ANY_SOURCE));
         cache.evict(key(KEY_BUNDLE, KEY_ID), in(Locale.US));
         CachedValue<String> cachedValue = cache.get(key(KEY_BUNDLE, KEY_ID), in(Locale.US));
         assertNull(cachedValue);
@@ -70,8 +71,8 @@ public class SimpleResourceCacheTest {
 
     @Test
     public void testCacheIsEmptyAfterClearing() {
-        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE));
-        cache.put(key(KEY_BUNDLE, ANOTHER_KEY_ID), in(Locale.US), cached(ANOTHER_VALUE));
+        cache.put(key(KEY_BUNDLE, KEY_ID), in(Locale.US), cached(VALUE, ANY_SOURCE));
+        cache.put(key(KEY_BUNDLE, ANOTHER_KEY_ID), in(Locale.US), cached(ANOTHER_VALUE, ANY_SOURCE));
         cache.clear();
 
         CachedValue<String> cachedValue = cache.get(key(KEY_BUNDLE, KEY_ID), in(Locale.US));
