@@ -21,7 +21,6 @@ import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
  * @author Ivan Gammel
- * @deprecated use {@link RefreshableResources} instead. Will be removed in 3.0 version of Resource4j API.
  */
 public class CustomizableResources extends AbstractResources {
 
