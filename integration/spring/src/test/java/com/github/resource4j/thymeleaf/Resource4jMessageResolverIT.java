@@ -21,13 +21,13 @@ public class Resource4jMessageResolverIT {
 	
 	@Test
 	public void testRenderRussianPageSubstitutesRussianString() {
-		String content = engine.process("page", new Context(new Locale("ru", "RU")));
+		String content = engine.process("example/pages/page", new Context(new Locale("ru", "RU")));
 		assertTrue(content.contains("\u041F\u0440\u0438\u043C\u0435\u0440 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B"));
 	}
 	
 	@Test
 	public void testRenderRussianPageUsesDefaultBundle() {
-		String content = engine.process("page", new Context(new Locale("ru", "RU")));
+		String content = engine.process("example/pages/page", new Context(new Locale("ru", "RU")));
 		assertTrue(content.contains("Latin"));
 	}
 }

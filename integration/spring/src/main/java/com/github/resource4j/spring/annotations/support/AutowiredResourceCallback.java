@@ -108,7 +108,6 @@ public final class AutowiredResourceCallback implements FieldCallback {
 		return context;
 	}
 	
-	// TODO: add support for localization of session-scoped beans here
 	@SuppressWarnings("static-method")
 	private Locale getCurrentLocale() {
 		return Locale.getDefault();

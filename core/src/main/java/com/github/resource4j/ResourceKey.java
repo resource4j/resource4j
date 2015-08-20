@@ -155,7 +155,7 @@ public class ResourceKey implements java.io.Serializable {
      * @return new key with child identifier
      */
     public ResourceKey child(String childId) {
-        return new ResourceKey(bundle, id == null ? childId : id + ID_COMPONENT_DELIMITER + childId);
+        return new ResourceKey(bundle, id == null ? childId : join(id, childId));
     }
 
     /**
@@ -228,5 +228,9 @@ public class ResourceKey implements java.io.Serializable {
     public String toString() {
         return (bundle != null ? bundle : "") + BUNDLE_ID_SEPARATOR + (id != null ?  id : "");
     }
+
+	public static String join(String id, String subkey) {
+		return id + ID_COMPONENT_DELIMITER + subkey;
+	}
 
 }

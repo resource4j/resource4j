@@ -1,6 +1,7 @@
 package com.github.resource4j.spring.annotations.support;
 
 import static com.github.resource4j.ResourceKey.bundle;
+import static com.github.resource4j.ResourceKey.join;
 import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
 
 import java.lang.reflect.Field;
@@ -60,20 +61,39 @@ public class InjectValueCallback implements FieldCallback {
 		
 		Object value = null;
 		Class<?> type = field.getType();
-		if (ResourceValueReference.class.equals(type)) {
-			value = new GenericResourceValueReference(actualProvider, name);
-		} else if (ResourceProvider.class.equals(type)) {
-			value = actualProvider;
-		} else {
-			ResourceResolutionContext ctx = getContext(annotation.resolvedBy());
-			OptionalString string = actualProvider.get(name, ctx);
-			if (OptionalString.class.equals(type)) {
-				value = string;
-			} else if (MandatoryString.class.equals(type)) {
-				value = string.notNull();
-			} else {
-				value = string.notNull().as(type);
+		ResourceResolutionContext ctx = getContext(annotation.resolvedBy());
+		if (annotation.params().length > 0) {
+			String[] params = annotation.params();
+			Field[] fields = new Field[params.length];
+			for (int i = 0; i < params.length; i++) {
+				try {
+					fields[i] = type.getDeclaredField(params[i]);
+				} catch (NoSuchFieldException | SecurityException e) {
+					throw new IllegalStateException(String.format("%s - %s Value type %s does not support autowiring of %s", 
+							bean.getClass().getSimpleName(),
+							field.getName(),
+							type.getName(),
+							params[i]), e);
+				}
 			}
+			try {
+				value = type.newInstance();
+				for (Field valueField : fields) {
+					Object fieldValue = getValue(actualProvider, valueField.getType(), join(name, valueField.getName()), ctx);
+					boolean acc = valueField.isAccessible();
+					valueField.setAccessible(true);
+					valueField.set(value, fieldValue);
+					valueField.setAccessible(acc);
+				}
+			} catch (Exception e) {
+				throw new IllegalStateException(String.format("%s - %s Value type %s does not support autowiring.", 
+						bean.getClass().getSimpleName(),
+						field.getName(),
+						type.getName()), e);
+				
+			}
+		} else {
+			value = getValue(actualProvider, type, name, ctx);
 		}
 		if (annotation.required() && (value == null)) {
 			throw new IllegalArgumentException("Cannot autowire " + field.getDeclaringClass().getName() 
@@ -86,6 +106,26 @@ public class InjectValueCallback implements FieldCallback {
 				field.getDeclaringClass().getName(), 
 				field.getName(), 
 				value.getClass().getSimpleName());
+	}
+
+	private Object getValue(ResourceProvider provider, Class<?> expectedType, String name,
+			ResourceResolutionContext ctx) {
+		Object value;
+		if (ResourceValueReference.class.equals(expectedType)) {		
+			value = new GenericResourceValueReference(provider, name);
+		} else if (ResourceProvider.class.equals(expectedType)) {
+			value = provider;
+		} else {
+			OptionalString string = provider.get(name, ctx);
+			if (OptionalString.class.equals(expectedType)) {
+				value = string;
+			} else if (MandatoryString.class.equals(expectedType)) {
+				value = string.notNull();
+			} else {
+				value = string.notNull().as(expectedType);
+			}
+		}
+		return value;
 	}
 
 	private ResourceResolutionContext getContext(Class<? extends ResolutionContextProvider> contextProviderType) {

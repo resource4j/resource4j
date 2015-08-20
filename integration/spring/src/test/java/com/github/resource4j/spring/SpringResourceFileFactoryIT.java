@@ -25,7 +25,7 @@ public class SpringResourceFileFactoryIT {
 	
 	@Test
 	public void testResourceFileLoadedBySpringFactory() {
-		ResourceFile file = resources.contentOf("test.txt", in(Locale.US));
+		ResourceFile file = resources.contentOf("example/document/test.txt", in(Locale.US));
 		assertTrue(file instanceof SpringResourceFile);
 		assertEquals("Text for US locale", file.parsedTo(string()).notNull().asIs());
 	}

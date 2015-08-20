@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.example.legal.EULA;
+import example.document.DocumentTemplate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/META-INF/spring/testContext.xml")
@@ -28,8 +28,8 @@ public class ResourceFileAutowiringIT implements ApplicationContextAware {
 	@Test
 	public void testByteContentInjectedFromResourceFileWhenAutowiring() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		EULA bean = new EULA();
-		beanFactory.initializeBean(bean, "eula");
+		DocumentTemplate bean = new DocumentTemplate();
+		beanFactory.initializeBean(bean, "template");
 		assertEquals(1612, bean.getLogo().length);
 	}
 }

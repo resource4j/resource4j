@@ -79,16 +79,17 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 	}
 
 	private ResourceProvider getResourceProvider(Object bean) {
-		ResourceProvider provider = getProvider(bean.getClass().getName(), bean.getClass());
+		Class<? extends Object> beanClass = bean.getClass();
+		ResourceProvider provider = getProvider(beanClass.getName(), beanClass);
 		if (provider == null) {
-			for (Package pckg : packagesOf(bean.getClass())) {
+			for (Package pckg : packagesOf(beanClass)) {
 				provider = getProvider(pckg.getName(), pckg);
 				if (provider != null) {
 					return provider;
 				}
 			}
 		}
-		return null;
+		return provider;
 	}
 
 	private Iterable<Package> packagesOf(Class<?> clazz) {

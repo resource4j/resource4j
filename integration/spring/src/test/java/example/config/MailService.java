@@ -1,18 +1,17 @@
-package com.example.mail;
+package example.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.resource4j.spring.AutowiredResource;
 import com.github.resource4j.spring.annotations.InjectBundle;
 import com.github.resource4j.spring.annotations.InjectValue;
 
 @Service
-@InjectBundle(value = "application", id = "mail")
+@InjectBundle(value = "example/config/application", id = "mail")
 public class MailService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(MailService.class);
+	
+	@Autowired
+	private MailMock mock;
 	
 	@InjectValue
 	private String server;
@@ -23,11 +22,11 @@ public class MailService {
 	@InjectValue
 	private String password;
 	
-	@InjectValue
+	@InjectValue(params = {"email", "name"})
 	private MailAddress sender;
 	
 	public void sendMessage(MailAddress recepient, String message) throws MailDeliveryException {
-		LOG.info("Sending e-mail via {} from {} to {}", server, sender, recepient);
+		mock.send(sender, recepient, message);
 	}
 	
 }

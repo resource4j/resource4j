@@ -11,8 +11,9 @@ import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 
 /**
- * 
- * @author IvanGammel
+ * Injects value of annotated field using Resource4J framework.
+ * @author Ivan Gammel
+ * @see com.github.resource4j.resources.Resources
  * @see InjectResource
  * @see InjectBundle
  * @see ResourceValueBeanPostProcessor
@@ -56,5 +57,12 @@ public @interface InjectValue {
 	 */
 	Class<? extends ResolutionContextProvider> resolvedBy() 
 		default EmptyResolutionContextProvider.class;
+
+	/**
+	 * Specifies list of fields that must be populated in target object. Subkeys must match 
+	 * field names.
+	 * @return list of field names
+	 */
+	String[] params() default {};
 	
 }

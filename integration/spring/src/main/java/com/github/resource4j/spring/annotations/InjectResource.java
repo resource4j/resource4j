@@ -46,7 +46,7 @@ public @interface InjectResource {
 	 * <p>Injected value must be loaded from the file specified by this attribute (if set).</p>
 	 * @return name of the resource file
 	 */
-	String value();
+	String value() default "";
 	
 	/**
 	 * Indicates whether this resource value is required (i.e. not null) or not.

@@ -14,6 +14,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import example.i18n.Greeting;
+import example.i18n.Messages;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/META-INF/spring/testContext.xml")
 public class ResourceValueBeanPostProcessorIT implements ApplicationContextAware {
@@ -23,41 +26,41 @@ public class ResourceValueBeanPostProcessorIT implements ApplicationContextAware
 	@Test
 	public void testSimpleTypeValueInjection() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		ExampleBean bean = new ExampleBean();
-		beanFactory.initializeBean(bean, "exampleBean");
-		assertEquals("Success", bean.getValue());
+		Messages bean = new Messages();
+		beanFactory.initializeBean(bean, "messages");
+		assertEquals("Hello, {}!", bean.getWelcome());
 	}
 	
 	@Test
 	public void testAutowiredBundleClassInjection() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		AutowireBundleExample bean = new AutowireBundleExample();
-		beanFactory.initializeBean(bean, "autowireBundle");
-		assertEquals("Success", bean.getValue());
+		Greeting bean = new Greeting();
+		beanFactory.initializeBean(bean, "greeting");
+		assertEquals("Hello, {}!", bean.getWelcome());
 	}
 	
 	@Test
 	public void testAutowiredBundleNameInjection() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		AutowireBundleExample bean = new AutowireBundleExample();
-		beanFactory.initializeBean(bean, "autowireBundle");
-		assertEquals("New Zealand", bean.getCountry());
+		Greeting bean = new Greeting();
+		beanFactory.initializeBean(bean, "greeting");
+		assertEquals("Dear Customer", bean.getName());
 	}
 	
 	@Test
 	public void testMandatoryValueInjection() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		ExampleBean bean = new ExampleBean();
-		beanFactory.initializeBean(bean, "exampleBean");
-		assertEquals("Web Title", bean.getTitle().asIs());
+		Messages bean = new Messages();
+		beanFactory.initializeBean(bean, "messages");
+		assertEquals("Web", bean.getApplication().asIs());
 	}
 	
 	@Test
 	public void testReferenceInjection() {
 		AutowireCapableBeanFactory beanFactory = applicationContext.getAutowireCapableBeanFactory();
-		ExampleBean bean = new ExampleBean();
-		beanFactory.initializeBean(bean, "exampleBean");
-		assertEquals("Correct", bean.getSecondValue().fetch(in(Locale.US)).asIs());
+		Messages bean = new Messages();
+		beanFactory.initializeBean(bean, "messages");
+		assertEquals("See you!", bean.getGoodbyeValue().fetch(in(Locale.US)).asIs());
 	}
 	
 	@Override

@@ -17,7 +17,7 @@ import com.github.resource4j.examples.domain.model.WeatherEnum;
 import com.github.resource4j.examples.domain.service.Clock;
 import com.github.resource4j.examples.domain.service.WeatherService;
 import com.github.resource4j.resources.references.ResourceValueReference;
-import com.github.resource4j.spring.AutowiredResource;
+import com.github.resource4j.spring.annotations.InjectResource;
 
 /**
  * Handles requests for the application home page.
@@ -28,10 +28,10 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@AutowiredResource
+	@InjectResource
 	private int answer;
 	
-	@AutowiredResource
+	@InjectResource
 	private ResourceValueReference message;
 	
 	@Inject

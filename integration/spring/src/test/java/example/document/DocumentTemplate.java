@@ -1,11 +1,14 @@
-package com.example.legal;
+package example.document;
+
+import org.springframework.stereotype.Component;
 
 import com.github.resource4j.resources.references.ResourceFileReference;
 import com.github.resource4j.spring.annotations.InjectResource;
 
-public class EULA {
+@Component
+public class DocumentTemplate {
 
-	@InjectResource("/logo.png")
+	@InjectResource("/example/document/logo.png")
 	private byte[] logo;
 	
 	@InjectResource(value = "*.txt", required = false)

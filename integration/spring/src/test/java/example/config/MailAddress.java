@@ -1,4 +1,4 @@
-package com.example.mail;
+package example.config;
 
 public class MailAddress {
 	

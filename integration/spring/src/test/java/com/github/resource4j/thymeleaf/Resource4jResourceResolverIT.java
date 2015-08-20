@@ -21,7 +21,7 @@ public class Resource4jResourceResolverIT {
 	
 	@Test
 	public void testRenderGermanPage() {
-		String content = engine.process("page", new Context(new Locale("de", "DE")));
+		String content = engine.process("example/pages/page", new Context(new Locale("de", "DE")));
 		assertTrue(content.contains("Deutsch"));
 	}
 	
