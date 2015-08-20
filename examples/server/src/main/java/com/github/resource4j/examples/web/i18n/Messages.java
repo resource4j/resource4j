@@ -6,15 +6,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.github.resource4j.spring.annotations.InjectValue;
+import com.github.resource4j.spring.context.RequestResolutionContextProvider;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Messages {
 	
-	@InjectValue
+	@InjectValue(resolvedBy = RequestResolutionContextProvider.class)
 	private int answer;
 	
-	@InjectValue
+	@InjectValue(resolvedBy = RequestResolutionContextProvider.class)
 	private String message;
 
 	public int getAnswer() {
