@@ -5,24 +5,16 @@ import java.io.InputStream;
 
 import org.springframework.core.io.Resource;
 
-import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.parsers.ResourceParser;
+import com.github.resource4j.files.AbstractResourceFile;
 
-public class SpringResourceFile implements ResourceFile {
+public class SpringResourceFile extends AbstractResourceFile {
 
-	private ResourceKey key;
 	private Resource resource;
 
 	public SpringResourceFile(ResourceKey key, Resource resource) {
-		this.key = key;
+		super(key, resource.getFilename());
 		this.resource = resource;
-	}
-
-	@Override
-	public ResourceKey key() {
-		return key;
 	}
 
 	@Override
@@ -35,18 +27,8 @@ public class SpringResourceFile implements ResourceFile {
 	}
 
 	@Override
-	public <T, V extends OptionalValue<T>> V parsedTo(ResourceParser<T, V> parser) {
-		return parser.parse(key, this);
-	}
-
-	@Override
-	public String toString() {
-		return resource.getFilename();
-	}
-
-	@Override
-	public String resolvedName() {
-		return resource.getFilename();
+	public boolean exists() {
+		return resource.exists();
 	}
 	
 }

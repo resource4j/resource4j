@@ -3,11 +3,13 @@ package com.github.resource4j.resources.cache;
 public final class CachedValue<T> {
 
     private final T value;
+    
+    private String source;
 
     private final boolean missing;
 
-    public static <T> CachedValue<T> cached(T value) {
-        return new CachedValue<>(value);
+    public static <T> CachedValue<T> cached(T value, String source) {
+        return new CachedValue<>(value, source);
     }
 
     public static <T> CachedValue<T> missingValue(Class<T> type) {
@@ -19,13 +21,18 @@ public final class CachedValue<T> {
         this.missing = true;
     }
 
-    protected CachedValue(T value) {
+    protected CachedValue(T value, String source) {
         this.value = value;
         this.missing = false;
+        this.source = source;
     }
 
     public T get() {
         return value;
+    }
+    
+    public String source() {
+    	return source;
     }
 
     public boolean isMissing() {

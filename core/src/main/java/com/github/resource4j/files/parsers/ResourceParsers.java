@@ -44,11 +44,24 @@ public final class ResourceParsers {
 
     /**
      * Returns an instance of parser that parses Java resource bundles in <code>.properties</code> format 
+     * into java.util.Map&lt;String,String&gt; instance.
+     * @return a parser of <code>.properties</code> files
+     */
+    public static KeyValueParser propertyMap() {
+        return KeyValueParser.getInstance();
+    }
+    
+    /**
+     * Returns an instance of parser that parses Java resource bundles in <code>.properties</code> format 
      * into {@link Properties} instance.
      * @return a parser of <code>.properties</code> files
      */
     public static PropertiesParser properties() {
         return PropertiesParser.getInstance();
     }
+
+	public static ByteArrayParser binary() {
+		return ByteArrayParser.getInstance();
+	}
 
 }

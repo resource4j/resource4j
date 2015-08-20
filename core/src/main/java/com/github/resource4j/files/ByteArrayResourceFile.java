@@ -3,30 +3,15 @@ package com.github.resource4j.files;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.parsers.ResourceParser;
 
-public class ByteArrayResourceFile implements ResourceFile {
-
-	private ResourceKey key;
+public class ByteArrayResourceFile extends AbstractResourceFile {
 	
 	private byte[] value;
 	
 	public ByteArrayResourceFile(ResourceKey key, byte[] value) {
-		super();
-		this.key = key;
+		super(key, key.getBundle());
 		this.value = value;
-	}
-
-	@Override
-	public ResourceKey key() {
-		return key;
-	}
-
-	@Override
-	public String resolvedName() {
-		return key.getBundle();
 	}
 
 	@Override
@@ -34,10 +19,12 @@ public class ByteArrayResourceFile implements ResourceFile {
 		return new ByteArrayInputStream(value);
 	}
 
+	/**
+	 * Always returns <code>true</code>
+	 */
 	@Override
-	public <T, V extends OptionalValue<T>> V parsedTo(
-			ResourceParser<T, V> parser) {
-		return parser.parse(key, this);
+	public boolean exists() {
+		return true;
 	}
 
 }

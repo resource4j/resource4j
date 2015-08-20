@@ -20,7 +20,7 @@ import com.github.resource4j.examples.domain.CoreConfiguration;
 import com.github.resource4j.thymeleaf.ThymeleafResourceConfiguration;
 
 @Configuration
-@ComponentScan(basePackages="com.github.resource4j.examples.web.controller")
+@ComponentScan(basePackages="com.github.resource4j.examples.web")
 @EnableWebMvc
 @Import({ CoreConfiguration.class, ThymeleafResourceConfiguration.class })
 public class WebConfiguration extends WebMvcConfigurerAdapter {

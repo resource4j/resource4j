@@ -18,7 +18,12 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
     public GenericOptionalValue(String resolvedSource, ResourceKey key, V value) {
         super(resolvedSource, key, value);
     }
-
+    
+    public GenericOptionalValue(String resolvedSource, ResourceKey key, V value, Throwable suppressedException) {
+        super(resolvedSource, key, value);
+        this.suppressedException = suppressedException;
+    }
+    
     public GenericOptionalValue(String resolvedSource, ResourceKey key, Throwable suppressedException) {
         super(resolvedSource, key, null);
         this.suppressedException = suppressedException;

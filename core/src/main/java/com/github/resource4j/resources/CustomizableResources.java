@@ -20,9 +20,7 @@ import com.github.resource4j.generic.GenericOptionalString;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
- *
  * @author Ivan Gammel
- *
  */
 public class CustomizableResources extends AbstractResources {
 

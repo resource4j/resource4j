@@ -3,6 +3,7 @@ package com.github.resource4j.files.parsers;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 
 import com.github.resource4j.OptionalString;
@@ -15,10 +16,7 @@ import com.github.resource4j.generic.GenericOptionalString;
  */
 public class StringParser extends AbstractParser<String, OptionalString> {
 
-    /**
-     * TODO: replace with StandardCharsets.UTF-8 some time.
-     */
-    public static final String STANDARD_CHARSET_UTF_8 = "UTF-8";
+    public static final String STANDARD_CHARSET_UTF_8 = StandardCharsets.UTF_8.name();
     
     private static final StringParser INSTANCE = new StringParser(STANDARD_CHARSET_UTF_8);
 

@@ -5,31 +5,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.parsers.ResourceParser;
 
-public class URLResourceFile implements ResourceFile {
+public class URLResourceFile extends AbstractResourceFile {
 
     private ResourceKey key;
 
     private URL url;
 
     public URLResourceFile(ResourceKey key, URL url) {
-        super();
-        if (url == null) throw new NullPointerException("File url cannot be null");
-        if (key == null) throw new NullPointerException("Resource file key cannot be null");
-        this.key = key;
+        super(key, validateUrl(url));
         this.url = url;
     }
 
-    @Override
-    public ResourceKey key() {
-        return key;
-    }
-    
-    @Override
-	public String resolvedName() {
+    private static String validateUrl(URL url) {
+        if (url == null) throw new NullPointerException("File url cannot be null");
 		return url.toString();
 	}
 
@@ -44,14 +34,17 @@ public class URLResourceFile implements ResourceFile {
         }
     }
 
-    @Override
-    public <T,V extends OptionalValue<T>> V parsedTo(ResourceParser<T,V> parser) {
-        return parser.parse(key, this);
-    }
-
-    @Override
-    public String toString() {
-    	return resolvedName();
-    }
+	@Override
+	public boolean exists() {
+		try {
+			InputStream stream = url.openStream();
+			if (stream != null) {
+				stream.close();
+			} 
+			return true;
+        } catch (IOException e) {
+        	return false;
+        }
+	}
     
 }

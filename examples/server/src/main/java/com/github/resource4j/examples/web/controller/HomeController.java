@@ -1,7 +1,5 @@
 package com.github.resource4j.examples.web.controller;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
-
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -16,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.github.resource4j.examples.domain.model.WeatherEnum;
 import com.github.resource4j.examples.domain.service.Clock;
 import com.github.resource4j.examples.domain.service.WeatherService;
-import com.github.resource4j.resources.references.ResourceValueReference;
-import com.github.resource4j.spring.AutowiredResource;
+import com.github.resource4j.examples.web.i18n.Messages;
 
 /**
  * Handles requests for the application home page.
@@ -28,20 +25,19 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@AutowiredResource
-	private int answer;
-	
-	@AutowiredResource
-	private ResourceValueReference message;
-	
 	@Inject
 	private Clock clock;
 	
 	@Inject
 	private WeatherService weatherService;
 	
+	@Inject
+	private Messages messages;
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
+	 * @param locale resolved locale
+	 * @param model view model
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
@@ -50,8 +46,8 @@ public class HomeController {
 		WeatherEnum weather = weatherService.getCurrentWeather();
 		model.addAttribute("currentDate", clock.today());
 		model.addAttribute("weather", weather);
-		model.addAttribute("answer", answer);
-		model.addAttribute("message", message.fetch(in(locale)).asIs());
+		model.addAttribute("answer", messages.getAnswer());
+		model.addAttribute("message", messages.getMessage());
 		return "home";
 	}
 	

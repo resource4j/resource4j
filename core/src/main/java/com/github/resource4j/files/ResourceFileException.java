@@ -40,9 +40,9 @@ public abstract class ResourceFileException extends ResourceException {
     }
 
 	private static String format(ResourceKey key, String actualFileName, String message) {
-		String pattern = message != null ? message : "{0}";
+		String pattern = message != null ? message : "%s";
 		StringBuilder ref = new StringBuilder();
-		ref.append(key);
+		ref.append(key.getBundle());
 		if (actualFileName != null) {
 			ref.append('(').append(actualFileName).append(')');
 		}

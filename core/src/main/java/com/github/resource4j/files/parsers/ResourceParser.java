@@ -12,7 +12,7 @@ import com.github.resource4j.files.ResourceFile;
  * Parser implementations provided by Resource4J library preserve information on why parsing failed. 
  * When conversion to MandatoryValue is performed, thrown exception contains this information.</p>
  * <p>Type of returned {@link OptionalValue} can be specialized by parser implementation to 
- * extend Resource4J DSL capabilities.</p>
+ * extend Resource4J BindDSL capabilities.</p>
  * 
  * @author Ivan Gammel
  *

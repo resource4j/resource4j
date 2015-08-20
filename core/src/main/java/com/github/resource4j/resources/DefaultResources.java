@@ -19,7 +19,6 @@ import com.github.resource4j.resources.cache.SimpleResourceCache;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
- *
  * @author Ivan Gammel
  * @since 1.0
  */
@@ -97,7 +96,7 @@ public class DefaultResources extends CustomizableResources {
 		            ResourceKey propertyKey = bundle.child(id);
 		            String propertyValue = property.getValue();
 		            OptionalString string = new GenericOptionalString(file.resolvedName(), bundle, propertyValue);
-		            valueCache.putIfAbsent(propertyKey, context, cached(string));
+		            valueCache.putIfAbsent(propertyKey, context, cached(string, file.resolvedName()));
 		        }
 		        found = true;
 		    } catch (MissingResourceFileException e) {
@@ -127,7 +126,7 @@ public class DefaultResources extends CustomizableResources {
             try {
                 ResourceFile file = getFileFactory().getFile(key, option);
                 file.asStream().close();
-                fileCache.put(key, context, cached(file));
+                fileCache.put(key, context, cached(file, file.resolvedName()));
                 return file;
             } catch (MissingResourceFileException e) {
             } catch (IOException e) {

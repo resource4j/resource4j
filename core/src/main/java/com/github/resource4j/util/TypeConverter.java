@@ -1,5 +1,7 @@
 package com.github.resource4j.util;
 
+import static java.util.Locale.ROOT;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -7,17 +9,11 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -33,11 +29,11 @@ public final class TypeConverter {
     /**
      * ISO 8601 time format
      */
-    private static final String DEFAULT_TIME_FORMAT = "hh:mm:ss";
+    private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
     /**
      * ISO 8601 date/time format
      */
-    private static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-ddThh:mm:ss";
+    private static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String DEFAULT_NUMBER_FORMAT = "#.#";
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -165,6 +161,9 @@ public final class TypeConverter {
         if (object instanceof Calendar) {
             object = ((Calendar) object).getTime();
         }
+        if (formatter == null) {
+        	formatter = getFormatter(object.getClass(), null, object instanceof java.sql.Date ? "" : "0T");
+        }
         return formatter != null ? formatter.format(object) : String.valueOf(object);
     }
 
@@ -175,7 +174,7 @@ public final class TypeConverter {
             return (T) value;
         if ((value == null) || (value.length() == 0))
             return null;
-        if (type == Character.TYPE)
+        if ((type == Character.TYPE) || (type == Character.class))
             return (T) Character.valueOf(value.charAt(0));
         value = value.trim();
         if (value.length() == 0)
@@ -241,7 +240,7 @@ public final class TypeConverter {
     private static <T> Format getFormatter(Class<T> clazz, String format, String value) {
         Format formatter = null;
         if (Number.class.isAssignableFrom(clazz)) {
-            formatter = new DecimalFormat(format != null ? format : DEFAULT_NUMBER_FORMAT);
+            formatter = new DecimalFormat(format != null ? format : DEFAULT_NUMBER_FORMAT, DecimalFormatSymbols.getInstance(ROOT));
         } else if (java.sql.Date.class.isAssignableFrom(clazz)) {
             formatter = new SimpleDateFormat(format != null ? format : DEFAULT_DATE_FORMAT);
         } else if (java.sql.Time.class.isAssignableFrom(clazz)) {
