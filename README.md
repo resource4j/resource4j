@@ -52,15 +52,24 @@ If you are using Maven, please, add following lines to your POM file:
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-core</artifactId>
-		<version>2.0.2</version>
+		<version>2.1.0</version>
 	</dependency>
 For integration with Spring and (optionally) Thymeleaf, add following:
 
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-spring</artifactId>
-		<version>2.0.2</version>
+		<version>2.1.0</version>
 	</dependency>
+
+To add support of HOCON or XStream configuration files add Extras library:
+
+    <dependency>
+        <groupId>com.github.resource4j</groupId>
+        <artifactId>resource4j-extras</artifactId>
+        <version>2.1.0</version>
+    </dependency>
+
 	
 Resources
 ---------
@@ -223,10 +232,11 @@ Overview
 --------------------
 You can easily configure an implementation of Resources interface in DI container. To use the advanced features of Resource4j Spring and Thymeleaf integration add resource4j-spring library dependency to your project. These features include:
 
-1. Support of annotation-driven injection using **ResourceValueBeanPostProcessor** and **@AutowiredResource** annotation.
+1. Support of annotation-driven injection using **ResourceValueBeanPostProcessor**.
 2. Support for Spring-based discovery of resource bundles.
-3. Resource4j as message and resource resolver for Thymeleaf.
-4. Default configuration for Spring and Thymeleaf (**ThymeleafResourceConfiguration** class).
+3. Support for session-scoped and request-scoped beans.
+4. Resource4j as message and resource resolver for Thymeleaf.
+5. Default configuration for Spring and Thymeleaf (**ThymeleafResourceConfiguration** class).
  
 Annotation-driven injection
 ---------------------------
@@ -240,19 +250,20 @@ Below is an example:
 		/*
 		 * injected value is a provider for bundle(MyService.class)
 		 */
-		@AutowiredResource
+		@InjectValue
 		private ResourceProvider resources;
 
 		/* Value is injected for key(MyService.class, "date") 
-		 * and resolution context "WEB"
+		 * and request-scoped resolution context 
 		 */
-		@AutowiredResource(value="date", context="WEB")
+		@InjectValue(value="date", 
+		             resolvedBy = RequestResolutionContextProvider.class)
 		private MandatoryString dateFormat; 
 
 		/* 
 		 * Value is injected for key(MyService.class, "applicationName")
 		 */
-		@AutowiredResource
+		@InjectValue
 		private String applicationName;
 
 	} 
@@ -264,7 +275,7 @@ Class **ResourceValueReference** is particularly useful in this scenario:
 	/* 
 	 * value is injected for key(MyService.class, "population") 
 	 */
-	@AutowiredResource
+	@InjectValue
 	private ResourceValueReference population;
 	...	
 	System.out.println(population.fetch(in(Locale.US)).notNull().asIs());
@@ -280,15 +291,15 @@ package com.mycompany.legal;
 
 class EULA {
     /* 
-     * Value is injected from /logo.jpg
+     * Injected binary content of file /logo.jpg
      */
-    @AutowiredResource(source = "/logo.jpg")
+    @InjectResource("/logo.jpg")
     private byte[] logo;
 	
 	/* 
      * Content will be loaded on demand from /com/mycompany/legal/EULA.txt
      */
-    @AutowiredResource(source = "*.txt")
+    @InjectResource("*.txt")
     private ResourceFileReference content;
 }
 ```
