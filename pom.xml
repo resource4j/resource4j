@@ -51,15 +51,15 @@
 
 
 	<properties>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 
 		<!-- Logging -->
-		<slf4j.version>1.7.5</slf4j.version>
-		<logback.version>1.0.13</logback.version>
+		<slf4j.version>1.7.12</slf4j.version>
+		<logback.version>1.1.3</logback.version>
 
 		<!-- Integration -->
-		<springframework.version>4.0.3.RELEASE</springframework.version>
-		<aspectj.version>1.6.10</aspectj.version>
+		<springframework.version>4.2.0.RELEASE</springframework.version>
+		<aspectj.version>1.8.6</aspectj.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -255,7 +255,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.11</version>
+				<version>4.12</version>
 				<scope>test</scope>
 			</dependency>
 
