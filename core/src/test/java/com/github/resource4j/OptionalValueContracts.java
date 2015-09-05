@@ -2,6 +2,8 @@ package com.github.resource4j;
 
 import static org.junit.Assert.*;
 
+import java.util.function.Supplier;
+
 import org.junit.Test;
 
 public abstract class OptionalValueContracts extends ResourceValueContracts {
@@ -34,14 +36,21 @@ public abstract class OptionalValueContracts extends ResourceValueContracts {
 		assertSame(value.key(), mandatoryValue.key());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testOrThrowsIllegalArgumentExceptionIfDefaultValueIsNull() throws Exception {
+	@Test(expected = NullPointerException.class)
+	public void testOrThrowsNullPointerExceptionIfDefaultValueIsNull() throws Exception {
 		OptionalValue<String> value = createValue(anyKey(), someContent());
-		value.or(null);
+		value.or((String) null);
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
-	public void testOrDefaultIllegalArgumentExceptionIfDefaultValueIsNull() throws Exception {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Test(expected = NullPointerException.class)
+	public void testOrThrowsNullPointerExceptionIfSupplierIsNull() throws Exception {
+		OptionalValue<String> value = createValue(anyKey(), someContent());
+		value.orElseGet((Supplier) null);
+	}
+	
+	@Test(expected = NullPointerException.class)
+	public void testOrDefaultNullPointerExceptionIfDefaultValueIsNull() throws Exception {
 		OptionalValue<String> value = createValue(anyKey(), someContent());
 		value.orDefault(null);
 	}

@@ -54,8 +54,9 @@ public class InjectResourceCallback implements FieldCallback {
 		
 		Object value = null;
 		try {
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			OptionalValue<? extends Object> optional = resources.contentOf(fileName, context)
-					.parsedTo(formatSpecifiedBy(type, annotation));
+					.parsedTo((ResourceParser) formatSpecifiedBy(type, annotation));
 			
 			if (type.equals(OptionalValue.class) && genericMatch(field, optional.asIs())) {
 				value = optional;

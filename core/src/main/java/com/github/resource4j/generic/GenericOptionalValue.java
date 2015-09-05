@@ -1,9 +1,14 @@
 package com.github.resource4j.generic;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+
 import com.github.resource4j.MandatoryValue;
 import com.github.resource4j.MissingValueException;
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ValueNotAcceptableException;
 
 /**
  * Generic implementation of {@link OptionalValue}.
@@ -30,20 +35,33 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
     }
 
     @Override
-    public V orDefault(V defaultValue) throws IllegalArgumentException {
-        if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
-        if (value == null) return defaultValue;
-        return value;
-    }
-
-    @Override
-    public MandatoryValue<V> or(V defaultValue) throws IllegalArgumentException {
-        if (defaultValue == null) throw new IllegalArgumentException("defaultValue");
+    public MandatoryValue<V> or(V defaultValue) {
+        if (defaultValue == null) throw new NullPointerException("defaultValue");
         return new GenericMandatoryValue<>(resolvedSource, key, value == null ? defaultValue : value);
     }
+
+	@Override
+	public MandatoryValue<V> orElseGet(Supplier<? extends V> supplier) {
+        if (supplier == null) throw new NullPointerException("supplier");
+        return new GenericMandatoryValue<>(resolvedSource, key, value == null ? supplier.get() : value);
+	}
 
     @Override
     public MandatoryValue<V> notNull() throws MissingValueException {
         return new GenericMandatoryValue<>(resolvedSource, key, value, suppressedException);
     }
+
+	@Override
+	public OptionalValue<V> filter(Predicate<V> predicate) {
+		return predicate.test(value) ? 
+				this : new GenericOptionalValue<>(resolvedSource, key, new ValueNotAcceptableException(key.toString()));
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public <U> OptionalValue<U> map(Function<? super V, ? extends U> mapper) {
+		return value == null ? (OptionalValue) this : 
+			new GenericOptionalValue<U>(resolvedSource, key, mapper.apply(value));
+	}
+
 }
