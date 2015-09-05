@@ -5,6 +5,9 @@ import static com.github.resource4j.ResourceKey.join;
 import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +82,7 @@ public class InjectValueCallback implements FieldCallback {
 			try {
 				value = type.newInstance();
 				for (Field valueField : fields) {
-					Object fieldValue = getValue(actualProvider, valueField.getType(), join(name, valueField.getName()), ctx);
+					Object fieldValue = getValue(actualProvider, valueField.getGenericType(), join(name, valueField.getName()), ctx);
 					boolean acc = valueField.isAccessible();
 					valueField.setAccessible(true);
 					valueField.set(value, fieldValue);
@@ -93,7 +96,7 @@ public class InjectValueCallback implements FieldCallback {
 				
 			}
 		} else {
-			value = getValue(actualProvider, type, name, ctx);
+			value = getValue(actualProvider, field.getGenericType(), name, ctx);
 		}
 		if (annotation.required() && (value == null)) {
 			throw new IllegalArgumentException("Cannot autowire " + field.getDeclaringClass().getName() 
@@ -102,13 +105,14 @@ public class InjectValueCallback implements FieldCallback {
 		field.setAccessible(true);
 		field.set(bean, value);
 		field.setAccessible(false);
-		LOG.trace("Autowired {}#{} as {}", 
+		LOG.trace("Autowired {}#{} of type {} as {}", 				
 				field.getDeclaringClass().getName(), 
 				field.getName(), 
+				field.getGenericType(),
 				value.getClass().getSimpleName());
 	}
 
-	private Object getValue(ResourceProvider provider, Class<?> expectedType, String name,
+	private Object getValue(ResourceProvider provider, Type expectedType, String name,
 			ResourceResolutionContext ctx) {
 		Object value;
 		if (ResourceValueReference.class.equals(expectedType)) {		
@@ -122,7 +126,26 @@ public class InjectValueCallback implements FieldCallback {
 			} else if (MandatoryString.class.equals(expectedType)) {
 				value = string.notNull();
 			} else {
-				value = string.notNull().as(expectedType);
+				if (expectedType instanceof Class) {
+					Class<?> type = (Class<?>) expectedType;
+					value = string.notNull().as(type);
+				} else if ((expectedType instanceof ParameterizedType) && 
+					(java.util.Optional.class.equals(((ParameterizedType) expectedType).getRawType()))) {
+					ParameterizedType type = (ParameterizedType) expectedType;
+					Type arg = type.getActualTypeArguments()[0];
+					if (arg instanceof WildcardType) {
+						for (Type bound : ((WildcardType) arg).getUpperBounds()) {
+							if (bound instanceof Class) {
+								arg = bound;
+								break;
+							}
+						}
+					}
+					value = string.ofType((Class<?>) arg).std();
+				} else {
+					throw new UnsupportedOperationException("Cannot cast to " + expectedType);
+				}
+				
 			}
 		}
 		return value;
