@@ -2,6 +2,7 @@ package com.github.resource4j;
 
 import static org.junit.Assert.*;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.junit.Test;
@@ -68,6 +69,20 @@ public abstract class OptionalValueContracts extends ResourceValueContracts {
 	public void testNotNullThrowsMissingValueExceptionWhenNull() throws Exception {
 		OptionalValue<String> value = createValue(anyKey(), null);
 		value.notNull();
+	}
+
+	@Test
+	public void testStdReturnsJavaUtilOptional() {
+		OptionalValue<String> value = createValue(anyKey(), someContent());
+		Optional<String> s = value.std();
+		assertEquals(s.get(), value.asIs());
+	}
+	
+	@Test
+	public void testStdReturnsJavaUtilOptionalOfNull() {
+		OptionalValue<String> value = createValue(anyKey(), null);
+		Optional<String> s = value.std();
+		assertFalse(s.isPresent());
 	}
 	
 }
