@@ -5,5 +5,9 @@ import java.util.List;
 public interface ResourceResolutionComponent {
 
 	List<String> sections();
+
+	ResourceResolutionComponent reduce();
+
+	boolean isReducible();
 	
 }

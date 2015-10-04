@@ -10,15 +10,6 @@ import com.github.resource4j.util.TypeCastException;
  * @since 1.0
  */
 public interface ResourceString extends ResourceValue<String> {
-
-	/**
-	 * Converts this value to resource value of given type.
-     * @param type class object for the expected type of value
-     * @param <T> the expected type of value
-	 * @return resource value of given type
-	 * @throws TypeCastException if conversion failed
-	 */
-    <T> ResourceValue<T> ofType(Class<T> type) throws TypeCastException;
     
 	/**
 	 * Converts this value to resource value of given type using given formatting pattern.

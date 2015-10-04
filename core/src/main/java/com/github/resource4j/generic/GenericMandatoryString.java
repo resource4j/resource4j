@@ -17,7 +17,7 @@ import com.github.resource4j.util.TypeConverter;
  */
 public class GenericMandatoryString extends GenericResourceString implements MandatoryString {
 
-    protected GenericMandatoryString(String resolvedSource, ResourceKey key, String value) {
+    public GenericMandatoryString(String resolvedSource, ResourceKey key, String value) {
         this(resolvedSource, key, value, null);
     }
 

@@ -3,10 +3,11 @@ package com.github.resource4j.resources.resolution;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StringResolutionComponent implements ResourceResolutionComponent, java.io.Serializable {
 
-	private static final long serialVersionUID = "2.0".hashCode();
+	private static final long serialVersionUID = "3.0".hashCode();
 	
 	private List<String> sections;
 
@@ -45,4 +46,22 @@ public class StringResolutionComponent implements ResourceResolutionComponent, j
 		return true;
 	}
 
+	@Override
+	public StringResolutionComponent reduce() {
+		if (sections.size() < 2) {
+			throw new IllegalStateException("Cannot reduce to empty component");
+		}
+		return new StringResolutionComponent(sections.subList(0, sections.size() - 1));
+	}
+
+	@Override
+	public boolean isReducible() {
+		return sections.size() > 1;
+	}
+
+	@Override
+	public String toString() {
+		return sections.stream().collect(Collectors.joining("_"));
+	}
+	
 }

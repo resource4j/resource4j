@@ -1,10 +1,11 @@
 package com.github.resource4j.resources.resolution;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LocaleResolutionComponent extends StringResolutionComponent {
 
-	private static final long serialVersionUID = "2.0".hashCode();
+	private static final long serialVersionUID = "3.0".hashCode();
 	
 	private final Locale locale;
 
@@ -27,6 +28,19 @@ public class LocaleResolutionComponent extends StringResolutionComponent {
 			stack.pop();
 		}
 		return stack;
+	}
+	
+	public LocaleResolutionComponent reduce() {
+		int size = sections().size();
+		if (size < 2) {
+			throw new IllegalStateException("Cannot reduce to empty locale");
+		}
+		String name = sections()
+						.subList(0, size - 1)
+						.stream()
+						.collect(Collectors.joining("_"));		
+		Locale locale = new Locale(name);
+		return new LocaleResolutionComponent(locale);
 	}
 
 }

@@ -1,7 +1,8 @@
 package com.github.resource4j.resources.resolution;
 
 import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
@@ -42,5 +43,4 @@ public class ResourceResolutionContextTest {
 		ResourceResolutionContext child = in("A", Locale.US, "Test", "B");
 		assertTrue(parent.contains(child));
 	}
-	
 }

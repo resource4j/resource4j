@@ -109,4 +109,24 @@ public class GenericOptionalString extends GenericResourceString implements Opti
         return new GenericMandatoryString(resolvedSource, key, value == null ? supplier.get() : value);
 	}
 
+	@Override
+	public Throwable suppressedException() {
+		return suppressedException;
+	}
+
+	@Override
+	public OptionalString asString() throws TypeCastException {
+		return this;
+	}
+
+	@Override
+	public OptionalString asString(String format) throws TypeCastException {
+		return this;
+	}
+
+	@Override
+	public OptionalString asString(Format format) throws TypeCastException {
+		return this;
+	}
+
 }

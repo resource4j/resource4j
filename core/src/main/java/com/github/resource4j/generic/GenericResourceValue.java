@@ -24,6 +24,11 @@ public abstract class GenericResourceValue<V> implements ResourceValue<V> {
 	}
 	
 	@Override
+	public String resolvedSource() {
+		return resolvedSource;
+	}
+	
+	@Override
 	public ResourceKey key() {
 		return key;
 	}

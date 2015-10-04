@@ -4,27 +4,36 @@ public final class CachedValue<T> {
 
     private final T value;
     
-    private String source;
+    private final String source;
 
     private final boolean missing;
 
+    private final boolean loaded;
+    
+    public static <T> CachedValue<T> unknownStatus(Class<T> type) {
+    	return new CachedValue<>(false);
+    }
+    
     public static <T> CachedValue<T> cached(T value, String source) {
         return new CachedValue<>(value, source);
     }
 
     public static <T> CachedValue<T> missingValue(Class<T> type) {
-        return new CachedValue<>();
+        return new CachedValue<>(true);
     }
 
-    protected CachedValue() {
+    protected CachedValue(boolean loaded) {
         this.value = null;
         this.missing = true;
+        this.loaded = loaded;
+        this.source = null;
     }
 
     protected CachedValue(T value, String source) {
         this.value = value;
         this.missing = false;
         this.source = source;
+        this.loaded = true;
     }
 
     public T get() {
@@ -37,6 +46,10 @@ public final class CachedValue<T> {
 
     public boolean isMissing() {
         return missing;
+    }
+    
+    public boolean isLoaded() {
+    	return loaded;
     }
 
     @Override

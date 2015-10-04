@@ -64,4 +64,9 @@ public class GenericOptionalValue<V> extends GenericResourceValue<V> implements 
 			new GenericOptionalValue<U>(resolvedSource, key, mapper.apply(value));
 	}
 
+	@Override
+	public Throwable suppressedException() {
+		return suppressedException;
+	}
+
 }

@@ -12,7 +12,7 @@ import com.github.resource4j.ResourceKey;
  */
 public class GenericMandatoryValue<V> extends GenericResourceValue<V> implements MandatoryValue<V> {
 
-    protected GenericMandatoryValue(String resolvedSource, ResourceKey key, V value) {
+    public GenericMandatoryValue(String resolvedSource, ResourceKey key, V value) {
         this(resolvedSource, key, value, null);
     }
 

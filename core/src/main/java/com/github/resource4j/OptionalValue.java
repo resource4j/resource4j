@@ -1,10 +1,16 @@
 package com.github.resource4j;
 
+import java.text.Format;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import com.github.resource4j.generic.GenericOptionalString;
+import com.github.resource4j.generic.GenericOptionalValue;
+import com.github.resource4j.util.TypeCastException;
+import com.github.resource4j.util.TypeConverter;
 
 /**
  * Resource value explicitly defined as nullable.
@@ -15,6 +21,14 @@ import java.util.function.Supplier;
 public interface OptionalValue<V> extends ResourceValue<V> {
 
 	/**
+	 * Returns the exception suppressed when loading this value. 
+	 * This exception will be the cause of MissingValueException when notNull() is invoked.
+	 * @return suppressed exception
+	 * @since 3.0
+	 */
+	Throwable suppressedException();
+	
+	/**
 	 * Converts this optional value to java.lang.Optional
 	 * @return nullable java.lang.Optional
 	 * @since 3.0
@@ -22,7 +36,75 @@ public interface OptionalValue<V> extends ResourceValue<V> {
 	default Optional<V> std() {
 		return Optional.ofNullable(asIs());
 	}
+
+	/**
+	 * @since 3.0
+	 */
+	@Override
+    default <T> OptionalValue<T> ofType(Class<T> type) throws TypeCastException {
+		if (asIs() != null && asIs().getClass().equals(type)) {
+			@SuppressWarnings({"unchecked", "rawtypes"})
+    		OptionalValue<T> result = (OptionalValue) this;
+			return result;
+		}
+        T as = null;
+        if (suppressedException() == null) {
+            as = TypeConverter.convert(asIs(), type);
+        }
+        if (suppressedException() == null) {
+            return new GenericOptionalValue<>(resolvedSource(), key(), as);
+        } else {
+            return new GenericOptionalValue<>(resolvedSource(), key(), suppressedException());
+        }    	
+    }
 	
+    /**
+	 * Converts this value to resource string.
+	 * @return resource string
+	 * @throws TypeCastException if conversion failed
+	 * @since 3.0
+	 */
+    default OptionalString asString() throws TypeCastException {
+        String as = TypeConverter.convert(asIs(), String.class);
+        if (suppressedException() == null) {
+            return new GenericOptionalString(resolvedSource(), key(), as);
+        } else {
+            return new GenericOptionalString(resolvedSource(), key(), as, suppressedException());
+        }    	    	
+    }
+    
+    /**
+	 * Converts this value to resource string using given conversion pattern.
+	 * @param format conversion pattern
+	 * @return resource string
+	 * @throws TypeCastException if conversion failed
+	 * @since 3.0
+	 */
+    default OptionalString asString(String format) throws TypeCastException {
+        String as = TypeConverter.convert(asIs(), String.class, format);
+        if (suppressedException() == null) {
+            return new GenericOptionalString(resolvedSource(), key(), as);
+        } else {
+            return new GenericOptionalString(resolvedSource(), key(), as, suppressedException());
+        }    	    	    	
+    }
+    
+    /**
+	 * Converts this value to resource string using given conversion pattern.
+	 * @param format conversion pattern
+	 * @return resource string
+	 * @throws TypeCastException if conversion failed
+	 * @since 3.0
+	 */
+    default OptionalString asString(Format format) throws TypeCastException {
+        String as = TypeConverter.convert(asIs(), String.class, format);
+        if (suppressedException() == null) {
+            return new GenericOptionalString(resolvedSource(), key(), as);
+        } else {
+            return new GenericOptionalString(resolvedSource(), key(), as, suppressedException());
+        }    	    	    	
+    }
+    
     /**
      * Similarly to java.lang.Optional, invokes the specified consumer with 
      * the value if it's present, otherwise does nothing.
