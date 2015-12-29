@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.ResourceFileException;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.files.parsers.AbstractValueParser;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigParseOptions;
@@ -42,8 +42,8 @@ public class ConfigMapParser extends AbstractValueParser<Map<String, String>> {
 
 
 	@Override
-	protected Map<String, String> parse(ResourceFile file) throws IOException,
-			ResourceFileException {
+	protected Map<String, String> parse(ResourceObject file) throws IOException,
+			ResourceObjectException {
 		Config config = file.parsedTo(parser).asIs();
 
 		Map<String, String> result = new HashMap<String, String>();

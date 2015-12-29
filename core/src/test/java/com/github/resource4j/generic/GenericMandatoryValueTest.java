@@ -3,6 +3,7 @@ package com.github.resource4j.generic;
 import com.github.resource4j.MandatoryValue;
 import com.github.resource4j.MandatoryValueContracts;
 import com.github.resource4j.ResourceKey;
+import com.github.resource4j.generic.values.GenericMandatoryValue;
 
 public class GenericMandatoryValueTest extends MandatoryValueContracts {
 

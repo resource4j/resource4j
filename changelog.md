@@ -1,3 +1,8 @@
+Version 3.0
+-----------
+1. Java 8 is now minimal requirement for using this library. API extended to include interoperability with Optional type. Added support for java.time API and lambdas.
+2. INCOMPATIBLE CHANGE: Introduced core ResourceObject interface. ResourceFile dependencies updated.
+
 Version 2.1
 -----------
 This version has minor incompatible changes with version 2.0:

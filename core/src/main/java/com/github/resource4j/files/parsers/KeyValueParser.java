@@ -3,8 +3,8 @@ package com.github.resource4j.files.parsers;
 import java.io.IOException;
 import java.util.Map;
 
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.ResourceFileException;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
 
 public class KeyValueParser extends AbstractValueParser<Map<String,String>> {
     
@@ -18,8 +18,8 @@ public class KeyValueParser extends AbstractValueParser<Map<String,String>> {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	protected Map<String, String> parse(ResourceFile file) throws IOException, ResourceFileException {
-		return (Map) delegate.parse(file);
+	protected Map<String, String> parse(ResourceObject object) throws IOException, ResourceObjectException {
+		return (Map) delegate.parse(object);
 	}
 
 }

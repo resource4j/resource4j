@@ -5,7 +5,7 @@ import static com.github.resource4j.files.parsers.ResourceParsers.properties;
 import java.util.Map;
 
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.ResourceObject;
 
 public class PropertyResourceBundleParser implements ResourceBundleParser {
 
@@ -24,7 +24,7 @@ public class PropertyResourceBundleParser implements ResourceBundleParser {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Map<String, String> parse(ResourceFile file) {
+    public Map<String, String> parse(ResourceObject file) {
         return (Map) file.parsedTo(properties()).asIs();
     }
 

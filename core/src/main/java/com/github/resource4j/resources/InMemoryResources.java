@@ -3,6 +3,7 @@ package com.github.resource4j.resources;
 import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
 
+import java.time.Clock;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -12,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ByteArrayResourceFile;
-import com.github.resource4j.files.MissingResourceFileException;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.generic.GenericOptionalString;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.generic.objects.ByteArrayResourceObject;
+import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.generic.values.GenericOptionalString;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
@@ -25,13 +26,23 @@ import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 public class InMemoryResources extends AbstractResources implements EditableResources {
 
     private final String instanceId = "memory:" + hashCode();
+
+	private Clock clock;
 	
     private Map<ResourceResolutionContext, Map<String, byte[]>> files = new ConcurrentHashMap<>();
     
     private Map<ResourceResolutionContext, Map<ResourceKey,String>> properties = new ConcurrentHashMap<>();
     
     private Map<ResourceResolutionContext, SortedSet<ResourceResolutionContext>> matchingContexts = new HashMap<>();
-    
+
+    public InMemoryResources() {
+        this(Clock.systemUTC());
+    }
+
+    public InMemoryResources(Clock clock) {
+        this.clock = clock;
+    }
+
     @Override
     public void put(ResourceKey key, Locale locale, String value) {
     	put(key, in(locale), value);
@@ -109,7 +120,7 @@ public class InMemoryResources extends AbstractResources implements EditableReso
 	}
 
     @Override
-    public ResourceFile contentOf(String name, ResourceResolutionContext context) {
+    public ResourceObject contentOf(String name, ResourceResolutionContext context) {
     	byte[] value = doGet(name, context);
         if (value == null) {
         	synchronized (properties) {
@@ -128,9 +139,9 @@ public class InMemoryResources extends AbstractResources implements EditableReso
         	}
         }
         if (value == null) {
-        	throw new MissingResourceFileException(bundle(name));
+        	throw new MissingResourceObjectException(name);
         }
-		return new ByteArrayResourceFile(bundle(name), value);
+		return new ByteArrayResourceObject(name, name, value, clock.millis());
     }
 
 	private byte[] doGet(String name, ResourceResolutionContext context) {

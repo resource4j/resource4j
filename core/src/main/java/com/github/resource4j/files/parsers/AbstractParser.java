@@ -2,11 +2,7 @@ package com.github.resource4j.files.parsers;
 
 import java.io.IOException;
 
-import com.github.resource4j.OptionalValue;
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.InaccessibleResourceException;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.ResourceFileException;
+import com.github.resource4j.*;
 
 /**
  * Basic implementation of a {@link ResourceParser} that provides a framework for specialized implementations.
@@ -18,36 +14,36 @@ import com.github.resource4j.files.ResourceFileException;
 public abstract class AbstractParser<T, V extends OptionalValue<T>> implements ResourceParser<T, V> {
 
     @Override
-    public V parse(ResourceKey key, ResourceFile file) {
+    public V parse(ResourceKey key, ResourceObject object) {
       T value = null;
       Throwable suppressedException = null;
       try {
-          value = parse(file);
-      } catch (IOException | ResourceFileException e) {
+          value = parse(object);
+      } catch (IOException | ResourceObjectException e) {
           suppressedException = e;
       }
-      return createValue(file, key, value, suppressedException);
+      return createValue(object, key, value, suppressedException);
     }
 
     /**
-     * Create instance of {@link OptionalValue} with wrapped file content
-     * @param file parsed file
+     * Create instance of {@link OptionalValue} with wrapped object content
+     * @param object parsed object
      * @param key key to use for value creation
-     * @param value parsed file content to wrap
+     * @param value parsed object content to wrap
      * @param suppressedException optional exception caught when parsing
-     * @return {@link OptionalValue} wrapping the file content
+     * @return {@link OptionalValue} wrapping the object content
      */
-    protected abstract V createValue(ResourceFile file, ResourceKey key, T value, Throwable suppressedException);
+    protected abstract V createValue(ResourceObject object, ResourceKey key, T value, Throwable suppressedException);
 
     /**
-     * Perform actual parsing of given file. 
-     * @param file the file to parse
+     * Perform actual parsing of given object
+     * @param object the object to parse
      * @return parsed content
      * @throws IOException if reading from input stream failed
-     * @throws ResourceFileFormatException if file format is invalid
-     * @throws InaccessibleResourceException if file does not exist or not accessible
-     * @see ResourceFile#asStream()
+     * @throws ResourceObjectFormatException if object data format is invalid
+     * @throws InaccessibleResourceException if object does not exist or not accessible
+     * @see ResourceObject#asStream()
      */
-    protected abstract T parse(ResourceFile file) throws IOException, ResourceFileException;
+    protected abstract T parse(ResourceObject object) throws IOException, ResourceObjectException;
 
 }

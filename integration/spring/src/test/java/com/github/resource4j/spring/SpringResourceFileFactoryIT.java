@@ -7,13 +7,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
+import com.github.resource4j.ResourceObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.resources.Resources;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,8 +25,8 @@ public class SpringResourceFileFactoryIT {
 	
 	@Test
 	public void testResourceFileLoadedBySpringFactory() {
-		ResourceFile file = resources.contentOf("example/document/test.txt", in(Locale.US));
-		assertTrue(file instanceof SpringResourceFile);
+		ResourceObject file = resources.contentOf("example/document/test.txt", in(Locale.US));
+		assertTrue(file instanceof SpringResourceObject);
 		assertEquals("Text for US locale", file.parsedTo(string()).notNull().asIs());
 	}
 	

@@ -2,21 +2,19 @@ package com.github.resource4j.resources;
 
 import static com.github.resource4j.ResourceKey.bundle;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.github.resource4j.*;
+import com.github.resource4j.generic.objects.factory.ClasspathResourceObjectFactory;
+import com.github.resource4j.generic.objects.factory.ResourceObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.resource4j.OptionalString;
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.MissingResourceFileException;
-import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.files.lookup.*;
-import com.github.resource4j.generic.GenericOptionalString;
+import com.github.resource4j.generic.values.GenericOptionalString;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
@@ -32,7 +30,7 @@ public class CustomizableResources extends AbstractResources {
 
     private ResourceFileEnumerationStrategy fileEnumerationStrategy;
 
-    private ResourceFileFactory fileFactory;
+    private ResourceObjectFactory fileFactory;
 
     private ResourceBundleParser bundleParser;
 
@@ -70,14 +68,14 @@ public class CustomizableResources extends AbstractResources {
     	return fileEnumerationStrategy;
     }
 
-    public void setFileFactory(ResourceFileFactory fileFactory) {
+    public void setFileFactory(ResourceObjectFactory fileFactory) {
         this.fileFactory = fileFactory;
         LOG.debug("Configured file factory: {}", fileFactory.getClass().getSimpleName());
     }
     
-    public ResourceFileFactory getFileFactory() {
+    public ResourceObjectFactory getFileFactory() {
     	if (fileFactory == null) {
-    		setFileFactory(new ClasspathResourceFileFactory());
+    		setFileFactory(new ClasspathResourceObjectFactory());
     	}
     	return fileFactory;
     }
@@ -112,18 +110,18 @@ public class CustomizableResources extends AbstractResources {
         
         for (String option : options) {
             try {
-                ResourceFile file = getFileFactory().getFile(key, option);
-                Map<String, String> properties = getBundleParser().parse(file);
+                ResourceObject object = getFileFactory().getObject(key.getBundle(), option);
+                Map<String, String> properties = getBundleParser().parse(object);
                 if (properties.containsKey(shortKey)) {
                     value = properties.get(shortKey);
-                    resolvedSource = file.resolvedName();
+                    resolvedSource = object.resolvedName();
 					break;
                 } else if (properties.containsKey(fullKey)) {
                 	value = properties.get(fullKey);
-                    resolvedSource = file.resolvedName();
+                    resolvedSource = object.resolvedName();
                 	break;
                 }
-            } catch (MissingResourceFileException e) {
+            } catch (MissingResourceObjectException e) {
                 suppressedException = e;
             }
         }
@@ -131,19 +129,21 @@ public class CustomizableResources extends AbstractResources {
     }
 
     @Override
-    public ResourceFile contentOf(String name, ResourceResolutionContext context) {
-        ResourceKey key = bundle(name);
+    public ResourceObject contentOf(String name, ResourceResolutionContext context) {
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
+        ResourceObject object = null;
         for (String option : options) {
             try {
-                ResourceFile file = getFileFactory().getFile(key, option);
-                file.asStream().close();
-                return file;
-            } catch (MissingResourceFileException e) {
-            } catch (IOException e) {
+                object = getFileFactory().getObject(name, option);
+                break;
+            } catch (MissingResourceObjectException e) {
+                LOG.trace("Object not found: {}", option);
             }
         }
-        throw new MissingResourceFileException(key);
+        if (object != null) {
+            return object;
+        }
+        throw new MissingResourceObjectException(name);
     }
 
 }

@@ -3,7 +3,7 @@ package com.github.resource4j.extras.config;
 import java.util.Map;
 
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.ResourceObject;
 import com.github.resource4j.files.lookup.ResourceBundleParser;
 
 public class ConfigResourceBundleParser implements ResourceBundleParser {
@@ -25,7 +25,7 @@ public class ConfigResourceBundleParser implements ResourceBundleParser {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public Map<String, String> parse(ResourceFile file) {
+    public Map<String, String> parse(ResourceObject file) {
         return (Map) file.parsedTo(parser).asIs();
     }
 

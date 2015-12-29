@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.ResourceObject;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 
 /**
@@ -41,7 +41,7 @@ public interface ResourceProvider {
      * @return reference to the resource file
      * @since 1.1
      */
-    ResourceFile contentOf(String name, Locale locale);
+    ResourceObject contentOf(String name, Locale locale);
 
     /**
      * Convenience method for obtaining reference to a resource file with given name in given resolution context: 
@@ -53,6 +53,6 @@ public interface ResourceProvider {
      * @see ResourceKey 
      * @since 2.0
      */
-    ResourceFile contentOf(String name, ResourceResolutionContext context);
+    ResourceObject contentOf(String name, ResourceResolutionContext context);
 
 }

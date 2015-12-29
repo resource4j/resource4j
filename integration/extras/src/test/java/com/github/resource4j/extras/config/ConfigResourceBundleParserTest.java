@@ -4,13 +4,14 @@ import static com.github.resource4j.ResourceKey.bundle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.net.URL;
 import java.util.Map;
 
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.generic.objects.URIResourceObject;
 import org.junit.Test;
 
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.URLResourceFile;
 
 public class ConfigResourceBundleParserTest {
 	
@@ -28,7 +29,9 @@ public class ConfigResourceBundleParserTest {
 		ConfigResourceBundleParser parser = new ConfigResourceBundleParser();
 		
 		String name = parser.getResourceFileName(key);
-		ResourceFile file = new URLResourceFile(key, getClass().getResource("/" + name));
+		String resolvedName = "/" + name;
+		URL url = getClass().getResource(resolvedName);
+		ResourceObject file = new URIResourceObject(url.toURI(), key.getBundle(), resolvedName, 0);
 		
 		Map<String, String> map = parser.parse(file);
 		

@@ -1,9 +1,10 @@
 package com.github.resource4j;
 
 import java.text.Format;
+import java.util.function.Function;
 
-import com.github.resource4j.generic.GenericMandatoryString;
-import com.github.resource4j.generic.GenericMandatoryValue;
+import com.github.resource4j.generic.values.GenericMandatoryString;
+import com.github.resource4j.generic.values.GenericMandatoryValue;
 import com.github.resource4j.util.TypeCastException;
 import com.github.resource4j.util.TypeConverter;
 
@@ -17,14 +18,17 @@ import com.github.resource4j.util.TypeConverter;
 public interface MandatoryValue<V> extends ResourceValue<V> {
 
 	/**
-	 * Returns name of resource bundle within resolution context in which this value found:
-	 * e.g. if bundle name specified in key was "example", the resolution context was 
-	 * defined by Germany locale and the value was found in <code>example-de_DE.properties</code> file, 
-	 * then the name of this file will be the resolved source.
-	 * @return name of resource bundle
-	 * @since 2.0
+	 * Apply the provided mapping function to the wrapped value, and if the result is non-null, return
+	 * an {@code OptionalValue} describing the result.  Otherwise return an empty {@code OptionalValue}.
+	 *
+	 * @param <U> The type of the result of the mapping function
+	 * @param mapper a mapping function to apply to the value, if present
+	 * @return an {@code OptionalValue} describing the result of applying a mapping
+	 * function to the wrapped value, if a value is present, otherwise an empty {@code OptionalValue}
+	 * @throws NullPointerException if the mapping function is null
+	 * @since 3.0
 	 */
-	String resolvedSource();
+	<U> OptionalValue<U> map(Function<? super V, ? extends U> mapper);
 
 	/**
 	 * Converts this value to resource value of given type.

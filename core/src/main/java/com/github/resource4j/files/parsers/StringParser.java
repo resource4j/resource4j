@@ -8,8 +8,8 @@ import java.nio.charset.UnsupportedCharsetException;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.generic.GenericOptionalString;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.generic.values.GenericOptionalString;
 
 /**
  * @author Ivan Gammel
@@ -43,14 +43,14 @@ public class StringParser extends AbstractParser<String, OptionalString> {
     }
 
     @Override
-    protected OptionalString createValue(ResourceFile file, ResourceKey key, String value, Throwable suppressedException) {
+    protected OptionalString createValue(ResourceObject file, ResourceKey key, String value, Throwable suppressedException) {
         return new GenericOptionalString(file.resolvedName(), key, value, suppressedException);
     }
 
     @Override
-    public String parse(ResourceFile file) throws IOException {
+    public String parse(ResourceObject object) throws IOException {
         // Here's the nice solution from StackOverflow: http://stackoverflow.com/a/5445161
-    	try (java.util.Scanner s = new java.util.Scanner(file.asStream(), charsetName)) {
+    	try (java.util.Scanner s = new java.util.Scanner(object.asStream(), charsetName)) {
     		s.useDelimiter("\\A");
             return s.hasNext() ? s.next() : "";
     	}

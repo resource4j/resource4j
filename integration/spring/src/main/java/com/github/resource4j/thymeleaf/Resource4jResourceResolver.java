@@ -9,7 +9,7 @@ import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.context.IContext;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 
-import com.github.resource4j.files.MissingResourceFileException;
+import com.github.resource4j.MissingResourceObjectException;
 import com.github.resource4j.resources.Resources;
 
 public class Resource4jResourceResolver implements IResourceResolver {
@@ -37,7 +37,7 @@ public class Resource4jResourceResolver implements IResourceResolver {
 		Locale locale = context.getLocale();
 		try {
 			return resources.contentOf(resourceName, locale).asStream();
-		} catch (MissingResourceFileException e) {
+		} catch (MissingResourceObjectException e) {
 			LOG.error("Resource {} not found.", resourceName, e);
 			// According to contract for IResourceResolver
 			return null;

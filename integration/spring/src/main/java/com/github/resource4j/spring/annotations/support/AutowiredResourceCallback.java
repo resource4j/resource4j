@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.github.resource4j.ResourceObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils.FieldCallback;
@@ -16,12 +17,11 @@ import org.springframework.util.ReflectionUtils.FieldCallback;
 import com.github.resource4j.MandatoryString;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.resources.ResourceProvider;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.references.GenericResourceFileReference;
+import com.github.resource4j.resources.references.GenericResourceObjectReference;
 import com.github.resource4j.resources.references.GenericResourceValueReference;
-import com.github.resource4j.resources.references.ResourceFileReference;
+import com.github.resource4j.resources.references.ResourceObjectReference;
 import com.github.resource4j.resources.references.ResourceValueReference;
 import com.github.resource4j.resources.resolution.ResourceResolutionContext;
 import com.github.resource4j.spring.AutowiredResource;
@@ -55,11 +55,11 @@ public final class AutowiredResourceCallback implements FieldCallback {
 		AutowiredResource autowired = field.getAnnotation(AutowiredResource.class);
 		ResourceResolutionContext context = contextOf(autowired);
 
-		if (ResourceFileReference.class.equals(type)) {
+		if (ResourceObjectReference.class.equals(type)) {
 			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
-			value = new GenericResourceFileReference(resources, name);
-		} else if (ResourceFile.class.equals(type)) {
+			value = new GenericResourceObjectReference(resources, name);
+		} else if (ResourceObject.class.equals(type)) {
 			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
 			value = resources.contentOf(name, context);

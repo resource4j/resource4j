@@ -10,9 +10,9 @@ import java.util.Map;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.MissingResourceFileException;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.generic.GenericOptionalString;
+import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.generic.values.GenericOptionalString;
 import com.github.resource4j.resources.cache.CachedValue;
 import com.github.resource4j.resources.cache.ResourceCache;
 import com.github.resource4j.resources.cache.SimpleResourceCache;
@@ -31,7 +31,7 @@ public class DefaultResources extends CustomizableResources {
 
     private ResourceCache<OptionalString> valueCache = new SimpleResourceCache<>();
 
-    private ResourceCache<ResourceFile> fileCache = new SimpleResourceCache<>();
+    private ResourceCache<ResourceObject> fileCache = new SimpleResourceCache<>();
 
     public DefaultResources() {
         this.defaultResourceBundle = DEFAULT_APPLICATION_RESOURCES;
@@ -79,7 +79,7 @@ public class DefaultResources extends CustomizableResources {
         return null;
     }
 	protected void tryLoadToCache(ResourceKey bundle, 
-			ResourceResolutionContext context) throws MissingResourceFileException {
+			ResourceResolutionContext context) throws MissingResourceObjectException {
 		String fileName = getBundleParser().getResourceFileName(bundle);
 		String defaultFileName = getBundleParser().getResourceFileName(defaultResourceBundle);
 		String[] bundleOptions = fileName != null
@@ -89,7 +89,7 @@ public class DefaultResources extends CustomizableResources {
 		boolean found = false;
 		for (String option : options) {
 		    try {
-		        ResourceFile file = getFileFactory().getFile(bundle, option);
+		        ResourceObject file = getFileFactory().getObject(bundle.getBundle(), option);
 		        Map<String, String> properties = getBundleParser().parse(file);
 		        for (Map.Entry<String, String> property : properties.entrySet()) {
 		            String id = property.getKey();
@@ -99,23 +99,23 @@ public class DefaultResources extends CustomizableResources {
 		            valueCache.putIfAbsent(propertyKey, context, cached(string, file.resolvedName()));
 		        }
 		        found = true;
-		    } catch (MissingResourceFileException e) {
+		    } catch (MissingResourceObjectException e) {
 		    	// ignore, since we are processing multiple options
 		    }
 		}
 		if (!found) {
-			throw new MissingResourceFileException(bundle);
+			throw new MissingResourceObjectException(bundle.getBundle());
 		}
 	}
 
     @Override
-    public ResourceFile contentOf(String name, ResourceResolutionContext context) {
+    public ResourceObject contentOf(String name, ResourceResolutionContext context) {
         ResourceKey key = bundle(name);
         // first, try to find the file in cache
-        CachedValue<ResourceFile> cachedFile = fileCache.get(key, context);
+        CachedValue<ResourceObject> cachedFile = fileCache.get(key, context);
         if (cachedFile != null) {
             if (cachedFile.isMissing()) {
-                throw new MissingResourceFileException(key);
+                throw new MissingResourceObjectException(name);
             } else {
                 return cachedFile.get();
             }
@@ -124,16 +124,15 @@ public class DefaultResources extends CustomizableResources {
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
             try {
-                ResourceFile file = getFileFactory().getFile(key, option);
+                ResourceObject file = getFileFactory().getObject(name, option);
                 file.asStream().close();
                 fileCache.put(key, context, cached(file, file.resolvedName()));
                 return file;
-            } catch (MissingResourceFileException e) {
-            } catch (IOException e) {
+            } catch (MissingResourceObjectException | IOException e) {
             }
         }
         // file not found: record this search result in cache
-        fileCache.put(key, context, missingValue(ResourceFile.class));
-        throw new MissingResourceFileException(key);
+        fileCache.put(key, context, missingValue(ResourceObject.class));
+        throw new MissingResourceObjectException(name);
     }
 }

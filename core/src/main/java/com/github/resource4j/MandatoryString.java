@@ -58,4 +58,6 @@ public interface MandatoryString extends MandatoryValue<String>, ResourceString 
      * @throws IllegalArgumentException as specified in {@link MessageFormat#format(String, Object...)}
      */
     String asFormatted(Object... arguments);
+
+
 }

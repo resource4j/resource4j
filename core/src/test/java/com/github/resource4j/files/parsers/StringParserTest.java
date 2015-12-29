@@ -5,17 +5,17 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import com.github.resource4j.ResourceObject;
 import org.junit.Test;
 
-import com.github.resource4j.files.ByteArrayResourceFile;
-import com.github.resource4j.files.ResourceFile;
+import com.github.resource4j.generic.objects.ByteArrayResourceObject;
 
 public class StringParserTest {
 
     @Test
     public void testOneLineStringParsing() throws IOException {
         String line = "Lorem Ipsum Dolorem";
-        ResourceFile file = new ByteArrayResourceFile(bundle("test.txt"), line.getBytes());
+        ResourceObject file = new ByteArrayResourceObject("test.txt", "test.txt", line.getBytes(), 0);
         String result = StringParser.getInstance().parse(file);
         assertEquals(line, result);
     }
@@ -23,7 +23,7 @@ public class StringParserTest {
     @Test
     public void testMultiLineStringParsing() throws IOException {
         String line = "Lorem\r\nIpsum\n\tDolorem";
-        ResourceFile file = new ByteArrayResourceFile(bundle("test.txt"), line.getBytes());
+        ResourceObject file = new ByteArrayResourceObject("test.txt", "test.txt", line.getBytes(), 0);
         String result = StringParser.getInstance().parse(file);
         assertEquals(line, result);
     }

@@ -2,10 +2,10 @@ package com.github.resource4j.extras.xstream;
 
 import java.io.IOException;
 
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.ResourceFileException;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.files.parsers.AbstractValueParser;
-import com.github.resource4j.files.parsers.ResourceFileFormatException;
+import com.github.resource4j.files.parsers.ResourceObjectFormatException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
@@ -32,15 +32,15 @@ public class XStreamParser<T> extends AbstractValueParser<T> {
 	}
 	
 	@Override
-	protected T parse(ResourceFile file) throws IOException, ResourceFileException {
+	protected T parse(ResourceObject file) throws IOException, ResourceObjectException {
 		Object object = Object.class;
 		try {
 			object = xstream.fromXML(file.asStream());
 			return type.cast(object);
 		} catch (XStreamException e) {
-			throw new ResourceFileFormatException(file, "Cannot parse resource file");
+			throw new ResourceObjectFormatException(file, "Cannot parse resource object");
 		} catch (ClassCastException e) {
-			throw new ResourceFileFormatException(file, 
+			throw new ResourceObjectFormatException(file,
 					"Resource data type " + object.getClass().getName() 
 					+ " does not match requested " + type.getName());
 		}
