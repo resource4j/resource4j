@@ -3,7 +3,7 @@ package com.github.resource4j;
 import java.text.Format;
 
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.util.TypeCastException;
 
 /**

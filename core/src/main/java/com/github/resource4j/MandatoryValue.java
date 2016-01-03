@@ -3,8 +3,8 @@ package com.github.resource4j;
 import java.text.Format;
 import java.util.function.Function;
 
-import com.github.resource4j.generic.values.GenericMandatoryString;
-import com.github.resource4j.generic.values.GenericMandatoryValue;
+import com.github.resource4j.values.GenericMandatoryString;
+import com.github.resource4j.values.GenericMandatoryValue;
 import com.github.resource4j.util.TypeCastException;
 import com.github.resource4j.util.TypeConverter;
 

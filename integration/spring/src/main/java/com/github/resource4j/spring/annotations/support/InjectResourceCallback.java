@@ -1,6 +1,6 @@
 package com.github.resource4j.spring.annotations.support;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -15,11 +15,11 @@ import org.springframework.util.ReflectionUtils.FieldCallback;
 import com.github.resource4j.MandatoryValue;
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.MissingResourceObjectException;
-import com.github.resource4j.files.parsers.ByteArrayParser;
-import com.github.resource4j.files.parsers.ResourceParser;
-import com.github.resource4j.files.parsers.StringParser;
+import com.github.resource4j.objects.parsers.ByteArrayParser;
+import com.github.resource4j.objects.parsers.ResourceParser;
+import com.github.resource4j.objects.parsers.StringParser;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.spring.annotations.InjectResource;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 

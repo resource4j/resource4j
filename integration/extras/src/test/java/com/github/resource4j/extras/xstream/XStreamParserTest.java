@@ -9,7 +9,7 @@ import java.io.IOException;
 import com.github.resource4j.ResourceObject;
 import org.junit.Test;
 
-import com.github.resource4j.generic.objects.ByteArrayResourceObject;
+import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.github.resource4j.ResourceObjectException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;

@@ -5,8 +5,8 @@ import java.io.InputStreamReader;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
-import com.github.resource4j.files.parsers.AbstractValueParser;
-import com.github.resource4j.files.parsers.ResourceObjectFormatException;
+import com.github.resource4j.objects.parsers.AbstractValueParser;
+import com.github.resource4j.objects.parsers.ResourceObjectFormatException;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;
 import com.typesafe.config.ConfigFactory;

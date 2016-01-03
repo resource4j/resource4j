@@ -1,6 +1,6 @@
 package com.github.resource4j.resources;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static org.junit.Assert.*;
 
 import java.util.Locale;
@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 public class GenericResourceProviderTest {
 

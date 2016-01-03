@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.github.resource4j.files.parsers.ResourceParser;
+import com.github.resource4j.objects.parsers.ResourceParser;
 import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 

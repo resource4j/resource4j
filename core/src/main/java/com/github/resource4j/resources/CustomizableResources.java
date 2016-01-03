@@ -8,14 +8,14 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.github.resource4j.*;
-import com.github.resource4j.generic.objects.factory.ClasspathResourceObjectFactory;
-import com.github.resource4j.generic.objects.factory.ResourceObjectFactory;
+import com.github.resource4j.objects.factories.ClasspathResourceObjectFactory;
+import com.github.resource4j.objects.factories.ResourceObjectFactory;
+import com.github.resource4j.resources.discovery.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.resource4j.files.lookup.*;
-import com.github.resource4j.generic.values.GenericOptionalString;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.values.GenericOptionalString;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
  * @author Ivan Gammel
@@ -92,11 +92,26 @@ public class CustomizableResources extends AbstractResources {
     	return bundleParser;
     }
 
+    protected String getFileName(String bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        if (bundle.indexOf('/') > 0) {
+            return bundle;
+        }
+        String extension = "";
+        Class<? extends ResourceBundleParser> parser = getBundleParser().getClass();
+        ContentType type = parser.getAnnotation(ContentType.class);
+        if (type != null) {
+            extension = type.extension();
+        }
+        return bundle.replace('.','/') + '.' + extension;
+    }
 
 	@Override
 	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
-        String bundleName = getBundleParser().getResourceFileName(key);
-        String defaultBundleName = getBundleParser().getResourceFileName(defaultResourceBundle);
+        String bundleName = getFileName(key.getBundle());
+        String defaultBundleName = getFileName(defaultResourceBundle.getBundle());
         String[] bundleOptions = bundleName != null
                 ? new String[] { bundleName, defaultBundleName }
                 : new String[] { defaultBundleName };

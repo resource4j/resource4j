@@ -1,7 +1,7 @@
 package com.github.resource4j.spring;
 
-import static com.github.resource4j.files.parsers.ResourceParsers.string;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.objects.parsers.ResourceParsers.string;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

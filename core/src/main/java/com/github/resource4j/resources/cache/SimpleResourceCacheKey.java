@@ -1,7 +1,7 @@
 package com.github.resource4j.resources.cache;
 
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 public class SimpleResourceCacheKey {
 	

@@ -2,7 +2,7 @@ package com.github.resource4j.spring.annotations.support;
 
 import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.ResourceKey.join;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -19,9 +19,9 @@ import com.github.resource4j.MandatoryString;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.resources.ResourceProvider;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.references.GenericResourceValueReference;
-import com.github.resource4j.resources.references.ResourceValueReference;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.values.GenericResourceValueReference;
+import com.github.resource4j.ResourceValueReference;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.spring.annotations.InjectValue;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 

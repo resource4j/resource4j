@@ -2,26 +2,14 @@ package com.github.resource4j.extras.config;
 
 import java.util.Map;
 
-import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.files.lookup.ResourceBundleParser;
+import com.github.resource4j.resources.discovery.ContentType;
+import com.github.resource4j.resources.discovery.ResourceBundleParser;
 
+@ContentType(extension = "conf", mimeType = "application/hocon")
 public class ConfigResourceBundleParser implements ResourceBundleParser {
 
-    private static final String EXTENSION = "conf";
-    
 	private ConfigMapParser parser = new ConfigMapParser();
-
-    @Override
-    public String getResourceFileName(ResourceKey key) {
-        String bundleName = key.getBundle();
-        if (bundleName == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder(bundleName.length() + 1 + EXTENSION.length());
-        sb.append(bundleName.replace('.', '/')).append('.').append(EXTENSION);
-        return sb.toString();
-    }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override

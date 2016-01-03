@@ -7,8 +7,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.github.resource4j.generic.values.GenericOptionalString;
-import com.github.resource4j.generic.values.GenericOptionalValue;
+import com.github.resource4j.values.GenericOptionalString;
+import com.github.resource4j.values.GenericOptionalValue;
 import com.github.resource4j.util.TypeCastException;
 import com.github.resource4j.util.TypeConverter;
 

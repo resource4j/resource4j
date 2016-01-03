@@ -1,7 +1,7 @@
 package com.github.resource4j.resources;
 
 import static com.github.resource4j.ResourceKey.key;
-import static com.github.resource4j.files.parsers.ResourceParsers.string;
+import static com.github.resource4j.objects.parsers.ResourceParsers.string;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;

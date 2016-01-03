@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 
 /**
  *

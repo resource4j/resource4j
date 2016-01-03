@@ -13,9 +13,9 @@ import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import com.github.resource4j.generic.objects.factory.ClasspathResourceObjectFactory;
-import com.github.resource4j.generic.objects.factory.MappingResourceObjectFactory;
-import com.github.resource4j.generic.objects.factory.ResourceObjectFactory;
+import com.github.resource4j.objects.factories.ClasspathResourceObjectFactory;
+import com.github.resource4j.objects.factories.MappingResourceObjectFactory;
+import com.github.resource4j.objects.factories.ResourceObjectFactory;
 import com.github.resource4j.resources.DefaultResources;
 import com.github.resource4j.resources.Resources;
 import com.github.resource4j.spring.ResourceValueBeanPostProcessor;

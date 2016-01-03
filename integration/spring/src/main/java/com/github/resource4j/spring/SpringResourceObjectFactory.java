@@ -1,7 +1,7 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.generic.objects.factory.ResourceObjectFactory;
+import com.github.resource4j.objects.factories.ResourceObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -34,7 +34,7 @@ public class SpringResourceObjectFactory implements ResourceObjectFactory, Appli
 		if (applicationContext == null) {
 			throw new IllegalStateException("SpringResourceObjectFactory not initialized: application context required.");
 		}
-		Resource resource = applicationContext.getResource(actualName);
+		Resource resource = applicationContext.getResource('/' + actualName);
 		if (!resource.exists() || !resource.isReadable()) {
 			throw new MissingResourceObjectException(name, actualName);
 		}

@@ -295,17 +295,17 @@ public final class TypeConverter {
         if (Calendar.class.isAssignableFrom(type) || java.util.Date.class.isAssignableFrom(type)) {
             return toDate(type, value);
         } else if ((type == Long.class) || (type == Long.TYPE)) {
-            return (T) Long.valueOf(((Number) value).longValue());
+            return (T) Long.valueOf(value.longValue());
         } else if ((type == Integer.class) || (type == Integer.TYPE)) {
-            return (T) Integer.valueOf(((Number) value).intValue());
+            return (T) Integer.valueOf(value.intValue());
         } else if ((type == Short.class) || (type == Short.TYPE)) {
-            return (T) Short.valueOf(((Number) value).shortValue());
+            return (T) Short.valueOf(value.shortValue());
         } else if ((type == Byte.class) || (type == Byte.TYPE)) {
-            return (T) Byte.valueOf(((Number) value).byteValue());
+            return (T) Byte.valueOf(value.byteValue());
         } else if ((type == Double.class) || (type == Double.TYPE)) {
-            return (T) Double.valueOf(((Number) value).doubleValue());
+            return (T) Double.valueOf(value.doubleValue());
         } else if ((type == Float.class) || (type == Float.TYPE)) {
-            return (T) Float.valueOf(((Number) value).floatValue());
+            return (T) Float.valueOf(value.floatValue());
         } else if ((type == Boolean.class) || (type == Boolean.TYPE)) {
             return (T) Boolean.valueOf(value.longValue() != 0);
         } else if (type == BigInteger.class) {

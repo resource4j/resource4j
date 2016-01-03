@@ -1,22 +1,22 @@
 package com.github.resource4j.resources;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static com.github.resource4j.resources.cache.CachedValue.cached;
-import static com.github.resource4j.resources.cache.CachedValue.missingValue;
+import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.OptionalString;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.resources.cache.CachedValue;
+import com.github.resource4j.resources.cache.ResourceCache;
+import com.github.resource4j.resources.cache.SimpleResourceCache;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
+import com.github.resource4j.values.GenericOptionalString;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import com.github.resource4j.OptionalString;
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.MissingResourceObjectException;
-import com.github.resource4j.ResourceObject;
-import com.github.resource4j.generic.values.GenericOptionalString;
-import com.github.resource4j.resources.cache.CachedValue;
-import com.github.resource4j.resources.cache.ResourceCache;
-import com.github.resource4j.resources.cache.SimpleResourceCache;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import static com.github.resource4j.ResourceKey.bundle;
+import static com.github.resource4j.resources.cache.CachedValue.cached;
+import static com.github.resource4j.resources.cache.CachedValue.missingValue;
 
 /**
  * @author Ivan Gammel
@@ -78,10 +78,11 @@ public class DefaultResources extends CustomizableResources {
         }
         return null;
     }
+
 	protected void tryLoadToCache(ResourceKey bundle, 
 			ResourceResolutionContext context) throws MissingResourceObjectException {
-		String fileName = getBundleParser().getResourceFileName(bundle);
-		String defaultFileName = getBundleParser().getResourceFileName(defaultResourceBundle);
+		String fileName = getFileName(bundle.getBundle());
+		String defaultFileName = getFileName(defaultResourceBundle.getBundle());
 		String[] bundleOptions = fileName != null
 		        ? new String[] { fileName, defaultFileName }
 		        : new String[] { defaultFileName };

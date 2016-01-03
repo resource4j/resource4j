@@ -27,7 +27,7 @@ public class InjectValueOptionalTest implements ApplicationContextAware {
 		this.applicationContext = applicationContext;
 	}
 
-	@InjectBundle("example/config/application")
+	@InjectBundle("example.config.application")
 	public static class StringValueModel {
 		
 		@InjectValue("mail_user")
@@ -41,7 +41,7 @@ public class InjectValueOptionalTest implements ApplicationContextAware {
 		}
 	}
 	
-	@InjectBundle("example/config/application")
+	@InjectBundle("example.config.application")
 	public static class IntValueModel {
 		@InjectValue("mail_password")
 		private Optional<Integer> code;
@@ -53,7 +53,7 @@ public class InjectValueOptionalTest implements ApplicationContextAware {
 		}
 	}
 	
-	@InjectBundle("example/config/application")
+	@InjectBundle("example.config.application")
 	public static class NumberValueModel {
 		@InjectValue("mail_password")
 		private Optional<? extends Number> code;

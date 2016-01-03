@@ -5,7 +5,7 @@ import java.util.Locale;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
  * The core class of Resource4J API that provides access to resource values. 

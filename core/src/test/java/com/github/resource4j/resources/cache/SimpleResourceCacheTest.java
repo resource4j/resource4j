@@ -2,7 +2,7 @@ package com.github.resource4j.resources.cache;
 
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.resources.cache.CachedValue.cached;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

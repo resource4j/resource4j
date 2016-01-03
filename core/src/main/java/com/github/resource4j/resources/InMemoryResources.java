@@ -1,7 +1,7 @@
 package com.github.resource4j.resources;
 
 import static com.github.resource4j.ResourceKey.bundle;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 
 import java.time.Clock;
 import java.util.HashMap;
@@ -14,10 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.generic.objects.ByteArrayResourceObject;
+import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.github.resource4j.MissingResourceObjectException;
-import com.github.resource4j.generic.values.GenericOptionalString;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.values.GenericOptionalString;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
  *

@@ -5,7 +5,7 @@ import java.util.Locale;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
  * Resource provider is a component providing convenient access to the values in some specific resource bundle.

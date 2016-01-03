@@ -1,6 +1,6 @@
 package com.github.resource4j.spring;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;

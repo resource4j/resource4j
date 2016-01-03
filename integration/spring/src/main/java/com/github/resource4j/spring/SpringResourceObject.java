@@ -1,7 +1,7 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.InaccessibleResourceException;
-import com.github.resource4j.generic.objects.AbstractResourceObject;
+import com.github.resource4j.objects.AbstractResourceObject;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;

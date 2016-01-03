@@ -1,8 +1,8 @@
 package com.github.resource4j.spring.annotations.support;
 
 import static com.github.resource4j.ResourceKey.key;
-import static com.github.resource4j.files.parsers.ResourceParsers.binary;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.objects.parsers.ResourceParsers.binary;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.ResourceProvider;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.references.GenericResourceObjectReference;
-import com.github.resource4j.resources.references.GenericResourceValueReference;
-import com.github.resource4j.resources.references.ResourceObjectReference;
-import com.github.resource4j.resources.references.ResourceValueReference;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.objects.GenericResourceObjectReference;
+import com.github.resource4j.values.GenericResourceValueReference;
+import com.github.resource4j.ResourceObjectReference;
+import com.github.resource4j.ResourceValueReference;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.spring.AutowiredResource;
 import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 
