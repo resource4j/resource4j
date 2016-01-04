@@ -10,9 +10,9 @@ public abstract class AbstractValueParser<T> extends AbstractParser<T, OptionalV
     @Override
     protected OptionalValue<T> createValue(ResourceObject object, ResourceKey key, T value, Throwable suppressedException) {
         if (suppressedException != null) {
-            return new GenericOptionalValue<>(object.resolvedName(), key, suppressedException);
+            return new GenericOptionalValue<>(object.actualName(), key, suppressedException);
         } else {
-            return new GenericOptionalValue<>(object.resolvedName(), key, value);
+            return new GenericOptionalValue<>(object.actualName(), key, value);
         }
     }
 

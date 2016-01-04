@@ -5,7 +5,7 @@ import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 
 /**
- * <p>Resource parser implementations load the content of provided resource object as binary stream, 
+ * <p>Resource parser implementations load the data of provided resource object as binary stream,
  * convert it to the value of given type and wrap in {@link OptionalValue}. 
  * If parsing fails due to incorrect format, missing or inaccessible resource object, the 
  * wrapped value will be <code>null</code>.
@@ -16,13 +16,13 @@ import com.github.resource4j.ResourceObject;
  * 
  * @author Ivan Gammel
  *
- * @param <T> type of parsed content
+ * @param <T> type of parsed data
  * @param <V> type of returned {@link OptionalValue}
  */
 public interface ResourceParser<T, V extends OptionalValue<T>> {
 
 	/**
-	 * Parse given resource file and wrap the resulting content into {@link OptionalValue}.
+	 * Parse given resource file and wrap the resulting data into {@link OptionalValue}.
 	 * @param key the key to use as {@link OptionalValue} key. Must not be <code>null</code>
 	 * @param object the object to parse. Must not be <code>null</code>
 	 * @return {@link OptionalValue} with object model

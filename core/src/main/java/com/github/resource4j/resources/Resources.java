@@ -71,7 +71,7 @@ public interface Resources {
     /**
      * Resolves object name without any resolution context.
      * @param name the name of the object to load
-     * @return reference to the object for content loading and parsing
+     * @return reference to the object for data loading and parsing
      * @since 2.0
      */
     ResourceObject contentOf(String name);

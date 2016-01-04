@@ -3,7 +3,9 @@ package com.github.resource4j.thymeleaf;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.github.resource4j.spring.SpringResourceObjectFactory;
+import com.github.resource4j.objects.providers.ClasspathResourceObjectProvider;
+import com.github.resource4j.objects.providers.MappingResourceObjectProvider;
+import com.github.resource4j.spring.SpringResourceObjectProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -13,9 +15,7 @@ import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import com.github.resource4j.objects.factories.ClasspathResourceObjectFactory;
-import com.github.resource4j.objects.factories.MappingResourceObjectFactory;
-import com.github.resource4j.objects.factories.ResourceObjectFactory;
+import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.DefaultResources;
 import com.github.resource4j.resources.Resources;
 import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
@@ -26,11 +26,11 @@ public class ThymeleafResourceConfiguration implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 	
 	@Bean
-	public ResourceObjectFactory fileFactory() {
-		MappingResourceObjectFactory factory = new MappingResourceObjectFactory();
-		Map<String, ResourceObjectFactory> mappings = new LinkedHashMap<>();
-		mappings.put(".+\\.properties$", new ClasspathResourceObjectFactory());
-		SpringResourceObjectFactory springResourceFactory = new SpringResourceObjectFactory();
+	public ResourceObjectProvider fileFactory() {
+		MappingResourceObjectProvider factory = new MappingResourceObjectProvider();
+		Map<String, ResourceObjectProvider> mappings = new LinkedHashMap<>();
+		mappings.put(".+\\.properties$", new ClasspathResourceObjectProvider());
+		SpringResourceObjectProvider springResourceFactory = new SpringResourceObjectProvider();
 		springResourceFactory.setApplicationContext(applicationContext);
 		mappings.put(".+", springResourceFactory);
 		factory.setMappings(mappings);

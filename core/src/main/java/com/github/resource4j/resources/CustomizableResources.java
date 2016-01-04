@@ -8,8 +8,9 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import com.github.resource4j.*;
-import com.github.resource4j.objects.factories.ClasspathResourceObjectFactory;
-import com.github.resource4j.objects.factories.ResourceObjectFactory;
+import com.github.resource4j.objects.providers.ClasspathResourceObjectProvider;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.discovery.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class CustomizableResources extends AbstractResources {
 
     private ResourceFileEnumerationStrategy fileEnumerationStrategy;
 
-    private ResourceObjectFactory fileFactory;
+    private ResourceObjectProvider fileFactory;
 
     private ResourceBundleParser bundleParser;
 
@@ -68,14 +69,14 @@ public class CustomizableResources extends AbstractResources {
     	return fileEnumerationStrategy;
     }
 
-    public void setFileFactory(ResourceObjectFactory fileFactory) {
+    public void setFileFactory(ResourceObjectProvider fileFactory) {
         this.fileFactory = fileFactory;
         LOG.debug("Configured file factory: {}", fileFactory.getClass().getSimpleName());
     }
     
-    public ResourceObjectFactory getFileFactory() {
+    public ResourceObjectProvider getFileFactory() {
     	if (fileFactory == null) {
-    		setFileFactory(new ClasspathResourceObjectFactory());
+    		setFileFactory(new ClasspathResourceObjectProvider());
     	}
     	return fileFactory;
     }
@@ -125,15 +126,15 @@ public class CustomizableResources extends AbstractResources {
         
         for (String option : options) {
             try {
-                ResourceObject object = getFileFactory().getObject(key.getBundle(), option);
+                ResourceObject object = getFileFactory().get(key.getBundle(), option);
                 Map<String, String> properties = getBundleParser().parse(object);
                 if (properties.containsKey(shortKey)) {
                     value = properties.get(shortKey);
-                    resolvedSource = object.resolvedName();
+                    resolvedSource = object.actualName();
 					break;
                 } else if (properties.containsKey(fullKey)) {
                 	value = properties.get(fullKey);
-                    resolvedSource = object.resolvedName();
+                    resolvedSource = object.actualName();
                 	break;
                 }
             } catch (MissingResourceObjectException e) {
@@ -149,7 +150,7 @@ public class CustomizableResources extends AbstractResources {
         ResourceObject object = null;
         for (String option : options) {
             try {
-                object = getFileFactory().getObject(name, option);
+                object = getFileFactory().get(name, option);
                 break;
             } catch (MissingResourceObjectException e) {
                 LOG.trace("Object not found: {}", option);

@@ -1,6 +1,6 @@
 package com.github.resource4j.objects;
 
-import com.github.resource4j.InaccessibleResourceException;
+import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectException;
 
 import java.io.*;
 
@@ -14,25 +14,25 @@ public class FileResourceObject extends AbstractResourceObject {
     }
 
     @Override
-    public InputStream asStream() throws InaccessibleResourceException {
+    public InputStream asStream() throws InaccessibleResourceObjectException {
         try {
             return new FileInputStream(file);
         } catch (IOException | SecurityException e) {
-            throw new InaccessibleResourceException(e, name, resolvedName);
+            throw new InaccessibleResourceObjectException(e, name, resolvedName);
         }
     }
 
     @Override
-    public long size() throws InaccessibleResourceException {
+    public long size() throws InaccessibleResourceObjectException {
         if (!file.exists() || file.isDirectory()) {
-            throw new InaccessibleResourceException("File become inaccessible: size cannot be calculated",
+            throw new InaccessibleResourceObjectException("File become inaccessible: size cannot be calculated",
                     name,
                     resolvedName);
         }
         try {
             return file.length();
         } catch (SecurityException e) {
-            throw new InaccessibleResourceException(e, name, resolvedName);
+            throw new InaccessibleResourceObjectException(e, name, resolvedName);
         }
     }
 

@@ -9,7 +9,7 @@ import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.context.IContext;
 import org.thymeleaf.resourceresolver.IResourceResolver;
 
-import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.resources.Resources;
 
 public class Resource4jResourceResolver implements IResourceResolver {

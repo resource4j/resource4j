@@ -1,7 +1,7 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.factories.ResourceObjectFactory;
+import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -9,15 +9,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 
-public class SpringResourceObjectFactory implements ResourceObjectFactory, ApplicationContextAware {
+public class SpringResourceObjectProvider implements ResourceObjectProvider, ApplicationContextAware {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(SpringResourceObjectFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SpringResourceObjectProvider.class);
 
 	private ApplicationContext applicationContext;
 
-	public SpringResourceObjectFactory() {
+	public SpringResourceObjectProvider() {
 		super();
 		LOG.debug("Resource path configured: <managed by Spring Framework>");		
 	}
@@ -29,10 +29,10 @@ public class SpringResourceObjectFactory implements ResourceObjectFactory, Appli
 	}
 
 	@Override
-	public ResourceObject getObject(String name, String actualName)
+	public ResourceObject get(String name, String actualName)
 			throws MissingResourceObjectException {
 		if (applicationContext == null) {
-			throw new IllegalStateException("SpringResourceObjectFactory not initialized: application context required.");
+			throw new IllegalStateException("SpringResourceObjectProvider not initialized: application context required.");
 		}
 		Resource resource = applicationContext.getResource('/' + actualName);
 		if (!resource.exists() || !resource.isReadable()) {

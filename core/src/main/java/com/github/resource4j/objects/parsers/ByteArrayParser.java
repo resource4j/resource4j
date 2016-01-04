@@ -14,7 +14,7 @@ public class ByteArrayParser extends AbstractParser<byte[], OptionalValue<byte[]
 	@Override
 	protected OptionalValue<byte[]> createValue(ResourceObject object,
 			ResourceKey key, byte[] value, Throwable suppressedException) {
-		return new GenericOptionalValue<byte[]>(object.resolvedName(), key, value, suppressedException);
+		return new GenericOptionalValue<byte[]>(object.actualName(), key, value, suppressedException);
 	}
 
 	@Override

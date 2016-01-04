@@ -23,7 +23,7 @@ public interface EditableResources extends Resources {
      * Creates or replaces existing resource file in given locale as a resolution context
      * @param name name of the file
      * @param locale resolution context
-     * @param content the file content to store
+     * @param content the file data to store
      * @since 2.0
      */
     void put(String name, Locale locale, byte[] content);
@@ -40,7 +40,7 @@ public interface EditableResources extends Resources {
      * Creates or replaces existing resource file in given resolution context
      * @param name name of the file
      * @param context resolution context
-     * @param content the file content to store
+     * @param content the file data to store
     */
    void put(String name, ResourceResolutionContext context, byte[] content);
    

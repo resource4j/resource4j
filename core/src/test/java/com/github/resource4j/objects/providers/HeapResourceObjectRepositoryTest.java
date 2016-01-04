@@ -1,0 +1,12 @@
+package com.github.resource4j.objects.providers;
+
+import java.time.Clock;
+
+public class HeapResourceObjectRepositoryTest extends AbstractResourceObjectRepositoryTest {
+
+    @Override
+    protected ResourceObjectRepository createRepository(Clock clock) {
+        return new HeapResourceObjectRepository(clock);
+    }
+
+}

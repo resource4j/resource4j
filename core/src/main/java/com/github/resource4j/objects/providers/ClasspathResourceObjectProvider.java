@@ -1,13 +1,12 @@
-package com.github.resource4j.objects.factories;
+package com.github.resource4j.objects.providers;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.FileResourceObject;
 import com.github.resource4j.objects.URIResourceObject;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.resources.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.github.resource4j.MissingResourceObjectException;
 
 import java.io.File;
 import java.net.URI;
@@ -15,19 +14,19 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Clock;
 
-public class ClasspathResourceObjectFactory implements ResourceObjectFactory {
+public class ClasspathResourceObjectProvider implements ResourceObjectProvider {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ClasspathResourceObjectFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ClasspathResourceObjectProvider.class);
 
     private Clock clock;
 
     private ClassLoader loader;
 	
-	public ClasspathResourceObjectFactory() {
+	public ClasspathResourceObjectProvider() {
         this(Resources.class.getClassLoader(), Clock.systemUTC());
 	}
 
-    public ClasspathResourceObjectFactory(ClassLoader loader, Clock clock) {
+    public ClasspathResourceObjectProvider(ClassLoader loader, Clock clock) {
         if (loader == null) {
             throw new NullPointerException("loader");
         }
@@ -40,7 +39,7 @@ public class ClasspathResourceObjectFactory implements ResourceObjectFactory {
     }
 
     @Override
-    public ResourceObject getObject(String name, String resolvedName) throws MissingResourceObjectException {
+    public ResourceObject get(String name, String resolvedName) throws MissingResourceObjectException {
         try {
             URL url = loader.getResource(resolvedName);
             if (url == null) {

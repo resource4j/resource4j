@@ -44,7 +44,7 @@ public class StringParser extends AbstractParser<String, OptionalString> {
 
     @Override
     protected OptionalString createValue(ResourceObject file, ResourceKey key, String value, Throwable suppressedException) {
-        return new GenericOptionalString(file.resolvedName(), key, value, suppressedException);
+        return new GenericOptionalString(file.actualName(), key, value, suppressedException);
     }
 
     @Override

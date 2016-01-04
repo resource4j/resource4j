@@ -17,7 +17,7 @@ public class ResourceObjectFormatException extends ResourceObjectException {
 	 * @param message exception message pattern
 	 */
 	public ResourceObjectFormatException(ResourceObject object, String message) {
-		super(message, object.name(), object.resolvedName());
+		super(message, object.name(), object.actualName());
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class ResourceObjectFormatException extends ResourceObjectException {
 	 * @param cause the parsing error
 	 */
 	public ResourceObjectFormatException(ResourceObject object, Throwable cause) {
-		super(cause, object.name(), object.resolvedName());
+		super(cause, object.name(), object.actualName());
 	}
 	
 }

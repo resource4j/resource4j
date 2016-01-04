@@ -21,7 +21,7 @@ public abstract class AbstractResourceObject implements ResourceObject {
     }
 
     @Override
-    public String resolvedName() {
+    public String actualName() {
         return resolvedName;
     }
 

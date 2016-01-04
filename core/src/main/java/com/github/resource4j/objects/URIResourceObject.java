@@ -1,6 +1,6 @@
 package com.github.resource4j.objects;
 
-import com.github.resource4j.InaccessibleResourceException;
+import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectException;
 import com.github.resource4j.util.IO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class URIResourceObject extends AbstractResourceObject {
         try (InputStream is = uri.toURL().openStream()) {
             length = IO.size(is);
         } catch (IOException e) {
-            throw new InaccessibleResourceException(e, name, resolvedName);
+            throw new InaccessibleResourceObjectException(e, name, resolvedName);
         }
         return length;
     }
@@ -51,7 +51,7 @@ public class URIResourceObject extends AbstractResourceObject {
         try {
             return uri.toURL().openStream();
         } catch (IOException | SecurityException e) {
-            throw new InaccessibleResourceException(e, name, resolvedName);
+            throw new InaccessibleResourceObjectException(e, name, resolvedName);
         }
     }
 }

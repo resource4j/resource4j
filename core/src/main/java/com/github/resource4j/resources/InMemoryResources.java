@@ -15,7 +15,7 @@ import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.ByteArrayResourceObject;
-import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.values.GenericOptionalString;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 

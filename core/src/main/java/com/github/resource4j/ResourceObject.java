@@ -22,7 +22,7 @@ public interface ResourceObject {
 	 * Name of resource object in resource storage used in requests to Resources, e.g. part of the file name that
      * includes relative path, but does not include resolution context.
 	 * @return name of resource object in storage
-     * @see #resolvedName()
+     * @see #actualName()
 	 */
 	String name();
 	
@@ -36,11 +36,11 @@ public interface ResourceObject {
 	}
 	
     /**
-     * Returns the actual name of this resource object resolved within some context if it exists 
+     * Returns the actual name of this resource object in storage resolved within some context if it exists
      * or {@link ResourceObject#name()} if it doesn't.
      * @return resolved name of this resource object
      */
-	String resolvedName();
+	String actualName();
 
 
 	/**
@@ -56,17 +56,17 @@ public interface ResourceObject {
     long lastModified();
 
 	/**
-	 * Returns content of this object as input stream.
-	 * @return content of this file as input stream
+	 * Returns data of this object as input stream.
+	 * @return data of this file as input stream
 	 */
 	InputStream asStream();
 
 	/**
-	 * Parse the content of this object using given parser and return it in OptionalValue,
+	 * Parse the data of this object using given parser and return it in OptionalValue,
 	 * which will be empty if the object does not exist.
 	 * @param parser a parser to use
-	 * @param <T> type of content to be returned in OptionalValue.
-	 * @return content of this object parsed to OptionalValue using given parser.
+	 * @param <T> type of data to be returned in OptionalValue.
+	 * @return data of this object parsed to OptionalValue using given parser.
 	 */
 	default <T> OptionalValue<T> parsedTo(ResourceParser<T, ? extends OptionalValue<T>> parser) {
 		return parser.parse(key(), this);

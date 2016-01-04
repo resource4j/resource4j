@@ -1,6 +1,6 @@
 package com.github.resource4j.resources;
 
-import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
@@ -90,14 +90,14 @@ public class DefaultResources extends CustomizableResources {
 		boolean found = false;
 		for (String option : options) {
 		    try {
-		        ResourceObject file = getFileFactory().getObject(bundle.getBundle(), option);
+		        ResourceObject file = getFileFactory().get(bundle.getBundle(), option);
 		        Map<String, String> properties = getBundleParser().parse(file);
 		        for (Map.Entry<String, String> property : properties.entrySet()) {
 		            String id = property.getKey();
 		            ResourceKey propertyKey = bundle.child(id);
 		            String propertyValue = property.getValue();
-		            OptionalString string = new GenericOptionalString(file.resolvedName(), bundle, propertyValue);
-		            valueCache.putIfAbsent(propertyKey, context, cached(string, file.resolvedName()));
+		            OptionalString string = new GenericOptionalString(file.actualName(), bundle, propertyValue);
+		            valueCache.putIfAbsent(propertyKey, context, cached(string, file.actualName()));
 		        }
 		        found = true;
 		    } catch (MissingResourceObjectException e) {
@@ -125,9 +125,9 @@ public class DefaultResources extends CustomizableResources {
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
             try {
-                ResourceObject file = getFileFactory().getObject(name, option);
+                ResourceObject file = getFileFactory().get(name, option);
                 file.asStream().close();
-                fileCache.put(key, context, cached(file, file.resolvedName()));
+                fileCache.put(key, context, cached(file, file.actualName()));
                 return file;
             } catch (MissingResourceObjectException | IOException e) {
             }

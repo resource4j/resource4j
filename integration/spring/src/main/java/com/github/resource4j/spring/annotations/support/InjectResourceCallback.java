@@ -14,7 +14,7 @@ import org.springframework.util.ReflectionUtils.FieldCallback;
 
 import com.github.resource4j.MandatoryValue;
 import com.github.resource4j.OptionalValue;
-import com.github.resource4j.MissingResourceObjectException;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.parsers.ByteArrayParser;
 import com.github.resource4j.objects.parsers.ResourceParser;
 import com.github.resource4j.objects.parsers.StringParser;
