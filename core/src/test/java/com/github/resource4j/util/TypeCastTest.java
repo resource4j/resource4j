@@ -47,7 +47,7 @@ public class TypeCastTest {
     public void testParseShort() throws ParseException {
         Short value = TypeConverter.convert("12345", Short.TYPE);
         assertNotNull(value);
-        assertEquals((short) 12345, value.shortValue()); // NOPMD by igammel on 30.03.12 15:39
+        assertEquals((short) 12345, value.shortValue()); // NOPMD by igammel whenRequested 30.03.12 15:39
     }
 
     @Test

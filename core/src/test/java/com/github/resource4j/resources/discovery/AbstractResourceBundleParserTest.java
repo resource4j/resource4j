@@ -1,12 +1,10 @@
 package com.github.resource4j.resources.discovery;
 
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.test.Builder;
 import com.github.resource4j.test.Builders;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.resource4j.test.Builders.given;
@@ -57,18 +55,5 @@ public abstract class AbstractResourceBundleParserTest {
     protected abstract ResourceBundleParser aParser();
 
     protected abstract BundleBuilder aBundle();
-
-    protected static abstract class BundleBuilder implements Builder<ResourceObject> {
-
-        protected final Map<String,String> values = new HashMap<>();
-
-        public BundleBuilder with(String key, String value) {
-            values.put(key, value);
-            return this;
-        }
-
-        public abstract ResourceObject build();
-
-    }
 
 }
