@@ -4,8 +4,10 @@ import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.objects.providers.HeapResourceObjectRepository;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.TestedOperation;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class ExpensiveResourceObjectProvider implements ResourceObjectProvider {
@@ -13,20 +15,20 @@ public class ExpensiveResourceObjectProvider implements ResourceObjectProvider {
     private HeapResourceObjectRepository repository;
 
     private TestedOperation<GetParams, ResourceObject> getMethodTest = new TestedOperation<>(
-            params -> repository.get(params.name, params.resolvedName));
+            params -> repository.get(params.name, params.ctx));
 
     public ExpensiveResourceObjectProvider(HeapResourceObjectRepository repository) {
         this.repository = repository;
     }
 
-    public PreprocessorDSL whenRequested(String name, String resolvedName, byte[] data) {
-        repository.put(name, resolvedName, data);
-        return new PreprocessorDSL(resolvedName);
+    public PreprocessorDSL whenRequested(String name, ResourceResolutionContext ctx, byte[] data) {
+        repository.put(name, ctx, data);
+        return new PreprocessorDSL(name, ctx);
     }
 
     @Override
-    public ResourceObject get(String name, String resolvedName) throws ResourceObjectAccessException {
-        return getMethodTest.execute(new GetParams(name, resolvedName));
+    public ResourceObject get(String name, ResourceResolutionContext ctx) throws ResourceObjectAccessException {
+        return getMethodTest.execute(new GetParams(name, ctx));
     }
 
     /**
@@ -34,30 +36,41 @@ public class ExpensiveResourceObjectProvider implements ResourceObjectProvider {
      */
     private static class GetParams {
         public String name;
-        public String resolvedName;
-
-        public GetParams(String name, String resolvedName) {
+        public ResourceResolutionContext ctx;
+        public GetParams(String name, ResourceResolutionContext ctx) {
             this.name = name;
-            this.resolvedName = resolvedName;
+            this.ctx = ctx;
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            GetParams getParams = (GetParams) o;
+            return Objects.equals(name, getParams.name) &&
+                    Objects.equals(ctx, getParams.ctx);
+        }
+        @Override
+        public int hashCode() {
+            return Objects.hash(name, ctx);
         }
     }
 
     public class PreprocessorDSL {
 
-        private String resolvedName;
+        private GetParams params;
 
-        public PreprocessorDSL(String resolvedName) {
-            this.resolvedName = resolvedName;
+        public PreprocessorDSL(String name, ResourceResolutionContext ctx) {
+            this.params = new GetParams(name, ctx);
         }
 
         public Runnable sleep(long millis) {
             return () ->
-                    getMethodTest.before(TestedOperation.sleep(params -> params.resolvedName.equals(resolvedName), millis));
+                    getMethodTest.before(TestedOperation.sleep(params -> params.equals(this.params), millis));
         }
 
         public Runnable await(CountDownLatch latch) {
             return () ->
-                    getMethodTest.before(TestedOperation.await(params -> params.resolvedName.equals(resolvedName), latch));
+                    getMethodTest.before(TestedOperation.await(params -> params.equals(this.params), latch));
         }
 
     }

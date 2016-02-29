@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
  * This resource object provider provides a mechanism to load resource objects from different contexts using pattern
@@ -36,14 +37,14 @@ public class MappingResourceObjectProvider implements ResourceObjectProvider {
 	}
 	
 	@Override
-	public ResourceObject get(String name, String actualName)
+	public ResourceObject get(String name, ResourceResolutionContext context)
 			throws MissingResourceObjectException {
 		for (Mapping mapping : mappings) {
-			if (mapping.pattern.matcher(actualName).matches()) {
-				return mapping.factory.get(name, actualName);
+			if (mapping.pattern.matcher(name).matches()) {
+				return mapping.factory.get(name, context);
 			}
 		}
-		throw new MissingResourceObjectException(name, actualName);
+		throw new MissingResourceObjectException(name, context.toString());
 	}
 
 	private static class Mapping {

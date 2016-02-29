@@ -3,6 +3,7 @@ package com.github.resource4j.objects.providers;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.util.IO;
 
 import java.io.IOException;
@@ -28,6 +29,11 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
     private Clock clock;
 
     private AtomicLong footprint = new AtomicLong();
+
+    /**
+     * used as generator of unique object keys
+     */
+    private FileNameResolver resolver = new DefaultFileNameResolver();
 
     public HeapResourceObjectRepository(Clock clock) {
         this.clock = clock;
@@ -60,12 +66,14 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
     }
 
     @Override
-    public boolean contains(String resolvedName) {
+    public boolean contains(String name, ResourceResolutionContext context) {
+        String resolvedName = resolver.resolve(name, context);
         return content.containsKey(resolvedName);
     }
 
     @Override
-    public void put(String name, String resolvedName, byte[] data) {
+    public void put(String name, ResourceResolutionContext context, byte[] data) {
+        String resolvedName = resolver.resolve(name, context);
         ObjectHolder newHolder = new ObjectHolder(name, data, clock.millis());
         ObjectHolder existingHolder = content.putIfAbsent(resolvedName, newHolder);
         if (existingHolder != null) {
@@ -77,13 +85,15 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
     }
 
     @Override
-    public void remove(String name) {
-        ObjectHolder removed = content.remove(name);
+    public void remove(String name, ResourceResolutionContext context) {
+        String resolvedName = resolver.resolve(name, context);
+        ObjectHolder removed = content.remove(resolvedName);
         footprint.addAndGet(-removed.footprint());
     }
 
     @Override
-    public ResourceObject get(String name, String resolvedName) throws MissingResourceObjectException {
+    public ResourceObject get(String name, ResourceResolutionContext context) throws MissingResourceObjectException {
+        String resolvedName = resolver.resolve(name, context);
         ObjectHolder holder = content.get(resolvedName);
         if (holder == null) {
             throw new MissingResourceObjectException(name, resolvedName);

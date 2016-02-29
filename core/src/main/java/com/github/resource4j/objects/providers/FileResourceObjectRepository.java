@@ -13,10 +13,14 @@ import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectExcept
 import com.github.resource4j.objects.exceptions.InvalidResourceObjectException;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectRepositoryException;
+import com.github.resource4j.resources.context.ResourceResolutionComponent;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileResourceObjectRepository implements ResourceObjectRepository {
+public class FileResourceObjectRepository
+        extends AbstractFileResourceObjectProvider
+        implements ResourceObjectRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FileResourceObjectRepository.class);
 	
@@ -51,7 +55,8 @@ public class FileResourceObjectRepository implements ResourceObjectRepository {
 	}
 
 	@Override
-	public boolean contains(String resolvedName) {
+	public boolean contains(String name, ResourceResolutionContext context) {
+        String resolvedName = resolver().resolve(name, context);
 		File file = new File(base, resolvedName);
 		return isResourceFile(file);
 	}
@@ -61,7 +66,8 @@ public class FileResourceObjectRepository implements ResourceObjectRepository {
     }
 
     @Override
-	public void put(String name, String resolvedName, byte[] data) throws ResourceObjectException {
+	public void put(String name, ResourceResolutionContext context, byte[] data) throws ResourceObjectException {
+        String resolvedName = resolver().resolve(name, context);
         File file = new File(base, resolvedName);
         if (file.isDirectory()) {
             throw new InvalidResourceObjectException("Directory with given name already exists", name, resolvedName);
@@ -89,7 +95,8 @@ public class FileResourceObjectRepository implements ResourceObjectRepository {
 	}
 
 	@Override
-	public void remove(String resolvedName) {
+	public void remove(String name, ResourceResolutionContext context) {
+        String resolvedName = resolver().resolve(name, context);
         File file = new File(base, resolvedName);
         if (isResourceFile(file)) {
             boolean isDeleted = file.delete();

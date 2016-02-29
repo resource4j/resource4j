@@ -12,11 +12,11 @@ import java.time.Clock;
 import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
 import static com.github.resource4j.objects.parsers.ResourceParsers.binary;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static com.github.resource4j.test.Builders.given;
 import static com.github.resource4j.test.TestClock.testFixed;
 import static java.time.Clock.systemUTC;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public abstract class AbstractResourceObjectRepositoryTest {
 
@@ -39,8 +39,8 @@ public abstract class AbstractResourceObjectRepositoryTest {
     @Test
     public void testRepositoryContainsStoredObject() throws Exception {
         ResourceObject object = given(anObject());
-        objects.put(object.name(), object.actualName(), object::asStream);
-        assertTrue(objects.contains(object.actualName()));
+        objects.put(object.name(), withoutContext(), object::asStream);
+        assertTrue(objects.contains(object.name(), withoutContext()));
     }
 
         @Test
@@ -48,9 +48,9 @@ public abstract class AbstractResourceObjectRepositoryTest {
         long millis = clock.millis();
 
         ResourceObject original = given(anObject());
-        objects.put(original.name(), original.actualName(), original::asStream);
+        objects.put(original.name(), withoutContext(), original::asStream);
 
-        ResourceObject found = objects.get(original.name(), original.actualName());
+        ResourceObject found = objects.get(original.name(), withoutContext());
 
         assertEquals("object name", original.name(), found.name());
         assertTrue("object resolved name", found.actualName().endsWith(original.actualName()));
@@ -69,13 +69,13 @@ public abstract class AbstractResourceObjectRepositoryTest {
     @Test(expected=MissingResourceObjectException.class)
     public void testRepositoryThrowsExceptionIfRequestedObjectNotExist() throws Exception {
         String testFile = "nonexistent";
-        objects.get(testFile, testFile);
+        objects.get(testFile, withoutContext());
     }
 
     @Test(expected=MissingResourceObjectException.class)
     public void testRepositoryThrowsExceptionIfRequestedObjectNameInvalid() throws Exception {
         String testFile = ":invalid:";
-        objects.get(testFile, testFile);
+        objects.get(testFile, withoutContext());
     }
 
 }

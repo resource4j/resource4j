@@ -90,15 +90,15 @@ public class DefaultResources extends CustomizableResources {
 		boolean found = false;
 		for (String option : options) {
 		    try {
-		        ResourceObject file = getFileFactory().get(bundle.getBundle(), option);
-		        Map<String, String> properties = getBundleParser().parse(file);
-		        for (Map.Entry<String, String> property : properties.entrySet()) {
-		            String id = property.getKey();
-		            ResourceKey propertyKey = bundle.child(id);
-		            String propertyValue = property.getValue();
-		            OptionalString string = new GenericOptionalString(file.actualName(), bundle, propertyValue);
-		            valueCache.putIfAbsent(propertyKey, context, cached(string, file.actualName()));
-		        }
+//		        ResourceObject file = getFileFactory().get(bundle.getBundle(), option);
+//		        Map<String, String> properties = getBundleParser().parse(file);
+//		        for (Map.Entry<String, String> property : properties.entrySet()) {
+//		            String id = property.getKey();
+//		            ResourceKey propertyKey = bundle.child(id);
+//		            String propertyValue = property.getValue();
+//		            OptionalString string = new GenericOptionalString(file.actualName(), bundle, propertyValue);
+//		            valueCache.putIfAbsent(propertyKey, context, cached(string, file.actualName()));
+//		        }
 		        found = true;
 		    } catch (MissingResourceObjectException e) {
 		    	// ignore, since we are processing multiple options
@@ -124,13 +124,13 @@ public class DefaultResources extends CustomizableResources {
         // not cached, try to find it
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
         for (String option : options) {
-            try {
-                ResourceObject file = getFileFactory().get(name, option);
-                file.asStream().close();
-                fileCache.put(key, context, cached(file, file.actualName()));
-                return file;
-            } catch (MissingResourceObjectException | IOException e) {
-            }
+//            try {
+//                ResourceObject file = getFileFactory().get(name, option);
+//                file.asStream().close();
+//                fileCache.put(key, context, cached(file, file.actualName()));
+//                return file;
+//            } catch (MissingResourceObjectException | IOException e) {
+//            }
         }
         // file not found: record this search result in cache
         fileCache.put(key, context, missingValue(ResourceObject.class));

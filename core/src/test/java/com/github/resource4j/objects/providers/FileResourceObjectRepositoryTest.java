@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.TestClock;
 import org.junit.Before;
 import org.junit.Rule;
@@ -31,7 +32,7 @@ public class FileResourceObjectRepositoryTest extends AbstractResourceObjectRepo
 	public void testMissingResourceFileThrownOnDirectory() throws Exception {
 		String testFile = "test.dir";
 		folder.newFolder(testFile);
-		objects().get(testFile, testFile);
+		objects().get(testFile, ResourceResolutionContext.withoutContext());
 	}
 
 }

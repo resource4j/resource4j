@@ -6,10 +6,16 @@ import com.github.resource4j.refreshable.cache.CacheRecord;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class BasicValueCache<O> implements Cache<O> {
+    @Override
+    public CacheRecord<O> putIfAbsent(ResolvedKey key, CacheRecord<O> value) {
+        return values.putIfAbsent(key, value);
+    }
 
-    private Map<ResolvedKey, CacheRecord<O>> values = new HashMap<>();
+    private ConcurrentMap<ResolvedKey, CacheRecord<O>> values = new ConcurrentHashMap<>();
 
     @Override
     public CacheRecord<O> get(ResolvedKey key) {

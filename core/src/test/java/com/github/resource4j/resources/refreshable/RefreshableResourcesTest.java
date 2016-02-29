@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.time.Clock;
 import java.util.Arrays;
 
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static com.github.resource4j.resources.discovery.PropertyBundleBuilder.aPropertiesBundle;
 import static com.github.resource4j.test.Builders.given;
 import static org.junit.Assert.assertEquals;
@@ -21,29 +23,30 @@ public class RefreshableResourcesTest {
     @Test
     public void test1() throws Exception {
 
-        ResourceKey key = ResourceKey.key("folder.bundle", "value");
+        String bundleName = "folder.bundle";
+        String objectName = bundleName;
+        ResourceKey key = ResourceKey.key(bundleName, "value");
 
         Clock clock = Clock.systemUTC();
 
+        ResourceResolutionContext ctx = in("ctx");
 
         ResourceObject bundleSlowCtx = given(aPropertiesBundle().with("value","slow-ctx"));
         ResourceObject bundleSlowCommon = given(aPropertiesBundle().with("value","slow"));
 
         HeapResourceObjectRepository pSlow = new HeapResourceObjectRepository(clock);
-        pSlow.put("folder.bundle", "/folder/bundle-ctx.properties", bundleSlowCtx::asStream);
-        pSlow.put("folder.bundle", "/folder/bundle.properties", bundleSlowCommon::asStream);
+        pSlow.put(objectName, ctx, bundleSlowCtx::asStream);
+        pSlow.put(objectName, withoutContext(), bundleSlowCommon::asStream);
 
         ResourceObject bundleFastCommon = given(aPropertiesBundle().with("value","fast"));
         HeapResourceObjectRepository pFast = new HeapResourceObjectRepository(clock);
-        pFast.put("folder.bundle", "/folder/bundle-ctx.properties", bundleFastCommon::asStream);
+        pFast.put(objectName, ctx, bundleFastCommon::asStream);
 
         ExpensiveResourceObjectProvider mSlow = managed(pSlow);
         ExpensiveResourceObjectProvider mFast = managed(pFast);
 
         RefreshableResources resources = new RefreshableResources();
         resources.setObjectProviders(Arrays.asList(mSlow, mFast));
-
-        ResourceResolutionContext ctx = ResourceResolutionContext.in("ctx");
 
         OptionalString value = resources.get(key, ctx);
         assertEquals("slow-ctx", value.asIs());

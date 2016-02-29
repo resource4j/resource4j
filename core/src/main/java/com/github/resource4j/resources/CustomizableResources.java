@@ -125,21 +125,21 @@ public class CustomizableResources extends AbstractResources {
         String resolvedSource = null;
         
         for (String option : options) {
-            try {
-                ResourceObject object = getFileFactory().get(key.getBundle(), option);
-                Map<String, String> properties = getBundleParser().parse(object);
-                if (properties.containsKey(shortKey)) {
-                    value = properties.get(shortKey);
-                    resolvedSource = object.actualName();
-					break;
-                } else if (properties.containsKey(fullKey)) {
-                	value = properties.get(fullKey);
-                    resolvedSource = object.actualName();
-                	break;
-                }
-            } catch (MissingResourceObjectException e) {
-                suppressedException = e;
-            }
+//            try {
+//                ResourceObject object = getFileFactory().get(key.getBundle(), option);
+//                Map<String, String> properties = getBundleParser().parse(object);
+//                if (properties.containsKey(shortKey)) {
+//                    value = properties.get(shortKey);
+//                    resolvedSource = object.actualName();
+//					break;
+//                } else if (properties.containsKey(fullKey)) {
+//                	value = properties.get(fullKey);
+//                    resolvedSource = object.actualName();
+//                	break;
+//                }
+//            } catch (MissingResourceObjectException e) {
+//                suppressedException = e;
+//            }
         }
         return new GenericOptionalString(resolvedSource, key, value, suppressedException);
     }
@@ -149,12 +149,12 @@ public class CustomizableResources extends AbstractResources {
         List<String> options = getFileEnumerationStrategy().enumerateFileNameOptions(new String[] { name }, context);
         ResourceObject object = null;
         for (String option : options) {
-            try {
-                object = getFileFactory().get(name, option);
-                break;
-            } catch (MissingResourceObjectException e) {
-                LOG.trace("Object not found: {}", option);
-            }
+//            try {
+//                object = getFileFactory().get(name, option);
+//                break;
+//            } catch (MissingResourceObjectException e) {
+//                LOG.trace("Object not found: {}", option);
+//            }
         }
         if (object != null) {
             return object;
