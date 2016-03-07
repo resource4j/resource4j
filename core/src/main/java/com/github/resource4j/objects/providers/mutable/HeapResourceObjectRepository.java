@@ -1,13 +1,14 @@
-package com.github.resource4j.objects.providers;
+package com.github.resource4j.objects.providers.mutable;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.objects.providers.resolvers.DefaultObjectNameResolver;
+import com.github.resource4j.objects.providers.resolvers.ObjectNameResolver;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEventDispatcher;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
-import com.github.resource4j.util.IO;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +23,16 @@ import java.util.stream.Collectors;
  * Currently storage is implemented as ConcurrentHashMap, but it may change in future.
  */
 public class HeapResourceObjectRepository implements ResourceObjectRepository {
+
+    public static final Predicate<ResourceObjectDetails> UNUSED = details -> details.readCount() == 0;
+
+    public static Predicate<ResourceObjectDetails> olderThan(long timestamp) {
+        return details -> details.timestamp() < timestamp;
+    }
+
+    public static Predicate<ResourceObjectDetails> largerThan(int size) {
+        return details -> details.size() > size;
+    }
 
     private Map<String, ObjectHolder> content = new ConcurrentHashMap<>();
 
@@ -33,10 +43,17 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
     /**
      * used as generator of unique object keys
      */
-    private FileNameResolver resolver = new DefaultFileNameResolver();
+    private ObjectNameResolver resolver = new DefaultObjectNameResolver();
+
+    private ResourceObjectRepositoryEventDispatcher dispatcher = new ResourceObjectRepositoryEventDispatcher(this);
 
     public HeapResourceObjectRepository(Clock clock) {
         this.clock = clock;
+    }
+
+    @Override
+    public String toString() {
+        return "heap:" + this.hashCode();
     }
 
     /**
@@ -46,16 +63,6 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
      */
     public long footprint() {
         return footprint.get();
-    }
-
-    public void removeIf(Predicate<ResourceObjectDetails> shallBeRemoved) {
-        content.values().removeIf(item -> {
-            if (shallBeRemoved.test(item)) {
-                footprint.addAndGet(-item.footprint());
-                return true;
-            }
-            return false;
-        });
     }
 
     public List<ResourceObject> find(Predicate<ResourceObjectDetails> searchCriteria) {
@@ -79,8 +86,10 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
         if (existingHolder != null) {
             int delta = existingHolder.update(data);
             footprint.addAndGet(delta);
+            dispatcher.objectCreated(name, context);
         } else {
             footprint.addAndGet(newHolder.footprint());
+            dispatcher.objectRemoved(name, context);
         }
     }
 
@@ -89,6 +98,7 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
         String resolvedName = resolver.resolve(name, context);
         ObjectHolder removed = content.remove(resolvedName);
         footprint.addAndGet(-removed.footprint());
+        dispatcher.objectRemoved(name, context);
     }
 
     @Override
@@ -100,6 +110,16 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
         }
         holder.readCounter.incrementAndGet();
         return asResourceObject(resolvedName, holder);
+    }
+
+    @Override
+    public void addListener(ResourceObjectRepositoryListener listener) {
+        dispatcher.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(ResourceObjectRepositoryListener listener) {
+        dispatcher.removeListener(listener);
     }
 
     private ByteArrayResourceObject asResourceObject(String resolvedName, ObjectHolder holder) {

@@ -2,24 +2,26 @@ package com.github.resource4j.objects.providers;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
+import com.github.resource4j.objects.providers.resolvers.DefaultObjectNameResolver;
+import com.github.resource4j.objects.providers.resolvers.ObjectNameResolver;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 public abstract class AbstractFileResourceObjectProvider implements ResourceObjectProvider {
 
-    private FileNameResolver resolver = new DefaultFileNameResolver();
+    private ObjectNameResolver resolver = new DefaultObjectNameResolver();
 
     protected AbstractFileResourceObjectProvider() {
     }
 
-    protected AbstractFileResourceObjectProvider(FileNameResolver resolver) {
+    protected AbstractFileResourceObjectProvider(ObjectNameResolver resolver) {
         this.resolver = resolver;
     }
 
-    public void setResolver(FileNameResolver resolver) {
+    public void setResolver(ObjectNameResolver resolver) {
         this.resolver = resolver;
     }
 
-    protected FileNameResolver resolver() {
+    protected ObjectNameResolver resolver() {
         return resolver;
     }
 

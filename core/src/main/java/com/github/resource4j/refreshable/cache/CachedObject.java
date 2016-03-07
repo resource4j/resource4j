@@ -18,10 +18,15 @@ public class CachedObject implements CachedResult {
 	@Override
 	public boolean exists() {
 		try {
-			return object.size() >= 0;
+			return object != null && object.size() >= 0;
 		} catch (InaccessibleResourceObjectException e) {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "object " + (object != null ? object.actualName() : "<missing>");
 	}
 
 }

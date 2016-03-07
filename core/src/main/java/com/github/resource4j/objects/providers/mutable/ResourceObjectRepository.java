@@ -1,8 +1,9 @@
-package com.github.resource4j.objects.providers;
+package com.github.resource4j.objects.providers.mutable;
 
-import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.objects.exceptions.ResourceObjectRepositoryException;
+import com.github.resource4j.objects.providers.ResourceObjectProvider;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.util.IO;
 
@@ -14,6 +15,18 @@ import java.util.function.Supplier;
  * Common interface for mutable resource object providers, e.g. the ones working with database.
  */
 public interface ResourceObjectRepository extends ResourceObjectProvider {
+
+    /**
+     * Subscribe given listener on the events from this repository
+     * @param listener the listener to subscribe
+     */
+    void addListener(ResourceObjectRepositoryListener listener);
+
+    /**
+     * Unsubscribe given listener from the events from this repository
+     * @param listener the listener to unsubscribe
+     */
+    void removeListener(ResourceObjectRepositoryListener listener);
 
     /**
      * Checks if the object with given name is present in given context in this repository

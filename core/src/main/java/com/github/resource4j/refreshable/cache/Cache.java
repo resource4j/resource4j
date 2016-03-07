@@ -1,14 +1,10 @@
 package com.github.resource4j.refreshable.cache;
 
-import com.github.resource4j.refreshable.ResolvedKey;
+public interface Cache<K, V> {
 
-import java.io.Serializable;
+	CacheRecord<V> get(K key);
 
-public interface Cache<O> {
+	void put(K key, CacheRecord<V> value);
 
-	CacheRecord<O> get(ResolvedKey key);
-
-	void put(ResolvedKey key, CacheRecord<O> value);
-
-	CacheRecord<O> putIfAbsent(ResolvedKey key, CacheRecord<O> initial);
+	CacheRecord<V> putIfAbsent(K key, CacheRecord<V> initial);
 }

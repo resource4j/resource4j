@@ -21,7 +21,8 @@ public final class ResourceResolutionContext implements Serializable {
 			return 0;
 		}
 	};
-	
+	public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
+
 	public static ResourceResolutionContext withoutContext() {
 		return new ResourceResolutionContext(new ResourceResolutionComponent[0]);
 	}
@@ -95,7 +96,7 @@ public final class ResourceResolutionContext implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		for (ResourceResolutionComponent component : components) {
 			if (builder.length() > 0) {
-				builder.append('-');
+				builder.append(DEFAULT_COMPONENT_SEPARATOR);
 			}
 			List<String> sections = component.sections();
 			boolean skipSeparator = true;
@@ -140,7 +141,8 @@ public final class ResourceResolutionContext implements Serializable {
             }
             @Override
             public ResourceResolutionContext next() {
-                return current.parent();
+				current = current.parent();
+                return current;
             }
         }).spliterator(), false);
 	}

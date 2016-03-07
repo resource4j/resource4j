@@ -1,11 +1,9 @@
-package com.github.resource4j.objects.providers;
+package com.github.resource4j.objects.providers.mutable;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Clock;
-import java.util.function.Supplier;
 
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.FileResourceObject;
@@ -13,7 +11,9 @@ import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectExcept
 import com.github.resource4j.objects.exceptions.InvalidResourceObjectException;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectRepositoryException;
-import com.github.resource4j.resources.context.ResourceResolutionComponent;
+import com.github.resource4j.objects.providers.AbstractFileResourceObjectProvider;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEventDispatcher;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,13 @@ public class FileResourceObjectRepository
 	private File base;
 
     private Clock clock;
+
+    private ResourceObjectRepositoryEventDispatcher dispatcher = new ResourceObjectRepositoryEventDispatcher(this);
+
+    @Override
+    public String toString() {
+        return "file:" + this.base.getAbsolutePath();
+    }
 
 	public FileResourceObjectRepository(String basePath, Clock clock) {
 		this(new File(basePath), clock);
@@ -72,9 +79,10 @@ public class FileResourceObjectRepository
         if (file.isDirectory()) {
             throw new InvalidResourceObjectException("Directory with given name already exists", name, resolvedName);
         }
+        boolean created = false;
         try {
             if (!file.exists()) {
-                boolean created = file.createNewFile();
+                created = file.createNewFile();
                 if (!created) {
                     throw new ResourceObjectRepositoryException("File was not created", name, resolvedName);
                 }
@@ -92,6 +100,11 @@ public class FileResourceObjectRepository
         } catch (IOException e) {
             throw new ResourceObjectRepositoryException("Could not write data to file", e, name, resolvedName);
         }
+        if (created) {
+            dispatcher.objectCreated(name, context);
+        } else {
+            dispatcher.objectUpdated(name, context);
+        }
 	}
 
 	@Override
@@ -104,5 +117,16 @@ public class FileResourceObjectRepository
                 throw new ResourceObjectRepositoryException("File was not deleted", "<n/a>", resolvedName);
             }
         }
+        dispatcher.objectRemoved(name, context);
 	}
+
+    @Override
+    public void addListener(ResourceObjectRepositoryListener listener) {
+        dispatcher.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(ResourceObjectRepositoryListener listener) {
+        dispatcher.removeListener(listener);
+    }
 }

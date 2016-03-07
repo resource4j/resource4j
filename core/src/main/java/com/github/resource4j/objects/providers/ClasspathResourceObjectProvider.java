@@ -26,6 +26,10 @@ public class ClasspathResourceObjectProvider extends AbstractFileResourceObjectP
         this(Resources.class.getClassLoader(), Clock.systemUTC());
 	}
 
+    public ClasspathResourceObjectProvider(ClassLoader loader) {
+        this(loader, Clock.systemUTC());
+    }
+
     public ClasspathResourceObjectProvider(ClassLoader loader, Clock clock) {
         if (loader == null) {
             throw new NullPointerException("loader");
@@ -56,4 +60,10 @@ public class ClasspathResourceObjectProvider extends AbstractFileResourceObjectP
             throw new IllegalArgumentException("Invalid resource name " + name, e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "classpath:" + loader.toString();
+    }
+
 }

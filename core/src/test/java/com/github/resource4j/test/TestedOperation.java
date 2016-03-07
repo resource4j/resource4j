@@ -44,7 +44,7 @@ public class TestedOperation<P,R> {
             } catch (InterruptedException e) {
                 break;
             }
-            delta = clock.millis() - time;
+            delta = time - clock.millis();
         }
     }
 

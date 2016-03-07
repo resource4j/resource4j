@@ -27,7 +27,7 @@ public class CachedValue implements Serializable, CachedResult {
 
 	@Override
 	public String toString() {
-		return String.valueOf(value);
+		return value != null ? String.valueOf(value) + " @ " + source : "<missing>";
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.github.resource4j.objects.providers;
+package com.github.resource4j.objects.providers.resolvers;
 
 import com.github.resource4j.resources.context.ResourceResolutionComponent;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
@@ -6,7 +6,7 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static java.lang.String.join;
 
-public class DefaultFileNameResolver implements FileNameResolver {
+public class DefaultObjectNameResolver implements ObjectNameResolver {
 
     public static final String FILE_NAME_SEPARATOR = "-";
 
@@ -20,10 +20,10 @@ public class DefaultFileNameResolver implements FileNameResolver {
 
     private String sectionSeparator = SECTION_SEPARATOR;
 
-    public DefaultFileNameResolver() {
+    public DefaultObjectNameResolver() {
     }
 
-    public DefaultFileNameResolver(String fileNameSeparator, String componentSeparator, String sectionSeparator) {
+    public DefaultObjectNameResolver(String fileNameSeparator, String componentSeparator, String sectionSeparator) {
         this.fileNameSeparator = fileNameSeparator;
         this.componentSeparator = componentSeparator;
         this.sectionSeparator = sectionSeparator;

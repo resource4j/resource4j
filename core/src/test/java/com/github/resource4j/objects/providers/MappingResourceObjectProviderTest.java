@@ -13,17 +13,11 @@ import static java.time.Clock.systemUTC;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.ByteArrayResourceObject;
-import com.github.resource4j.objects.ByteArrayResourceObjectBuilder;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
+import com.github.resource4j.objects.providers.mutable.FileResourceObjectRepository;
 import com.github.resource4j.test.TestClock;
 import org.junit.Rule;
 import org.junit.Test;

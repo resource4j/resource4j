@@ -22,7 +22,12 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
 public class MappingResourceObjectProvider implements ResourceObjectProvider {
 
 	private List<Mapping> mappings;
-	
+
+    @Override
+	public String toString() {
+        return "map(" + this.mappings.size() + ")";
+    }
+
 	/**
 	 * Specify list of pattern to resource object provider mappings. Note, that if the actual object name
 	 * matches two or more patterns, first one in the map will be used. You may use {@link LinkedHashMap} 

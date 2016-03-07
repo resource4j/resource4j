@@ -2,7 +2,7 @@ package com.github.resource4j.resources.refreshable;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
-import com.github.resource4j.objects.providers.HeapResourceObjectRepository;
+import com.github.resource4j.objects.providers.mutable.HeapResourceObjectRepository;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.TestedOperation;
@@ -12,17 +12,28 @@ import java.util.concurrent.CountDownLatch;
 
 public class ExpensiveResourceObjectProvider implements ResourceObjectProvider {
 
+    private final String name;
+
     private HeapResourceObjectRepository repository;
 
     private TestedOperation<GetParams, ResourceObject> getMethodTest = new TestedOperation<>(
             params -> repository.get(params.name, params.ctx));
 
-    public ExpensiveResourceObjectProvider(HeapResourceObjectRepository repository) {
+    public String toString() {
+        return name + ":" + this.repository.toString();
+    }
+
+    public ExpensiveResourceObjectProvider(String name, HeapResourceObjectRepository repository) {
+        this.name = name;
         this.repository = repository;
     }
 
     public PreprocessorDSL whenRequested(String name, ResourceResolutionContext ctx, byte[] data) {
         repository.put(name, ctx, data);
+        return new PreprocessorDSL(name, ctx);
+    }
+
+    public PreprocessorDSL whenRequested(String name, ResourceResolutionContext ctx) {
         return new PreprocessorDSL(name, ctx);
     }
 
@@ -63,14 +74,12 @@ public class ExpensiveResourceObjectProvider implements ResourceObjectProvider {
             this.params = new GetParams(name, ctx);
         }
 
-        public Runnable sleep(long millis) {
-            return () ->
-                    getMethodTest.before(TestedOperation.sleep(params -> params.equals(this.params), millis));
+        public void sleep(long millis) {
+            getMethodTest.before(TestedOperation.sleep(params -> params.equals(this.params), millis));
         }
 
-        public Runnable await(CountDownLatch latch) {
-            return () ->
-                    getMethodTest.before(TestedOperation.await(params -> params.equals(this.params), latch));
+        public void await(CountDownLatch latch) {
+            getMethodTest.before(TestedOperation.await(params -> params.equals(this.params), latch));
         }
 
     }
