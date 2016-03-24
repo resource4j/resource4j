@@ -19,13 +19,13 @@ public class BasicValueCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public CacheRecord<V> get(K key) {
-        return values.get(key);
+    public void clear() {
+        values.clear();
     }
 
     @Override
-    public void put(K key, CacheRecord<V> value) {
-        values.put(key, value);
+    public CacheRecord<V> get(K key) {
+        return values.get(key);
     }
 
 }

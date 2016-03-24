@@ -62,10 +62,24 @@ public final class ResourceResolutionContext implements Serializable {
 	}
 	
 	public ResourceResolutionContext parent() {
-		ResourceResolutionComponent[] components = new ResourceResolutionComponent[this.components.length - 1];
-		for (int i = 0; i < this.components.length - 1; i++) {
-			components[i] = this.components[i];
-		}
+        if (isEmpty()) {
+            throw new IllegalStateException("Context is already empty: parent does not exist");
+        }
+
+        int length = this.components.length;
+        int lastIndex = length - 1;
+        ResourceResolutionComponent last = this.components[lastIndex];
+        if (!last.isReducible()) {
+            length = length - 1;
+        }
+
+        ResourceResolutionComponent[] components = new ResourceResolutionComponent[length];
+        System.arraycopy(this.components, 0, components, 0, lastIndex);
+
+        if (last.isReducible()) {
+            components[lastIndex] = last.reduce();
+        }
+
 		return new ResourceResolutionContext(components);
 	}
 	

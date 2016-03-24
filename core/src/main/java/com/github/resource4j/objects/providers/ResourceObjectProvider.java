@@ -5,6 +5,8 @@ import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
+import java.util.function.Predicate;
+
 /**
  * Common interface for resource object providers.
  */
@@ -19,5 +21,13 @@ public interface ResourceObjectProvider {
      * @throws com.github.resource4j.objects.exceptions.ResourceObjectAccessException if object does not exist, is not accessible or not readable.
      */
     ResourceObject get(String name, ResourceResolutionContext context) throws ResourceObjectAccessException;
-    
+
+    default ResourceObjectProvider objectsLike(Predicate<String> nameMatcher) {
+        return new SelectiveResourceObjectProvider(this, nameMatcher, null);
+    }
+
+    default ResourceObjectProvider acceptContext(Predicate<ResourceResolutionContext> contextMatcher) {
+        return new SelectiveResourceObjectProvider(this, null, contextMatcher);
+    }
+
 }

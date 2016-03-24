@@ -5,10 +5,16 @@ import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
-import com.github.resource4j.objects.parsers.ResourceParsers;
+import com.github.resource4j.objects.parsers.BundleParser;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
-import com.github.resource4j.refreshable.cache.*;
-import com.github.resource4j.refreshable.cache.impl.BasicValueCache;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
+import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
+import com.github.resource4j.refreshable.cache.Cache;
+import com.github.resource4j.refreshable.cache.CacheRecord;
+import com.github.resource4j.refreshable.cache.CachedBundle;
+import com.github.resource4j.refreshable.cache.CachedObject;
+import com.github.resource4j.refreshable.cache.CachedResult;
+import com.github.resource4j.refreshable.cache.CachedValue;
 import com.github.resource4j.resources.AbstractResources;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.values.GenericOptionalString;
@@ -16,29 +22,22 @@ import com.github.resource4j.values.GenericOptionalString;
 import java.time.Clock;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
+import static com.github.resource4j.refreshable.ResourcesConfiguratorBuilder.configure;
 import static com.github.resource4j.refreshable.cache.CacheRecord.initial;
-import static com.github.resource4j.resources.context.ResourceResolutionContext.*;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.parentsOf;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.StreamSupport.stream;
 
-/**
- * 1. Push request ("bundle.k1", ctx)
- * 2. Map ("bundle.k1", ctx) -> ("bundle-ctx-A", "bundle-ctx-B")
- * 3. Load "bundle-ctx-A" -> ("bundle-ctx-A:bundle.k1", "bundle-ctx-A:bundle.k2"...)
- * 4. Reduce ("bundle-ctx-A:bundle.k1","bundle-ctx-B:bundle.k1" -> "bundle-ctx-A:bundle.k1")
- * 5.
- */
 public class RefreshableResources extends AbstractResources {
 
-    private Cache<ResolvedKey, CachedValue> values = new BasicValueCache<>();
+    private Cache<ResolvedKey, CachedValue> values;
 
-    private Cache<ResolvedName, CachedBundle> bundles = new BasicValueCache<>();
+    private Cache<ResolvedName, CachedBundle> bundles;
 
-    private Cache<ResolvedName, CachedObject> objects = new BasicValueCache<>();
+    private Cache<ResolvedName, CachedObject> objects;
 
     private List<ResourceObjectProvider> providers;
 
@@ -52,52 +51,127 @@ public class RefreshableResources extends AbstractResources {
 
 	private Map<ResolvedName, Future<CachedObject>> objectRequests = new HashMap<>();
 
-	private ExecutorService valueQueue = Executors.newFixedThreadPool(2, new NamedThreadFactory("value-loader"));
+	private ExecutorService valueQueue;
 
-    private ExecutorService bundleQueue = Executors.newFixedThreadPool(2, new NamedThreadFactory("bundle-loader"));
+    private ExecutorService bundleQueue;
 
-	private ExecutorService objectQueue = Executors.newFixedThreadPool(2, new NamedThreadFactory("object-loader"));
+	private ExecutorService objectQueue;
 
-    private static class NamedThreadFactory implements ThreadFactory {
-        private final AtomicInteger counter = new AtomicInteger();
-        private final String name;
-        private static final String THREAD_NAME_PATTERN = "%s-%d";
-        public NamedThreadFactory(String name) {
-            this.name = name;
+    private List<BundleFormat> bundleFormats;
+
+    private ResourceKey defaultBundle;
+
+    private ResourceObjectRepositoryListener listener = event -> {
+        LOG.info("Repository {} updated: clearing caches...", event.source());
+        resetCaches();
+    };
+
+    public RefreshableResources() {
+        this(configure().get());
+    }
+
+    public RefreshableResources(RefreshableResourcesConfigurator configurator) {
+        configurator.configureSources(sources -> {
+            this.providers = sources;
+            for (ResourceObjectProvider provider : this.providers) {
+                if (provider instanceof ResourceObjectRepository) {
+                    ResourceObjectRepository repository = (ResourceObjectRepository) provider;
+                    repository.addListener(listener);
+                }
+            }
+        });
+        configurator.configureFormats(formats -> this.bundleFormats = formats);
+        configurator.configureDefaultBundle(bundle -> defaultBundle = bundle);
+
+        configurator.configureValuePipeline(
+                cache -> this.values = cache,
+                queue -> this.valueQueue = queue);
+
+        configurator.configureBundlePipeline(
+                cache -> this.bundles = cache,
+                queue -> this.bundleQueue = queue);
+
+
+        configurator.configureObjectPipeline(
+                cache -> this.objects = cache,
+                queue -> this.objectQueue = queue);
+
+    }
+
+    private void resetCaches() {
+        ResolvedName objectTaskName = new ResolvedName(":", withoutContext());
+        ResolvedKey valueTaskName = new ResolvedKey(ResourceKey.key(":"), withoutContext());
+        final CountDownLatch bundleLatch = new CountDownLatch(1);
+        final CountDownLatch valueLatch = new CountDownLatch(1);
+        resetCache("objects", objects, objectTaskName, objectQueue, objectRequests, null, bundleLatch);
+        resetCache("bundles", bundles, objectTaskName, bundleQueue, bundleRequests, bundleLatch, valueLatch);
+        resetCache("values", values, valueTaskName, valueQueue, valueRequests, valueLatch, null);
+    }
+
+    private <K,V> void resetCache(String cacheName,
+                                  Cache<K, V> cache,
+                                  K resolvedKey,
+                                  ExecutorService queue,
+                                  Map<K, Future<V>> requests,
+                                  CountDownLatch barrier,
+                                  CountDownLatch latch) {
+        CacheRecord<V> value = cache.putIfAbsent(resolvedKey, initial());
+        fetchIfNotInitialized(value, resolvedKey, requests, () -> queue.submit(() -> {
+            if (barrier != null) {
+                while (barrier.getCount() > 0) {
+                    barrier.await();
+                }
+            }
+            cache.clear();
+            LOG.debug("Cache {} has been reset", cacheName);
+            if (latch != null) {
+                latch.countDown();
+            }
+            return null;
+        }));
+    }
+
+    private ResolvedName bundleName(ResourceKey key, ResourceResolutionContext context) {
+        String bundle = key.getBundle();
+        if (bundle == null) {
+            return null;
         }
-        @Override
-        public Thread newThread(Runnable r) {
-            final String threadName = String.format(THREAD_NAME_PATTERN, name, counter.incrementAndGet());
-            return new Thread(r, threadName);
-
-        }
+        String objectName = bundle.replace('.', '/');
+        ResolvedName name = new ResolvedName(objectName, context);
+        return name;
     }
 
     private CachedValue loadValue(ResolvedKey resolvedKey) {
-        String objectName = resolvedKey.key().getBundle().replace('.', '/');
 
-        ResolvedName bundleName = new ResolvedName(objectName, resolvedKey.context());
+        ResourceKey bundle = resolvedKey.key().getBundle() != null ? resolvedKey.key() : defaultBundle;
+
+        final ResolvedName bundleName = bundleName(bundle, resolvedKey.context());
+
         CacheRecord<CachedBundle> value = bundles.putIfAbsent(bundleName, initial());
         fetchIfNotInitialized(value, bundleName, bundleRequests, () -> {
             Future<CachedBundle> future = null;
-            future = fireRequest(null, bundleQueue, () -> this.loadBundle(bundleName));
+            for (BundleFormat format : bundleFormats) {
+                future = fireRequest(future, bundleQueue,
+                        () -> this.loadBundle(format.applyTo(bundleName), format.parser()));
+            }
             return future;
         });
 
         if (value.is(CacheRecord.StateType.EXISTS)) {
-            CachedBundle bundle = value.get();
-            String valueString = bundle.get(resolvedKey.key().getId());
-            return new CachedValue(valueString, bundle.source());
+            CachedBundle cachedBundle = value.get();
+            String valueString = cachedBundle.get(resolvedKey.key().getId());
+            return new CachedValue(valueString, cachedBundle.source());
 
         }
+
         return new CachedValue(null, null);
     }
 
-    private CachedBundle loadBundle(ResolvedName bundleName) {
+    private CachedBundle loadBundle(ResolvedName bundleName, BundleParser bundle) {
         ResourceObject object = loadObjectNonRecursive(bundleName);
         try {
-            Map<String, String> bundle = object.parsedTo(ResourceParsers.propertyMap()).asIs();
-            return new CachedBundle(object.actualName(), bundle);
+            Map<String, String> bundleMap = object.parsedTo(bundle).asIs();
+            return new CachedBundle(object.actualName(), bundleMap);
         } catch (Exception e) {
             return new CachedBundle(object.actualName(), null);
         }
@@ -193,6 +267,7 @@ public class RefreshableResources extends AbstractResources {
             // if it's not null, then we are expecting new result and need to wait
             if (future != null) {
                 cacheObject(key, future, value);
+                existingRequests.remove(key);
             }
         }
     }
@@ -267,10 +342,6 @@ public class RefreshableResources extends AbstractResources {
         }
         objectRequests.put(resolvedKey, future);
         return future;
-    }
-
-    public void setObjectProviders(List<ResourceObjectProvider> providers) {
-        this.providers = providers;
     }
 
 }

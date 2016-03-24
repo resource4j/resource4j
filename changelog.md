@@ -6,9 +6,9 @@ Version 3.0
 
 Breaking changes:
 
-1. Introduced core ResourceObject interface. ResourceFile dependencies updated.
-2. Changed ResourceBundleParser API - getResourceFileName replaced with ContentType annotation for bundle parsers.
-3. Implementation packages reorganized
+1. With introduction of ResourceObject interface and related APIs, all ResourceFile APIs have been removed.
+3. Implementation packages reorganized.
+4. Dropped support of default bundles, since there exists a preferable and more transparent alternative in DSL
 
 Version 2.1
 -----------

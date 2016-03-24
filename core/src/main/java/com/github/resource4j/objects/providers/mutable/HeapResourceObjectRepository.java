@@ -3,6 +3,8 @@ package com.github.resource4j.objects.providers.mutable;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.objects.providers.events.ResourceObjectEventType;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent;
 import com.github.resource4j.objects.providers.resolvers.DefaultObjectNameResolver;
 import com.github.resource4j.objects.providers.resolvers.ObjectNameResolver;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEventDispatcher;
@@ -13,10 +15,15 @@ import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.created;
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.deleted;
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.modified;
 
 /**
  * Resource object repository which stores data in heap.
@@ -34,7 +41,7 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
         return details -> details.size() > size;
     }
 
-    private Map<String, ObjectHolder> content = new ConcurrentHashMap<>();
+    private ConcurrentMap<String, ObjectHolder> content = new ConcurrentHashMap<>();
 
     private Clock clock;
 
@@ -86,10 +93,10 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
         if (existingHolder != null) {
             int delta = existingHolder.update(data);
             footprint.addAndGet(delta);
-            dispatcher.objectCreated(name, context);
+            dispatcher.repositoryUpdated(modified(toString(), name, context));
         } else {
             footprint.addAndGet(newHolder.footprint());
-            dispatcher.objectRemoved(name, context);
+            dispatcher.repositoryUpdated(created(toString(), name, context));
         }
     }
 
@@ -98,7 +105,7 @@ public class HeapResourceObjectRepository implements ResourceObjectRepository {
         String resolvedName = resolver.resolve(name, context);
         ObjectHolder removed = content.remove(resolvedName);
         footprint.addAndGet(-removed.footprint());
-        dispatcher.objectRemoved(name, context);
+        dispatcher.repositoryUpdated(deleted(toString(), name, context));
     }
 
     @Override

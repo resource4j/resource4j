@@ -45,12 +45,6 @@ public abstract class AbstractResourcesTest {
     }
 
     @Test
-    public void testGetValueFromDefaultBundleWhenSearchingInExistingBundle() {
-        MandatoryString value = resources.get(key("test", "defaultValue"), Locale.US).notNull();
-        assertEquals("success", value.asIs());
-    }
-
-    @Test
     public void testGetValueFromExistingBundleSpecifiedByClass() {
         MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.US).notNull();
         assertEquals("Concrete Action", value.asIs());
@@ -89,8 +83,9 @@ public abstract class AbstractResourcesTest {
 
     @Test
     public void testGetValueFromDefaultBundleWhenSearchingInExistingBundleSpecifiedByClass() {
-        OptionalString value = resources.get(key(ConcreteAction.class, "defaultName"), Locale.US);
-        assertEquals("ActionName", value.asIs());
+        OptionalString value =
+                resources.get(key(ConcreteAction.class, "defaultName"), Locale.US);
+        assertEquals("ActionName", value.or(resources.get(key("defaultName"), Locale.US).asIs()).asIs());
     }
 
     @Test

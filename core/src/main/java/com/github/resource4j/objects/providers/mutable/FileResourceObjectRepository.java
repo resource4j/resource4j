@@ -12,11 +12,16 @@ import com.github.resource4j.objects.exceptions.InvalidResourceObjectException;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectRepositoryException;
 import com.github.resource4j.objects.providers.AbstractFileResourceObjectProvider;
+import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEventDispatcher;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.created;
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.deleted;
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.modified;
 
 public class FileResourceObjectRepository
         extends AbstractFileResourceObjectProvider
@@ -101,9 +106,9 @@ public class FileResourceObjectRepository
             throw new ResourceObjectRepositoryException("Could not write data to file", e, name, resolvedName);
         }
         if (created) {
-            dispatcher.objectCreated(name, context);
+            dispatcher.repositoryUpdated(created(toString(), name, context));
         } else {
-            dispatcher.objectUpdated(name, context);
+            dispatcher.repositoryUpdated(modified(toString(), name, context));
         }
 	}
 
@@ -117,7 +122,7 @@ public class FileResourceObjectRepository
                 throw new ResourceObjectRepositoryException("File was not deleted", "<n/a>", resolvedName);
             }
         }
-        dispatcher.objectRemoved(name, context);
+        dispatcher.repositoryUpdated(deleted(toString(), name, context));
 	}
 
     @Override

@@ -27,28 +27,19 @@ public class ResourceObjectRepositoryEventDispatcher implements ResourceObjectRe
         this.listeners.remove(listener);
     }
 
-    private void notifySafe(String name, ResourceResolutionContext context, Consumer<ResourceObjectRepositoryListener> consumer) {
+    @Override
+    public void repositoryUpdated(ResourceObjectRepositoryEvent event) {
         listeners.forEach(listener -> {
             try {
-                consumer.accept(listener);
+                listener.repositoryUpdated(event);
             } catch (RuntimeException e) {
-                log.error("failed to notify listener {} about object ({}-{})", listener, name, context, e);
+                log.error("failed to notify listener {}: {} object ({}-{})",
+                        listener,
+                        event.type().toString().toLowerCase(),
+                        event.objectName(),
+                        event.context(),
+                        e);
             }
         });
-    }
-
-    @Override
-    public void objectRemoved(String name, ResourceResolutionContext context) {
-        notifySafe(name, context, listener -> listener.objectRemoved(name, context));
-    }
-
-    @Override
-    public void objectCreated(String name, ResourceResolutionContext context) {
-        notifySafe(name, context, listener -> listener.objectCreated(name, context));
-    }
-
-    @Override
-    public void objectUpdated(String name, ResourceResolutionContext context) {
-        notifySafe(name, context, listener -> listener.objectUpdated(name, context));
     }
 }

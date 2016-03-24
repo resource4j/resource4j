@@ -8,8 +8,24 @@ import java.util.Map;
 
 public class PropertyBundleBuilder extends BundleBuilder {
 
+    private String name = "test";
+
+    private String resolvedName = "test";
+
     public static PropertyBundleBuilder aPropertiesBundle() {
         return new PropertyBundleBuilder();
+    }
+
+    public static PropertyBundleBuilder aPropertiesBundle(String name, String resolvedName) {
+        return new PropertyBundleBuilder(name, resolvedName);
+    }
+
+    public PropertyBundleBuilder() {
+    }
+
+    public PropertyBundleBuilder(String name, String resolvedName) {
+        this.name = name;
+        this.resolvedName = resolvedName;
     }
 
     private static void appendEscaped(StringBuilder builder, String unicodeText) {
@@ -30,7 +46,7 @@ public class PropertyBundleBuilder extends BundleBuilder {
             appendEscaped(content, entry.getValue());
             content.append('\n');
         }
-        return new ByteArrayResourceObject("test", "test",
+        return new ByteArrayResourceObject(name, resolvedName,
                 content.toString().getBytes(StandardCharsets.ISO_8859_1),
                 System.currentTimeMillis());
     }
