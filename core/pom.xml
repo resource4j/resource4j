@@ -8,6 +8,7 @@
 	</parent>
 
     <artifactId>resource4j-core</artifactId>
+    <packaging>jar</packaging>
 
     <name>Resource4J Core Library</name>
     <description>

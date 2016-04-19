@@ -165,7 +165,18 @@ public class ResourceKey implements java.io.Serializable {
     public ResourceKey bundle() {
     	return new ResourceKey(bundle, null);
     }
-    
+
+    /**
+     * Returns unresolved name of resource object associated with this key
+     * @return unresolved name of resource object
+     */
+    public String objectName() {
+        if (bundle == null) {
+            return null;
+        }
+        return bundle.replace('.', '/');
+    }
+
     /**
      * Returns name of the bundle for this key
      * @return the bundle name

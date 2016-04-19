@@ -1,7 +1,10 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.ResourceObject;
+import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
+import com.github.resource4j.objects.providers.AbstractFileResourceObjectProvider;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -11,7 +14,9 @@ import org.springframework.core.io.Resource;
 
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 
-public class SpringResourceObjectProvider implements ResourceObjectProvider, ApplicationContextAware {
+public class SpringResourceObjectProvider
+		extends AbstractFileResourceObjectProvider
+		implements ApplicationContextAware {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SpringResourceObjectProvider.class);
 
@@ -28,7 +33,7 @@ public class SpringResourceObjectProvider implements ResourceObjectProvider, App
 		this.applicationContext = applicationContext;
 	}
 
-	@Override
+    @Override
 	public ResourceObject get(String name, String actualName)
 			throws MissingResourceObjectException {
 		if (applicationContext == null) {

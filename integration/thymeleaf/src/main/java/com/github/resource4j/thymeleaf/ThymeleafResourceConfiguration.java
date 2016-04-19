@@ -1,10 +1,11 @@
 package com.github.resource4j.thymeleaf;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.github.resource4j.objects.providers.ClasspathResourceObjectProvider;
 import com.github.resource4j.objects.providers.MappingResourceObjectProvider;
+import com.github.resource4j.objects.providers.ResourceObjectProvider;
+import com.github.resource4j.resources.RefreshableResources;
+import com.github.resource4j.resources.Resources;
+import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 import com.github.resource4j.spring.SpringResourceObjectProvider;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -15,10 +16,10 @@ import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import com.github.resource4j.objects.providers.ResourceObjectProvider;
-import com.github.resource4j.resources.DefaultResources;
-import com.github.resource4j.resources.Resources;
-import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static com.github.resource4j.resources.ResourcesConfiguratorBuilder.configure;
 
 @Configuration
 public class ThymeleafResourceConfiguration implements ApplicationContextAware {
@@ -26,7 +27,7 @@ public class ThymeleafResourceConfiguration implements ApplicationContextAware {
 	private ApplicationContext applicationContext;
 	
 	@Bean
-	public ResourceObjectProvider fileFactory() {
+	public ResourceObjectProvider mappingProvider() {
 		MappingResourceObjectProvider factory = new MappingResourceObjectProvider();
 		Map<String, ResourceObjectProvider> mappings = new LinkedHashMap<>();
 		mappings.put(".+\\.properties$", new ClasspathResourceObjectProvider());
@@ -39,8 +40,10 @@ public class ThymeleafResourceConfiguration implements ApplicationContextAware {
 	
 	@Bean
 	public Resources resources() {
-		DefaultResources resources = new DefaultResources();
-		resources.setFileFactory(fileFactory());
+		RefreshableResources resources = new RefreshableResources(
+				configure()
+					.sources(mappingProvider())
+					.get());
 		return resources;
 	}
 	

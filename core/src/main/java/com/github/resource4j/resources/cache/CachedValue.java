@@ -1,94 +1,33 @@
 package com.github.resource4j.resources.cache;
 
-public final class CachedValue<T> {
+import java.io.Serializable;
 
-    private final T value;
-    
-    private final String source;
+public class CachedValue implements Serializable, CachedResult {
 
-    private final boolean missing;
+	String value;
 
-    private final boolean loaded;
-    
-    public static <T> CachedValue<T> unknownStatus(Class<T> type) {
-    	return new CachedValue<>(false);
-    }
-    
-    public static <T> CachedValue<T> cached(T value, String source) {
-        return new CachedValue<>(value, source);
-    }
+	String source;
 
-    public static <T> CachedValue<T> missingValue(Class<T> type) {
-        return new CachedValue<>(true);
-    }
+	public CachedValue(String value, String source) {
+		this.value = value;
+		this.source = source;
+	}
 
-    protected CachedValue(boolean loaded) {
-        this.value = null;
-        this.missing = true;
-        this.loaded = loaded;
-        this.source = null;
-    }
+	public boolean exists() {
+		return value != null;
+	}
 
-    protected CachedValue(T value, String source) {
-        this.value = value;
-        this.missing = false;
-        this.source = source;
-        this.loaded = true;
-    }
+	public String value() {
+		return value;
+	}
 
-    public T get() {
-        return value;
-    }
-    
-    public String source() {
-    	return source;
-    }
+	public String source() {
+		return source;
+	}
 
-    public boolean isMissing() {
-        return missing;
-    }
-    
-    public boolean isLoaded() {
-    	return loaded;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (missing ? 1231 : 1237);
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        CachedValue<?> other = (CachedValue<?>) obj;
-        if (missing != other.missing) {
-            return false;
-        }
-        if (value == null) {
-            if (other.value != null) {
-                return false;
-            }
-        } else if (!value.equals(other.value)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return this.missing ? "<missing>" : (this.value == null ? "<null>" : String.valueOf(this.value));
-    }
+	@Override
+	public String toString() {
+		return value != null ? String.valueOf(value) + " @ " + source : "<missing>";
+	}
 
 }

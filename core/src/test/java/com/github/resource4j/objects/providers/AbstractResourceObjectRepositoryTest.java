@@ -2,7 +2,9 @@ package com.github.resource4j.objects.providers;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.objects.providers.events.ResourceObjectEventType;
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.TestClock;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,6 +16,7 @@ import java.util.Locale;
 import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
 import static com.github.resource4j.objects.parsers.ResourceParsers.binary;
+import static com.github.resource4j.objects.providers.ResourceObjectRepositoryLogger.contain;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static com.github.resource4j.test.Builders.given;
@@ -35,8 +38,82 @@ public abstract class AbstractResourceObjectRepositoryTest {
 
     protected abstract ResourceObjectRepository createRepository(Clock clock);
 
-    protected ResourceObjectRepository objects() {
+    protected ResourceObjectRepository repository() {
         return objects;
+    }
+
+    @Test
+    public void shouldNotifyOnObjectAdded() throws Exception {
+        ResourceObject object = given(anObject());
+        ResourceObjectRepositoryLogger events = new ResourceObjectRepositoryLogger();
+        objects.addListener(events);
+        objects.put(object.name(), withoutContext(), object::asStream);
+        assertEquals(1, events.received());
+        assertThat(events, contain(e ->
+                e.type() == ResourceObjectEventType.CREATED
+                && e.objectName().equals(object.name())
+                && e.context().equals(withoutContext())
+        ));
+    }
+
+    @Test
+    public void shouldNotifyOnObjectRemoved() throws Exception {
+        ResourceObject object = given(anObject());
+        objects.put(object.name(), withoutContext(), object::asStream);
+
+        ResourceObjectRepositoryLogger events = new ResourceObjectRepositoryLogger();
+        objects.addListener(events);
+        objects.remove(object.name(), withoutContext());
+        assertEquals(1, events.received());
+        assertThat(events, contain(e ->
+                e.type() == ResourceObjectEventType.DELETED
+                        && e.objectName().equals(object.name())
+                        && e.context().equals(withoutContext())
+        ));
+    }
+
+    @Test
+    public void shouldNotifyOnObjectModified() throws Exception {
+        ResourceObjectRepositoryLogger events = new ResourceObjectRepositoryLogger();
+        objects.addListener(events);
+
+        ResourceResolutionContext ctx = withoutContext();
+        String path = "main.txt";
+        ResourceObject object1 = given(anObject(path, ctx).withContent("1"));
+        objects.put(object1.name(), withoutContext(), object1::asStream);
+
+        ResourceObject object2 = given(anObject(path, ctx).withContent("2"));
+        objects.put(object2.name(), withoutContext(), object2::asStream);
+
+        assertEquals(2, events.received());
+        assertThat(events, contain(e ->
+                e.type() == ResourceObjectEventType.MODIFIED
+                        && e.objectName().equals(object2.name())
+                        && e.context().equals(withoutContext())
+        ));
+    }
+
+    @Test
+    public void shouldNotNotifyUnsubscribedListener() throws Exception {
+        ResourceObjectRepositoryLogger events = new ResourceObjectRepositoryLogger();
+        objects.addListener(events);
+
+        ResourceResolutionContext ctx = withoutContext();
+        String path = "main.txt";
+        ResourceObject object1 = given(anObject(path, ctx).withContent("1"));
+        objects.put(object1.name(), withoutContext(), object1::asStream);
+
+        objects.removeListener(events);
+
+        ResourceObject object2 = given(anObject(path, ctx).withContent("2"));
+        objects.put(object2.name(), withoutContext(), object2::asStream);
+
+        assertEquals(1, events.received());
+        assertThat(events, contain(e ->
+                e.type() == ResourceObjectEventType.CREATED
+                        && e.objectName().equals(object1.name())
+                        && e.context().equals(withoutContext())
+        ));
     }
 
     @Test

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
+import com.github.resource4j.spring.test.TestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -18,7 +19,7 @@ import com.github.resource4j.spring.annotations.InjectBundle;
 import com.github.resource4j.spring.annotations.InjectValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/META-INF/spring/testContext.xml")
+@ContextConfiguration(classes = TestConfiguration.class)
 public class InjectValueOptionalTest implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;

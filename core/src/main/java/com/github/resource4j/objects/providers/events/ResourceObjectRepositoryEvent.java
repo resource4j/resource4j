@@ -1,18 +1,21 @@
 package com.github.resource4j.objects.providers.events;
 
+import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 import java.io.Serializable;
 
 public class ResourceObjectRepositoryEvent implements Serializable {
 
-    private String source;
+    private final String source;
 
-    private ResourceObjectEventType type;
+    private final ResourceObjectEventType type;
 
-    private String name;
+    private final String name;
 
-    private ResourceResolutionContext context;
+    private final String key;
+
+    private final ResourceResolutionContext context;
 
     public static ResourceObjectRepositoryEvent created(String source, String name, ResourceResolutionContext context) {
         return new ResourceObjectRepositoryEvent(source, ResourceObjectEventType.CREATED, name, context);
@@ -28,6 +31,14 @@ public class ResourceObjectRepositoryEvent implements Serializable {
         return new ResourceObjectRepositoryEvent(source, ResourceObjectEventType.DELETED, name, context);
     }
 
+    public static ResourceObjectRepositoryEvent valueSet(String source, ResourceKey key, ResourceResolutionContext context) {
+        return new ResourceObjectRepositoryEvent(source, ResourceObjectEventType.VALUE_SET, key, context);
+    }
+
+    public static ResourceObjectRepositoryEvent valueRemoved(String source, ResourceKey key, ResourceResolutionContext context) {
+        return new ResourceObjectRepositoryEvent(source, ResourceObjectEventType.VALUE_REMOVED, key, context);
+    }
+
     public ResourceObjectRepositoryEvent(String source,
                                          ResourceObjectEventType type,
                                          String name,
@@ -35,6 +46,18 @@ public class ResourceObjectRepositoryEvent implements Serializable {
         this.source = source;
         this.type = type;
         this.name = name;
+        this.key = null;
+        this.context = context;
+    }
+
+    public ResourceObjectRepositoryEvent(String source,
+                                         ResourceObjectEventType type,
+                                         ResourceKey key,
+                                         ResourceResolutionContext context) {
+        this.source = source;
+        this.type = type;
+        this.name = key.getBundle();
+        this.key = key.getId();
         this.context = context;
     }
 
@@ -49,6 +72,10 @@ public class ResourceObjectRepositoryEvent implements Serializable {
 
     public String objectName() {
         return name;
+    }
+
+    public ResourceKey key() {
+        return ResourceKey.key(name, key);
     }
 
     public ResourceResolutionContext context() {

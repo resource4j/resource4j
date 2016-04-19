@@ -5,7 +5,7 @@
 
 	<bean id="fileFactory" class="com.github.resource4j.spring.SpringResourceObjectProvider" />
 
-	<bean id="resources" class="com.github.resource4j.resources.DefaultResources">
+	<bean id="resources" class="com.github.resource4j.resources.RefreshableResources">
 		<property name="fileFactory" ref="fileFactory" />
 	</bean>
 

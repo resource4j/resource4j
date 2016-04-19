@@ -1,10 +1,7 @@
 package com.github.resource4j.resources.context;
 
-import com.github.resource4j.refreshable.ResolvedKey;
-
 import java.io.Serializable;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 

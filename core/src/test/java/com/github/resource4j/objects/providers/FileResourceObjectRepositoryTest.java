@@ -28,7 +28,7 @@ public class FileResourceObjectRepositoryTest extends AbstractResourceObjectRepo
 	public void testMissingResourceFileThrownOnDirectory() throws Exception {
 		String testFile = "test.dir";
 		folder.newFolder(testFile);
-		objects().get(testFile, ResourceResolutionContext.withoutContext());
+		repository().get(testFile, ResourceResolutionContext.withoutContext());
 	}
 
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
+import com.github.resource4j.spring.test.TestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -18,7 +19,7 @@ import example.i18n.Greeting;
 import example.i18n.Messages;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/META-INF/spring/testContext.xml")
+@ContextConfiguration(classes = TestConfiguration.class)
 public class ResourceValueBeanPostProcessorIT implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;

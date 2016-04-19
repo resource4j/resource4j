@@ -4,6 +4,8 @@ public enum ResourceObjectEventType {
 
     CREATED,
     MODIFIED,
-    DELETED;
+    DELETED,
+    VALUE_SET,
+    VALUE_REMOVED;
 
 }

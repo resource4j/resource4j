@@ -30,7 +30,6 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 
 	@Autowired
 	private Resources resources;
-
 	
 	private BeanFactory beanFactory;
 	
