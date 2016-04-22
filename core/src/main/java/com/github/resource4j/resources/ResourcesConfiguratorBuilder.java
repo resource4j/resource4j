@@ -5,11 +5,11 @@ import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.cache.Cache;
 import com.github.resource4j.resources.cache.CachedBundle;
-import com.github.resource4j.resources.cache.CachedObject;
 import com.github.resource4j.resources.cache.CachedValue;
 import com.github.resource4j.resources.cache.impl.BasicValueCache;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
+import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +30,7 @@ public class ResourcesConfiguratorBuilder implements Supplier<ResourcesConfigura
     private List<ResourceObjectProvider> providers = singletonList(classpath());
     private ResourceKey defaultBundle = ResourceKey.bundle("i18n.resources");
     private List<BundleFormat> formats = singletonList(format(propertyMap()));
+    private ResourceValuePostProcessor valuePostProcessor = null;
 
     private Supplier<BasicValueCache<ResolvedKey, CachedValue>> valueCache = BasicValueCache::new;
     private Supplier<ExecutorService> valueExecutor = () -> buildThreadPool("value");
@@ -66,6 +67,11 @@ public class ResourcesConfiguratorBuilder implements Supplier<ResourcesConfigura
         return this;
     }
 
+    public ResourcesConfiguratorBuilder postProcessingBy(ResourceValuePostProcessor postProcessor) {
+        this.valuePostProcessor = postProcessor;
+        return this;
+    }
+
     public Configurator get() {
         return new Configurator();
     }
@@ -89,6 +95,11 @@ public class ResourcesConfiguratorBuilder implements Supplier<ResourcesConfigura
         @Override
         public void configureFormats(Consumer<List<BundleFormat>> consumer) {
             consumer.accept(formats);
+        }
+
+        @Override
+        public void configurePostProcessing(Consumer<ResourceValuePostProcessor> consumer) {
+            consumer.accept(valuePostProcessor);
         }
 
         @Override

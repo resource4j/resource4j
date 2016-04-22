@@ -4,6 +4,6 @@ import com.github.resource4j.ResourceException;
 
 public interface ResourceValuePostProcessor {
 
-    String process(String value) throws ResourceException;
+    String process(ResourceResolver resolver, String value) throws ResourceException;
 
 }

@@ -9,6 +9,7 @@ import com.github.resource4j.resources.cache.CachedObject;
 import com.github.resource4j.resources.cache.CachedValue;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
+import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -30,4 +31,6 @@ public interface RefreshableResourcesConfigurator {
 
     void configureObjectPipeline(Consumer<Cache<ResolvedName, ResourceObject>> cacheConsumer,
                                  Consumer<ExecutorService> poolConsumer);
+
+    void configurePostProcessing(Consumer<ResourceValuePostProcessor> consumer);
 }

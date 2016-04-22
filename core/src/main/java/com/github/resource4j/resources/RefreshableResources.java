@@ -1,6 +1,7 @@
 package com.github.resource4j.resources;
 
 import com.github.resource4j.OptionalString;
+import com.github.resource4j.ResourceException;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
@@ -15,6 +16,7 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.resources.impl.FallbackFuture;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
+import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 import com.github.resource4j.values.GenericOptionalString;
 
 import java.time.Clock;
@@ -22,6 +24,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -63,6 +66,10 @@ public class RefreshableResources extends AbstractResources {
 
     private AtomicLong requestEnumerator = new AtomicLong(0L);
 
+    private ThreadLocal<ResolvedKey> postProcessingLock = new ThreadLocal<>();
+
+    private ResourceValuePostProcessor valuePostProcessor;
+
     private ResourceObjectRepositoryListener listener = event -> {
         LOG.info("Repository {} updated: clearing caches...", event.source());
         resetCaches();
@@ -98,6 +105,8 @@ public class RefreshableResources extends AbstractResources {
                 cache -> this.objects = cache,
                 queue -> this.objectQueue = queue);
 
+        configurator.configurePostProcessing(p -> this.valuePostProcessor = p);
+
     }
 
     private void resetCaches() {
@@ -130,7 +139,7 @@ public class RefreshableResources extends AbstractResources {
                 latch.countDown();
             }
             return null;
-        }));
+        }), Function.identity());
     }
 
     private ResolvedName bundleName(ResourceKey key, ResourceResolutionContext context) {
@@ -153,7 +162,7 @@ public class RefreshableResources extends AbstractResources {
                         CachedResult::exists);
             }
             return future;
-        });
+        }, Function.identity());
 
         if (value.is(CacheRecord.StateType.EXISTS)) {
             CachedBundle cachedBundle = value.get();
@@ -177,13 +186,17 @@ public class RefreshableResources extends AbstractResources {
 
     private ResourceObject loadObjectNonRecursive(ResolvedName resolvedName) {
         CacheRecord<ResourceObject> value = objects.putIfAbsent(resolvedName, initialRecord());
-        fetchIfNotInitialized(value, resolvedName, objectRequests, () -> fireAllRequests(resolvedName, null));
+        fetchIfNotInitialized(value, resolvedName,
+                objectRequests,
+                () -> fireAllRequests(resolvedName, null),
+                Function.identity());
         return toResourceObject(resolvedName, value);
     }
 
-    private <K, O> void cacheObject(K key, Future<O> future, CacheRecord<O> value) {
+    private <K, O> void cacheObject(K key, Future<O> future, CacheRecord<O> value, Function<O,O> process) {
         try {
             O result = future.get();
+            result = process.apply(result);
             requestLock.lock();
             try {
                 value.store(result, clock::millis);
@@ -191,7 +204,7 @@ public class RefreshableResources extends AbstractResources {
             }finally {
                 requestLock.unlock();
             }
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | ResourceException e) {
             requestLock.lock();
             try {
                 value.fail(e);
@@ -252,6 +265,11 @@ public class RefreshableResources extends AbstractResources {
                     CachedResult::exists);
             valueRequests.put(resolvedKey, future);
             return future;
+        }, val -> {
+            if (valuePostProcessor == null) return val;
+            String string = val.value();
+            string = valuePostProcessor.process(id -> get(key.relative(id), context).asIs(), string);
+            return new CachedValue(string, val.source());
         });
         return toOptionalString(resolvedKey, value);
 	}
@@ -274,7 +292,9 @@ public class RefreshableResources extends AbstractResources {
     }
 
     protected <K,O> void fetchIfNotInitialized(CacheRecord<O> value, K key,
-                                               Map<K, Future<O>> existingRequests, Supplier<Future<O>> fetchTaskSupplier) {
+                                               Map<K, Future<O>> existingRequests,
+                                               Supplier<Future<O>> fetchTaskSupplier,
+                                               Function<O,O> processor) {
         // Cached value may be updated with loaded results so we use the double-check locking here
         if (value.is(CacheRecord.StateType.PENDING)) {
             requestLock.lock();
@@ -290,10 +310,10 @@ public class RefreshableResources extends AbstractResources {
             } finally {
                 requestLock.unlock();
             }
-            // fut2ure can be null if by second check above the value has already been loaded
+            // future can be null if by second check above the value has already been loaded
             // if it's not null, then we are expecting new result and need to wait
             if (future != null) {
-                cacheObject(key, future, value);
+                cacheObject(key, future, value, processor);
                 existingRequests.remove(key);
             }
         }
@@ -352,7 +372,7 @@ public class RefreshableResources extends AbstractResources {
             }
             future = fireAllRequests(resolvedKey, future);
             return future;
-        });
+        }, Function.identity());
 		return toResourceObject(resolvedKey, value);
 	}
 
