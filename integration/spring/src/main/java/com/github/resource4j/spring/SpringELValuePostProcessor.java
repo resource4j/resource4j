@@ -24,8 +24,16 @@ public class SpringELValuePostProcessor implements ResourceValuePostProcessor, B
     }
 
     @Override
-    public String process(ResourceResolver resolver, String value) throws ResourceException {
+    public String process(ResourceResolver resolver, String val) throws ResourceException {
+        String value = val;
+        if (value.startsWith("~")) {
+            return value.substring(1);
+        }
+        if (!value.startsWith("#")) {
+            return value;
+        }
         try {
+            value = value.substring(1);
             Expression expression = parser.parseExpression(value);
             StandardEvaluationContext context = new StandardEvaluationContext();
             context.setBeanResolver((evaluationContext, beanName) -> {
@@ -37,9 +45,11 @@ public class SpringELValuePostProcessor implements ResourceValuePostProcessor, B
                         ? beanFactoryResolver.resolve(context, beanName)
                         : null;
             });
-            return String.valueOf(expression.getValue(context));
+            Object resolvedValue = expression.getValue(context, String.class);
+            return String.valueOf(resolvedValue);
         } catch (EvaluationException e) {
             String expr = e.getExpressionString();
+            e.printStackTrace();
             throw new ValuePostProcessingException(expr != null ? expr : value);
         }
     }
