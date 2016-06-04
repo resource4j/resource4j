@@ -37,12 +37,6 @@ import static com.github.resource4j.objects.providers.events.ResourceObjectRepos
  */
 public class HeapResourceObjectRepository implements ResourceValueRepository {
 
-    public static final Predicate<ResourceObjectDetails> UNUSED = details -> details.readCount() == 0;
-
-    public static Predicate<ResourceObjectDetails> olderThan(long timestamp) {
-        return details -> details.timestamp() < timestamp;
-    }
-
     private static final Logger LOG = LoggerFactory.getLogger(HeapResourceObjectRepository.class);
 
     private ConcurrentMap<String, ObjectHolder> content = new ConcurrentHashMap<>();
