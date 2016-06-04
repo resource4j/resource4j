@@ -1,4 +1,4 @@
-package com.github.resource4j.util;
+package com.github.resource4j.converters;
 
 import static org.junit.Assert.*;
 
@@ -6,14 +6,11 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
 
 import org.junit.Test;
 
-import com.github.resource4j.util.TypeConverter;
+import com.github.resource4j.converters.TypeConverter;
 
 public class TypeCastTest {
 
@@ -86,16 +83,9 @@ public class TypeCastTest {
     }
 
     @Test
-    public void testParseDateAsCalendar() throws ParseException {
-        Calendar expected = new GregorianCalendar(1997, Calendar.JULY, 16);
-        Calendar date = TypeConverter.convert("1997-07-16", Calendar.class);
-        assertEquals(expected, date);
-    }
-
-    @Test
     public void testParseDate() throws ParseException {
         Calendar expected = new GregorianCalendar(1997, Calendar.JULY, 16);
-        Date date = TypeConverter.convert("1997-07-16", Date.class);
+        Date date = TypeConverter.convert("1997-07-16", Date.class, new SimpleDateFormat("yyyy-MM-dd"));
         assertEquals(expected.getTime(), date);
     }
     
@@ -137,7 +127,16 @@ public class TypeCastTest {
         long millis = calendar.getTimeInMillis();
         java.sql.Date value = new java.sql.Date(millis);
         Calendar result = TypeConverter.convert(value, Calendar.class);
-        assertEquals(calendar, result);
+        assertEquals(calendar.getTimeInMillis(), result.getTimeInMillis());
+    }
+
+    @Test
+    public void testCastCalendarToUtilDate() {
+        GregorianCalendar calendar = new GregorianCalendar(2012, Calendar.JANUARY, 10);
+        long millis = calendar.getTimeInMillis();
+        java.util.Date value = new java.util.Date(millis);
+        java.util.Date result = TypeConverter.convert(calendar, Date.class);
+        assertEquals(value, result);
     }
 
     @Test
@@ -146,16 +145,20 @@ public class TypeCastTest {
         long millis = calendar.getTimeInMillis();
         java.sql.Date value = new java.sql.Date(millis);
         Calendar result = TypeConverter.convert(value, Calendar.class);
-        assertEquals(calendar, result);
+        assertEquals(calendar.getTimeInMillis(), result.getTimeInMillis());
     }
     
     @Test
     public void testConversionWithDateFormat() {
     	Calendar calendar = new GregorianCalendar(2014, Calendar.JULY, 26);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+
     	DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.US);
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
     	
     	String toString = TypeConverter.convert(calendar, String.class, format);
     	Calendar fromString = TypeConverter.convert(toString, Calendar.class, format);
+
     	assertEquals(calendar.get(Calendar.DATE), fromString.get(Calendar.DATE));
     	assertEquals(calendar.get(Calendar.MONTH), fromString.get(Calendar.MONTH));
     	assertEquals(calendar.get(Calendar.YEAR), fromString.get(Calendar.YEAR));

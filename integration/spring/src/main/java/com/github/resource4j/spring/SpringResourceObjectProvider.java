@@ -39,7 +39,9 @@ public class SpringResourceObjectProvider
 		if (applicationContext == null) {
 			throw new IllegalStateException("SpringResourceObjectProvider not initialized: application context required.");
 		}
-		Resource resource = applicationContext.getResource('/' + actualName);
+		Resource resource = applicationContext.getResource(actualName.startsWith("/")
+				? actualName
+				: '/' + actualName);
 		if (!resource.exists() || !resource.isReadable()) {
 			throw new MissingResourceObjectException(name, actualName);
 		}

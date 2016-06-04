@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 import com.github.resource4j.values.GenericOptionalString;
 import com.github.resource4j.values.GenericOptionalValue;
-import com.github.resource4j.util.TypeCastException;
-import com.github.resource4j.util.TypeConverter;
+import com.github.resource4j.converters.TypeCastException;
+import com.github.resource4j.converters.TypeConverter;
 
 /**
  * Resource value explicitly defined as nullable.

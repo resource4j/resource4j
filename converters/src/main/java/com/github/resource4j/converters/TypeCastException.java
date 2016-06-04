@@ -1,4 +1,4 @@
-package com.github.resource4j.util;
+package com.github.resource4j.converters;
 
 /**
  * @author Ivan Gammel
@@ -16,7 +16,13 @@ public class TypeCastException extends RuntimeException {
     private Object value;
 
     public TypeCastException(Object value, Class<?> from, Class<?> to) {
-        this(value, from, to, null);
+        this(value, from, to, (Throwable) null);
+    }
+    public TypeCastException(Object value, Class<?> from, Class<?> to, String cause) {
+        super("Cannot convert value "+value+" from "+from.getName()+" to "+to.getName() + ": " + cause);
+        this.value = value;
+        this.valueType = from;
+        this.expectedType = to;
     }
 
     public TypeCastException(Object value, Class<?> from, Class<?> to, Throwable cause) {

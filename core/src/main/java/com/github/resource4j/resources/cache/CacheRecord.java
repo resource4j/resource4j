@@ -6,16 +6,10 @@ import java.util.function.Supplier;
 
 public class CacheRecord<V> implements java.io.Serializable {
 
-	private long requestId;
-
 	private Holder<V> holder = new Holder<>();
 
-	public CacheRecord(long requestId) {
-		this.requestId = requestId;
-	}
-
-	public static <O> CacheRecord<O> initial(long request) {
-		return new CacheRecord<>(request);
+	public static <O> CacheRecord<O> initial() {
+		return new CacheRecord<>();
 	}
 
 	public synchronized CacheRecord<V> fail(Throwable e) {
@@ -36,10 +30,6 @@ public class CacheRecord<V> implements java.io.Serializable {
 	public V get() {
 		return holder.value;
 	}
-
-    public long requestId() {
-        return requestId;
-    }
 
 	public long created() {
 		return holder.created;

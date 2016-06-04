@@ -5,8 +5,8 @@ import java.util.function.Function;
 
 import com.github.resource4j.values.GenericMandatoryString;
 import com.github.resource4j.values.GenericMandatoryValue;
-import com.github.resource4j.util.TypeCastException;
-import com.github.resource4j.util.TypeConverter;
+import com.github.resource4j.converters.TypeCastException;
+import com.github.resource4j.converters.TypeConverter;
 
 /**
  * Not-null representation of resource value, i.e. successfully resolved in a resolution context and, 

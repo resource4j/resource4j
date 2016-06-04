@@ -16,12 +16,14 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.resources.impl.FallbackFuture;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
+import com.github.resource4j.resources.processors.CyclicReferenceException;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 import com.github.resource4j.values.GenericOptionalString;
 
 import java.time.Clock;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
@@ -35,6 +37,8 @@ import static com.github.resource4j.resources.context.ResourceResolutionContext.
 import static java.util.stream.Collectors.toCollection;
 
 public class RefreshableResources extends AbstractResources {
+
+    private static final int DEFAULT_MAX_DEPTH = 20;
 
     private Cache<ResolvedKey, CachedValue> values;
 
@@ -64,9 +68,14 @@ public class RefreshableResources extends AbstractResources {
 
     private ResourceKey defaultBundle;
 
-    private AtomicLong requestEnumerator = new AtomicLong(0L);
+    private int maxDepth = DEFAULT_MAX_DEPTH;
 
-    private ThreadLocal<ResolvedKey> postProcessingLock = new ThreadLocal<>();
+    private ThreadLocal<Integer> cycleDetector = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 1;
+        }
+    };
 
     private ResourceValuePostProcessor valuePostProcessor;
 
@@ -201,15 +210,22 @@ public class RefreshableResources extends AbstractResources {
             try {
                 value.store(result, clock::millis);
                 LOG.trace("Cached {} -> {}", key, result);
-            }finally {
+            } finally {
                 requestLock.unlock();
             }
         } catch (InterruptedException | ExecutionException | ResourceException e) {
             requestLock.lock();
             try {
-                value.fail(e);
+                if (value.state() == CacheRecord.StateType.PENDING) {
+                    Throwable cause = e instanceof ExecutionException ? e.getCause() : e;
+                    value.fail(cause);
+                    LOG.trace("Cached error {} -> {}", key, cause.getClass().getSimpleName());
+                }
             } finally {
                 requestLock.unlock();
+            }
+            if (e instanceof CyclicReferenceException) {
+                throw (CyclicReferenceException) e;
             }
         }
     }
@@ -237,8 +253,22 @@ public class RefreshableResources extends AbstractResources {
     @Override
 	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
 	    ResolvedKey resolvedKey = new ResolvedKey(key, context);
-        CacheRecord<CachedValue> value = values.putIfAbsent(resolvedKey, initialRecord());
+        try {
+            return doGet(resolvedKey);
+        } catch (CyclicReferenceException e) {
+            return new GenericOptionalString(null, key, null, e);
+        }
+	}
 
+    private OptionalString doGet(ResolvedKey resolvedKey) {
+        int depth = cycleDetector.get();
+        if (depth < maxDepth) {
+            cycleDetector.set(depth + 1);
+        } else {
+            throw new CyclicReferenceException();
+        }
+
+        CacheRecord<CachedValue> value = values.putIfAbsent(resolvedKey, initialRecord());
         // Cached value may be updated with loaded results so we use the double-check locking here
         fetchIfNotInitialized(value, resolvedKey, valueRequests, () -> {
             Future<CachedValue> future = null;
@@ -268,11 +298,12 @@ public class RefreshableResources extends AbstractResources {
         }, val -> {
             if (valuePostProcessor == null) return val;
             String string = val.value();
-            string = valuePostProcessor.process(id -> get(key.relative(id), context).asIs(), string);
+            if (string == null) return val;
+            string = valuePostProcessor.process(id -> doGet(resolvedKey.relative(id)).asIs(), string);
             return new CachedValue(string, val.source());
         });
         return toOptionalString(resolvedKey, value);
-	}
+    }
 
     private Future<CachedValue> loadSingleValue(Future<CachedValue> future, ResolvedKey parentKey) {
         for (ResourceObjectProvider provider : providers) {
@@ -377,7 +408,7 @@ public class RefreshableResources extends AbstractResources {
 	}
 
     private <V> CacheRecord<V> initialRecord() {
-        return initial(requestEnumerator.incrementAndGet());
+        return initial();
     }
 
     protected Deque<ResourceObjectProvider> getSortedProviders() {

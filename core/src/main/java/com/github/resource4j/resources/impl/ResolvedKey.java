@@ -32,7 +32,10 @@ public class ResolvedKey implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return key.toString() + (context.isEmpty() ? "" : ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR + context.toString());
+        return key.toString()
+                + (context.isEmpty()
+                    ? ""
+                    : ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR + context.toString());
     }
 
     public ResourceResolutionContext context() {
@@ -41,5 +44,9 @@ public class ResolvedKey implements java.io.Serializable {
 
     public ResourceKey key() {
         return key;
+    }
+
+    public ResolvedKey relative(String id) {
+        return new ResolvedKey(key.relative(id), context);
     }
 }

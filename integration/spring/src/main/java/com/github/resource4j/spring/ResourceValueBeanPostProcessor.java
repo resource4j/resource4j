@@ -51,29 +51,14 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 		ResourceProvider provider = getResourceProvider(bean);
 		
 		doWithFields(bean.getClass(), 
-			new AutowiredResourceCallback(resources, bean, beanName), 
-			new FieldFilter() {
-				@Override
-				public boolean matches(Field field) {
-					return field.isAnnotationPresent(AutowiredResource.class);
-				}
-		});
+			new AutowiredResourceCallback(resources, bean, beanName),
+				field -> field.isAnnotationPresent(AutowiredResource.class));
 		doWithFields(bean.getClass(), 
-				new InjectValueCallback(bean, beanFactory, resources, provider), 
-				new FieldFilter() {
-					@Override
-					public boolean matches(Field field) {
-						return field.isAnnotationPresent(InjectValue.class);
-					}
-		});
+				new InjectValueCallback(bean, beanFactory, resources, provider),
+				field -> field.isAnnotationPresent(InjectValue.class));
 		doWithFields(bean.getClass(), 
-				new InjectResourceCallback(bean, beanName, beanFactory, resources), 
-				new FieldFilter() {
-					@Override
-					public boolean matches(Field field) {
-						return field.isAnnotationPresent(InjectResource.class);
-					}
-		});
+				new InjectResourceCallback(bean, beanName, beanFactory, resources),
+				field -> field.isAnnotationPresent(InjectResource.class));
 		return bean;
 	}
 

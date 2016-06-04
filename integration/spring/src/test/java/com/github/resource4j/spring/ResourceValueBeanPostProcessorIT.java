@@ -6,12 +6,14 @@ import static org.junit.Assert.assertEquals;
 import java.util.Locale;
 
 import com.github.resource4j.spring.test.TestConfiguration;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,6 +25,11 @@ import example.i18n.Messages;
 public class ResourceValueBeanPostProcessorIT implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
+
+	@Before
+	public void setLocale() {
+		LocaleContextHolder.setLocale(Locale.US);
+	}
 
 	@Test
 	public void testSimpleTypeValueInjection() {

@@ -1,6 +1,6 @@
 package com.github.resource4j.thymeleaf;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Locale;
 
@@ -14,20 +14,15 @@ import org.thymeleaf.context.Context;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={ ThymeleafResourceConfiguration.class })
-public class Resource4jMessageResolverIT {
-	
+public class Resource4jResourceResolverTest {
+
 	@Autowired
 	private TemplateEngine engine;
 	
 	@Test
-	public void testRenderRussianPageSubstitutesRussianString() {
-		String content = engine.process("example/pages/page", new Context(new Locale("ru", "RU")));
-		assertTrue(content.contains("\u041F\u0440\u0438\u043C\u0435\u0440 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B"));
+	public void testRenderGermanPage() {
+		String content = engine.process("example/pages/page", new Context(new Locale("de", "DE")));
+		assertTrue(content.contains("Deutsch"));
 	}
 	
-	@Test
-	public void testRenderRussianPageUsesDefaultBundle() {
-		String content = engine.process("example/pages/page", new Context(new Locale("ru", "RU")));
-		assertTrue(content.contains("Latin"));
-	}
 }

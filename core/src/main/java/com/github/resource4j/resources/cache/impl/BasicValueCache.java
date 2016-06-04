@@ -12,9 +12,8 @@ public class BasicValueCache<K, V> implements Cache<K, V> {
 
     @Override
     public CacheRecord<V> putIfAbsent(K key, CacheRecord<V> value) {
-        CacheRecord<V> result = value;
-        values.putIfAbsent(key, value);
-        return result;
+        CacheRecord<V> result = values.putIfAbsent(key, value);
+        return result == null ? value : result;
     }
 
     @Override

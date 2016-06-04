@@ -1,7 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
 
-	<parent>
+    <parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>9</version>
@@ -19,6 +22,7 @@
 	<url>https://github.com/resource4j/resource4j</url>
 
 	<modules>
+		<module>converters</module>
 		<module>core</module>
 		<module>integration</module>		
 	</modules>
@@ -53,13 +57,14 @@
 		<java.version>1.8</java.version>
 
 		<!-- Logging -->
-		<slf4j.version>1.7.12</slf4j.version>
-		<logback.version>1.1.3</logback.version>
+		<slf4j.version>1.7.21</slf4j.version>
+		<logback.version>1.1.7</logback.version>
 
 		<!-- Integration -->
-		<springframework.version>4.2.0.RELEASE</springframework.version>
+		<springframework.version>4.2.5.RELEASE</springframework.version>
 		<aspectj.version>1.8.6</aspectj.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<build>
@@ -67,7 +72,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -79,15 +84,15 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.2</version><!--$NO-MVN-MAN-VER$ -->
+				<version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<tagNameFormat>release-@{project.version}</tagNameFormat>
 				</configuration>
-			</plugin> <!--
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>1.6</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -97,7 +102,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin> -->
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -115,7 +120,7 @@
 	               <plugin>
 	                   <groupId>org.apache.maven.plugins</groupId>
 	                   <artifactId>maven-surefire-plugin</artifactId>
-	                   <version>2.18.1</version>
+	                   <version>2.19.1</version>
 	                   <configuration>
 	                       <argLine>${surefireArgLine}</argLine>
 	                   </configuration>
@@ -123,7 +128,7 @@
 	               <plugin>
 	                   <groupId>org.apache.maven.plugins</groupId>
 	                   <artifactId>maven-failsafe-plugin</artifactId>
-	                   <version>2.18.1</version>
+	                   <version>2.19.1</version>
 	                   <executions>
 	                       <execution>
 	                           <goals>
@@ -139,7 +144,7 @@
 	               <plugin>
 	                   <groupId>org.jacoco</groupId>
 	                   <artifactId>jacoco-maven-plugin</artifactId>
-	                   <version>0.7.4.201502262128</version>
+	                   <version>0.7.6.201602180812</version>
 	                   <executions>
 	                       <execution>
 	                           <id>pre-unit-test</id>
