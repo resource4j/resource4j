@@ -39,11 +39,19 @@ public class BasicValuePostProcessor implements ResourceValuePostProcessor {
                         break;
                     case '}':
                         if (macro) {
-                            String substitute = resolver.get(current.toString());
+                            String key = current.toString();
+                            String substitute = null;
+                            if (key.startsWith(":")) {
+                                if (key.length() > 1) {
+                                    substitute = "{" + key.substring(1) + "}";
+                                }
+                            } else {
+                                substitute = resolver.get(key);
+                            }
                             if (substitute != null) {
                                 result.append(substitute);
                             } else {
-                                result.append('{').append(current.toString()).append('}');
+                                result.append('{').append(key).append('}');
                                 partialResult = true;
                             }
                             current = result;

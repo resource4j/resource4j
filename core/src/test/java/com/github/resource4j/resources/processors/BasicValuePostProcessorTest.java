@@ -24,6 +24,24 @@ public class BasicValuePostProcessorTest {
     }
 
     @Test
+    public void shouldReturnEscapedKeyWithoutSubstitution() {
+        final String alias = "{:name}";
+        String result = processor.process(RESOLVER, alias);
+        assertEquals("{name}", result);
+    }
+
+    @Test
+    public void shouldFailWithCorrectPartialResultWhenEscapedKeyIsEmpty() {
+        String result = null;
+        try {
+            processor.process(RESOLVER, "{:}");
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("{:}", result);
+    }
+
+    @Test
     public void shouldReturnEmptyStringWhenEmptyStringProcessed() {
         String result = processor.process(RESOLVER, "");
         assertEquals("", result);
