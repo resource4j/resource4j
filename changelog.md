@@ -3,12 +3,15 @@ Version 3.0
 1. Java 8 is now minimal requirement for using this library.
 2. API extended to include interoperability with Optional type.
 3. Added support for java.time API and lambdas.
+4. Resources can be updated in runtime, if object or value provider supports it.
+5. Added resource value post-processing on loading.
 
 Breaking changes:
 
 1. With introduction of ResourceObject interface and related APIs, all ResourceFile APIs have been removed.
-3. Implementation packages reorganized.
-4. Dropped support of default bundles, since there exists a preferable and more transparent alternative in DSL
+2. Implementation packages reorganized.
+3. Dropped support of default bundles, since there exists a preferable and more transparent alternative in DSL
+4. TypeConverter moved to converters.jar and rewritten to support java.time.API
 
 Version 2.1
 -----------
