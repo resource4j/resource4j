@@ -4,9 +4,7 @@ import com.github.resource4j.MissingValueException;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.objects.providers.mutable.HeapResourceObjectRepository;
-import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.ResourceValueRepository;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.resources.processors.BasicValuePostProcessor;
 import com.github.resource4j.resources.processors.CyclicReferenceException;
 import com.github.resource4j.resources.processors.ValuePostProcessingException;
@@ -14,7 +12,7 @@ import org.junit.Test;
 
 import java.time.Clock;
 
-import static com.github.resource4j.resources.ResourcesConfiguratorBuilder.configure;
+import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

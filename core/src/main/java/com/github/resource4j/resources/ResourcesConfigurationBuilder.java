@@ -25,7 +25,7 @@ import static com.github.resource4j.objects.providers.ResourceObjectProviders.cl
 import static com.github.resource4j.resources.BundleFormat.format;
 import static java.util.Collections.singletonList;
 
-public class ResourcesConfiguratorBuilder implements Supplier<ResourcesConfiguratorBuilder.Configurator> {
+public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigurationBuilder.Configuration> {
 
     private List<ResourceObjectProvider> providers = singletonList(classpath());
     private ResourceKey defaultBundle = ResourceKey.bundle("i18n.resources");
@@ -43,44 +43,44 @@ public class ResourcesConfiguratorBuilder implements Supplier<ResourcesConfigura
 
     private int poolSize = 2;
 
-    public static ResourcesConfiguratorBuilder configure() {
-        return new ResourcesConfiguratorBuilder();
+    public static ResourcesConfigurationBuilder configure() {
+        return new ResourcesConfigurationBuilder();
     }
 
-    public ResourcesConfiguratorBuilder sources(ResourceObjectProvider... providers) {
+    public ResourcesConfigurationBuilder sources(ResourceObjectProvider... providers) {
         this.providers = Arrays.asList(providers);
         return this;
     }
 
-    public ResourcesConfiguratorBuilder defaultBundle(String name) {
+    public ResourcesConfigurationBuilder defaultBundle(String name) {
         this.defaultBundle = ResourceKey.bundle(name);
         return this;
     }
 
-    public ResourcesConfiguratorBuilder formats(BundleFormat... formats) {
+    public ResourcesConfigurationBuilder formats(BundleFormat... formats) {
         this.formats = Arrays.asList(formats);
         return this;
     }
 
-    public ResourcesConfiguratorBuilder poolSize(int threadsPerPool) {
+    public ResourcesConfigurationBuilder poolSize(int threadsPerPool) {
         this.poolSize = threadsPerPool;
         return this;
     }
 
-    public ResourcesConfiguratorBuilder postProcessingBy(ResourceValuePostProcessor postProcessor) {
+    public ResourcesConfigurationBuilder postProcessingBy(ResourceValuePostProcessor postProcessor) {
         this.valuePostProcessor = postProcessor;
         return this;
     }
 
-    public Configurator get() {
-        return new Configurator();
+    public Configuration get() {
+        return new Configuration();
     }
 
     protected ExecutorService buildThreadPool(String name) {
         return Executors.newFixedThreadPool(poolSize, new NamedThreadFactory(name + "-loader"));
     }
 
-    public class Configurator implements RefreshableResourcesConfigurator {
+    public class Configuration implements RefreshableResourcesConfigurator {
 
         @Override
         public void configureSources(Consumer<List<ResourceObjectProvider>> consumer) {

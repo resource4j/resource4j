@@ -19,7 +19,7 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.resource4j.resources.ResourcesConfiguratorBuilder.configure;
+import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 
 @Configuration
 public class ThymeleafResourceConfiguration implements ApplicationContextAware {

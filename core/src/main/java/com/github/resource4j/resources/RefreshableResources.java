@@ -23,14 +23,12 @@ import com.github.resource4j.values.GenericOptionalString;
 import java.time.Clock;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.github.resource4j.resources.ResourcesConfiguratorBuilder.configure;
+import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.cache.CacheRecord.initial;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.parentsOf;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;

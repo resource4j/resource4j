@@ -70,7 +70,8 @@ To add support of HOCON or XStream configuration files add Extras library:
 
 Learn more
 ----------
-1. [Configuring resources](docs/Configuration.md)
-2. [Using DSL](docs/DSL.md)
+1. [Basics](docs/Basics.md)
+2. [Configuring resources](docs/Configuration.md)
 3. [Integration with Spring Framework](docs/SpringIntegration.md)
 4. [Integration with Thymeleaf 2.1](docs/ThymeleafIntegration.md)
+5. [Extras](docs/Extras.md)

@@ -1,10 +1,8 @@
 package com.github.resource4j.resources;
 
-import com.github.resource4j.MissingValueException;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.parsers.PropertiesParser;
 import com.github.resource4j.objects.parsers.ResourceParsers;
 import com.github.resource4j.objects.providers.ExpensiveResourceObjectProvider;
 import com.github.resource4j.objects.providers.mutable.HeapResourceObjectRepository;
@@ -20,7 +18,7 @@ import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObj
 import static com.github.resource4j.objects.parsers.ResourceParsers.propertyMap;
 import static com.github.resource4j.objects.providers.resolvers.ResourceObjectProviderPredicates.name;
 import static com.github.resource4j.resources.BundleFormat.format;
-import static com.github.resource4j.resources.ResourcesConfiguratorBuilder.configure;
+import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static com.github.resource4j.resources.discovery.PropertyBundleBuilder.aPropertiesBundle;

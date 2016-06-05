@@ -1,18 +1,16 @@
 package com.github.resource4j;
 
-import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.providers.mutable.HeapResourceObjectRepository;
-import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.ResourceValueRepository;
 import com.github.resource4j.resources.RefreshableResources;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.ResourcesConfiguratorBuilder;
+import com.github.resource4j.resources.ResourcesConfigurationBuilder;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.junit.Before;
 
 import java.time.Clock;
 
-import static com.github.resource4j.resources.ResourcesConfiguratorBuilder.configure;
+import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 
 public abstract class AbstractResource4JTest {
 
@@ -22,12 +20,12 @@ public abstract class AbstractResource4JTest {
 
     @Before
     public void init() {
-        ResourcesConfiguratorBuilder builder = configure();
+        ResourcesConfigurationBuilder builder = configure();
         repository = doInit(builder);
         resources = new RefreshableResources(builder.get());
     }
 
-    public ResourceValueRepository doInit(ResourcesConfiguratorBuilder builder) {
+    public ResourceValueRepository doInit(ResourcesConfigurationBuilder builder) {
         ResourceValueRepository repository = new HeapResourceObjectRepository(Clock.systemUTC());
         builder.sources(repository);
         return repository;

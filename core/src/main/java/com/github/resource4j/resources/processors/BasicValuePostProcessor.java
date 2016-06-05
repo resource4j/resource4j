@@ -4,6 +4,10 @@ import com.github.resource4j.ResourceException;
 
 public class BasicValuePostProcessor implements ResourceValuePostProcessor {
 
+    public static BasicValuePostProcessor macroSubstitution() {
+        return new BasicValuePostProcessor();
+    }
+
     @Override
     public String process(ResourceResolver resolver, String value) throws ResourceException {
         StringBuilder result = new StringBuilder();
