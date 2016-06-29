@@ -7,6 +7,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -28,14 +29,15 @@ import com.github.resource4j.spring.annotations.support.InjectValueCallback;
 @SuppressWarnings("deprecation")
 public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware {
 
-	@Autowired
-	private Resources resources;
-	
 	private BeanFactory beanFactory;
 	
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		this.beanFactory = beanFactory;
+	}
+
+	private Supplier<Resources> resources() {
+		return () -> beanFactory.getBean(Resources.class);
 	}
 
 	@Override
@@ -48,23 +50,23 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 	public Object postProcessAfterInitialization(final Object bean,
 			final String beanName) throws BeansException {
 		
-		ResourceProvider provider = getResourceProvider(bean);
+		Supplier<ResourceProvider> provider = getResourceProvider(bean);
 		
 		doWithFields(bean.getClass(), 
-			new AutowiredResourceCallback(resources, bean, beanName),
+			new AutowiredResourceCallback(resources(), bean, beanName),
 				field -> field.isAnnotationPresent(AutowiredResource.class));
 		doWithFields(bean.getClass(), 
-				new InjectValueCallback(bean, beanFactory, resources, provider),
+				new InjectValueCallback(bean, beanFactory, resources(), provider),
 				field -> field.isAnnotationPresent(InjectValue.class));
 		doWithFields(bean.getClass(), 
-				new InjectResourceCallback(bean, beanName, beanFactory, resources),
+				new InjectResourceCallback(bean, beanName, beanFactory, resources()),
 				field -> field.isAnnotationPresent(InjectResource.class));
 		return bean;
 	}
 
-	private ResourceProvider getResourceProvider(Object bean) {
+	private Supplier<ResourceProvider> getResourceProvider(Object bean) {
 		Class<? extends Object> beanClass = bean.getClass();
-		ResourceProvider provider = getProvider(beanClass.getName(), beanClass);
+		Supplier<ResourceProvider> provider = getProvider(beanClass.getName(), beanClass);
 		if (provider == null) {
 			for (Package pckg : packagesOf(beanClass)) {
 				provider = getProvider(pckg.getName(), pckg);
@@ -95,7 +97,7 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 		return packages;
 	}
 
-	private ResourceProvider getProvider(String name, AnnotatedElement element) {
+	private Supplier<ResourceProvider> getProvider(String name, AnnotatedElement element) {
 		InjectBundle annotation = element.getAnnotation(InjectBundle.class);
 		if (annotation == null) {
 			return null;
@@ -107,7 +109,7 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 		} else {
 			key = key(annotation.value(), id);
 		}
-		return resources.forKey(key);
+		return () -> resources().get().forKey(key);
 	}
 	
 

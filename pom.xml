@@ -24,7 +24,8 @@
 	<modules>
 		<module>converters</module>
 		<module>core</module>
-		<module>integration</module>		
+		<module>integration</module>
+        <module>examples</module>
 	</modules>
 
 	<licenses>
@@ -105,7 +106,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 	   <profile>
 	       <id>quality-report</id>

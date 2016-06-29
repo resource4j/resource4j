@@ -1,11 +1,16 @@
 package com.github.resource4j.objects.providers;
 
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.objects.providers.mutable.FileResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.HeapResourceObjectRepository;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 import java.io.File;
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class ResourceObjectProviders {
 
@@ -25,10 +30,49 @@ public class ResourceObjectProviders {
         return new HeapResourceObjectRepository(Clock.systemUTC());
     }
 
-
     public static PatternMatchingConfigurator patternMatching() {
         return new PatternMatchingConfigurator();
     }
+
+    public static ResourceObjectProviderAdaptDSL bind(ResourceObjectProvider provider) {
+        return new ResourceObjectProviderAdaptDSL(provider);
+    }
+
+    public static class ResourceObjectProviderAdaptDSL {
+        private ResourceObjectProvider provider;
+
+        public ResourceObjectProviderAdaptDSL(ResourceObjectProvider provider) {
+            this.provider = provider;
+        }
+
+        public ResourceObjectProviderAdapter to(String path) {
+            return new ResourceObjectProviderAdapter(provider, path);
+        }
+    }
+
+    public static class ResourceObjectProviderAdapter implements ResourceObjectProvider {
+
+        private ResourceObjectProvider provider;
+
+        private String basePath;
+
+        public ResourceObjectProviderAdapter(ResourceObjectProvider provider, String basePath) {
+            this.provider = provider;
+            this.basePath = basePath;
+        }
+
+        @Override
+        public ResourceObject get(String name, ResourceResolutionContext context) throws ResourceObjectAccessException {
+            String realName = basePath + (name.startsWith("/") ? name : '/' + name);
+            return provider.get(realName, context);
+        }
+
+        public List<ResourceObjectProvider> unwrap() {
+            return Arrays.asList(provider);
+        }
+
+    }
+
 
     public static class PatternMatchingConfigurator {
 
@@ -54,6 +98,7 @@ public class ResourceObjectProviders {
             result.setMappings(providers);
             return result;
         }
+
     }
 
 }

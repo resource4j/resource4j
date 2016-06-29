@@ -5,6 +5,7 @@ Version 3.0
 3. Added support for java.time API and lambdas.
 4. Resources can be updated in runtime, if object or value provider supports it.
 5. Added resource value post-processing on loading.
+6. Spring Boot Auto-Configuration support
 
 Breaking changes:
 

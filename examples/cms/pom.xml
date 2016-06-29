@@ -3,60 +3,57 @@
 
 	<parent>
 		<groupId>com.github.resource4j</groupId>
-		<artifactId>resource4j-parent</artifactId>
+		<artifactId>resource4j-examples</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
-    <artifactId>resource4j-core</artifactId>
+    <artifactId>resource4j-cms</artifactId>
     <packaging>jar</packaging>
 
-    <name>Resource4J Core Library</name>
+    <name>Example CMS</name>
     <description>
-        Resource4J Core Library provides all resource4j basic APIs as well as their default implementations.
+        Resource4J Example CMS Web Application
     </description>
     <url>https://github.com/resource4j/resource4j</url>
 
     <licenses>
         <license>
             <name>Modified BSD License</name>
-            <url>https://github.com/resource4j/resource4j/blob/master/LICENSE.txt</url>
+            <url>https://github.com/ivan-gammel/resource4j/blob/master/LICENSE.txt</url>
             <distribution>repo</distribution>
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
 
     <dependencies>
-
         <dependency>
             <groupId>com.github.resource4j</groupId>
-            <artifactId>converters</artifactId>
-            <version>${project.version}</version>
+            <artifactId>resource4j-spring</artifactId>
         </dependency>
-
-        <!-- logging -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>provided</scope>
+            <groupId>com.github.resource4j</groupId>
+            <artifactId>resource4j-thymeleaf21</artifactId>
         </dependency>
-
-        <!-- test dependencies -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>com.github.resource4j</groupId>
+            <artifactId>resource4j-dbresources</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>

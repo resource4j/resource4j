@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 import com.github.resource4j.ResourceObject;
 import org.slf4j.Logger;
@@ -36,9 +37,9 @@ public final class AutowiredResourceCallback implements FieldCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(ResourceValueBeanPostProcessor.class); 
 	private final Object bean;
 	private final String beanName;
-	private Resources resources;
+	private Supplier<Resources> resources;
 
-	public AutowiredResourceCallback(Resources resources, Object bean, String beanName) {
+	public AutowiredResourceCallback(Supplier<Resources> resources, Object bean, String beanName) {
 		this.resources = resources;
 		this.bean = bean;
 		this.beanName = beanName;
@@ -58,24 +59,24 @@ public final class AutowiredResourceCallback implements FieldCallback {
 		if (ResourceObjectReference.class.equals(type)) {
 			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
-			value = new GenericResourceObjectReference(resources, name);
+			value = new GenericResourceObjectReference(resources.get(), name);
 		} else if (ResourceObject.class.equals(type)) {
 			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
-			value = resources.contentOf(name, context);
+			value = resources.get().contentOf(name, context);
 	    } else if (type.isArray() && (type.getComponentType() == Byte.TYPE)) {
 				String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 				id = name;
-				value = resources.contentOf(name, context).parsedTo(binary()).asIs();
+				value = resources.get().contentOf(name, context).parsedTo(binary()).asIs();
 		} else {
 			ResourceKey key = buildKey(bean, field);
 			id = key.toString();
 			if (ResourceValueReference.class.equals(type)) {
-				value = new GenericResourceValueReference(resources, key);
+				value = new GenericResourceValueReference(resources.get(), key);
 			} else if (ResourceProvider.class.equals(type)) {
-				value = resources.forKey(key);
+				value = resources.get().forKey(key);
 			} else {
-				string = resources.get(key, context);
+				string = resources.get().get(key, context);
 			}
 		}
 		if (value == null) {

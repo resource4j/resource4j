@@ -17,7 +17,7 @@
 	<licenses>
 		<license>
 			<name>Modified BSD License</name>
-			<url>https://github.com/ivan-gammel/resource4j/blob/master/LICENSE.txt</url>
+			<url>https://github.com/resource4j/resource4j/blob/master/LICENSE.txt</url>
 			<distribution>repo</distribution>
 			<comments>A business-friendly OSS license</comments>
 		</license>

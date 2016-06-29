@@ -13,6 +13,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import org.springframework.core.io.ResourceLoader;
+
+import static org.springframework.core.io.ResourceLoader.CLASSPATH_URL_PREFIX;
 
 public class SpringResourceObjectProvider
 		extends AbstractFileResourceObjectProvider
@@ -27,7 +30,7 @@ public class SpringResourceObjectProvider
 		LOG.debug("Resource path configured: <managed by Spring Framework>");		
 	}
 
-	@Override
+    @Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
@@ -39,9 +42,11 @@ public class SpringResourceObjectProvider
 		if (applicationContext == null) {
 			throw new IllegalStateException("SpringResourceObjectProvider not initialized: application context required.");
 		}
-		Resource resource = applicationContext.getResource(actualName.startsWith("/")
-				? actualName
-				: '/' + actualName);
+        String path = actualName.startsWith("/") || actualName.startsWith(CLASSPATH_URL_PREFIX)
+                ? actualName
+                : '/' + actualName;
+
+		Resource resource = applicationContext.getResource(path);
 		if (!resource.exists() || !resource.isReadable()) {
 			throw new MissingResourceObjectException(name, actualName);
 		}

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.github.resource4j.spring.config.Resource4jAutoConfiguration
