@@ -1,13 +1,15 @@
 package com.github.resource4j.resources;
 
 import static com.github.resource4j.ResourceKey.key;
-import static com.github.resource4j.files.parsers.ResourceParsers.string;
+import static com.github.resource4j.objects.parsers.ResourceParsers.string;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.Locale;
 
+import com.github.resource4j.OptionalString;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,12 +45,6 @@ public abstract class AbstractResourcesTest {
     }
 
     @Test
-    public void testGetValueFromDefaultBundleWhenSearchingInExistingBundle() {
-        MandatoryString value = resources.get(key("test", "defaultValue"), Locale.US).notNull();
-        assertEquals("success", value.asIs());
-    }
-
-    @Test
     public void testGetValueFromExistingBundleSpecifiedByClass() {
         MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.US).notNull();
         assertEquals("Concrete Action", value.asIs());
@@ -68,26 +64,28 @@ public abstract class AbstractResourcesTest {
    
     @Test
     public void testGetValueFromExistingBundleSpecifiedByClassAndExistingCountryLocale() {
-        MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMANY).notNull();
+        OptionalString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMANY);
         assertEquals("Aktion", value.asIs());
     }
 
     @Test
     public void testValueSourceFromExistingBundleSpecifiedByClassAndExistingCountryLocale() {
-        MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMANY).notNull();
+        OptionalString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMANY);
+        assertNotNull(value.asIs());
         assertThat(value.resolvedSource(), endsWith("ConcreteAction-de_DE.properties"));
     }
     
     @Test
     public void testGetValueFromExistingBundleSpecifiedByClassAndExistingLanguageLocale() {
-        MandatoryString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMAN).notNull();
+        OptionalString value = resources.get(key(ConcreteAction.class, "name"), Locale.GERMAN);
         assertEquals("Konkret Aktion", value.asIs());
     }
 
     @Test
     public void testGetValueFromDefaultBundleWhenSearchingInExistingBundleSpecifiedByClass() {
-        MandatoryString value = resources.get(key(ConcreteAction.class, "defaultName"), Locale.US).notNull();
-        assertEquals("ActionName", value.asIs());
+        OptionalString value =
+                resources.get(key(ConcreteAction.class, "defaultName"), Locale.US);
+        assertEquals("ActionName", value.or(resources.get(key("defaultName"), Locale.US).asIs()).asIs());
     }
 
     @Test

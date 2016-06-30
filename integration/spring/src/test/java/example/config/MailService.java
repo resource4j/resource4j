@@ -7,7 +7,7 @@ import com.github.resource4j.spring.annotations.InjectBundle;
 import com.github.resource4j.spring.annotations.InjectValue;
 
 @Service
-@InjectBundle(value = "example/config/application", id = "mail")
+@InjectBundle(value = "example.config.application", id = "mail")
 public class MailService {
 	
 	@Autowired

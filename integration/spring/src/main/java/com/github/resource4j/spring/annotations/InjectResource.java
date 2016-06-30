@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.github.resource4j.files.parsers.ResourceParser;
+import com.github.resource4j.objects.parsers.ResourceParser;
 import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 
@@ -23,7 +23,7 @@ import com.github.resource4j.spring.context.ResolutionContextProvider;
  *    
  * }
  * </pre><p>The file <code>/config/MyBean.xml</code> will be used to populate the value of the field 
- * and ConfigParser from Resource4j Extras will be used for parsing content.</p>
+ * and ConfigParser from Resource4j Extras will be used for parsing data.</p>
  * <p>Example of relative path definition:</p>
  * <pre>
  * package com.acme.example;

@@ -1,14 +1,16 @@
 package com.github.resource4j.spring.annotations.support;
 
 import static com.github.resource4j.ResourceKey.key;
-import static com.github.resource4j.files.parsers.ResourceParsers.binary;
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.objects.parsers.ResourceParsers.binary;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
+import com.github.resource4j.ResourceObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils.FieldCallback;
@@ -16,14 +18,13 @@ import org.springframework.util.ReflectionUtils.FieldCallback;
 import com.github.resource4j.MandatoryString;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
 import com.github.resource4j.resources.ResourceProvider;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.references.GenericResourceFileReference;
-import com.github.resource4j.resources.references.GenericResourceValueReference;
-import com.github.resource4j.resources.references.ResourceFileReference;
-import com.github.resource4j.resources.references.ResourceValueReference;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.objects.GenericResourceObjectReference;
+import com.github.resource4j.values.GenericResourceValueReference;
+import com.github.resource4j.ResourceObjectReference;
+import com.github.resource4j.ResourceValueReference;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.spring.AutowiredResource;
 import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 
@@ -36,9 +37,9 @@ public final class AutowiredResourceCallback implements FieldCallback {
 	private static final Logger LOG = LoggerFactory.getLogger(ResourceValueBeanPostProcessor.class); 
 	private final Object bean;
 	private final String beanName;
-	private Resources resources;
+	private Supplier<Resources> resources;
 
-	public AutowiredResourceCallback(Resources resources, Object bean, String beanName) {
+	public AutowiredResourceCallback(Supplier<Resources> resources, Object bean, String beanName) {
 		this.resources = resources;
 		this.bean = bean;
 		this.beanName = beanName;
@@ -55,27 +56,27 @@ public final class AutowiredResourceCallback implements FieldCallback {
 		AutowiredResource autowired = field.getAnnotation(AutowiredResource.class);
 		ResourceResolutionContext context = contextOf(autowired);
 
-		if (ResourceFileReference.class.equals(type)) {
+		if (ResourceObjectReference.class.equals(type)) {
 			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
-			value = new GenericResourceFileReference(resources, name);
-		} else if (ResourceFile.class.equals(type)) {
+			value = new GenericResourceObjectReference(resources.get(), name);
+		} else if (ResourceObject.class.equals(type)) {
 			String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 			id = name;
-			value = resources.contentOf(name, context);
+			value = resources.get().contentOf(name, context);
 	    } else if (type.isArray() && (type.getComponentType() == Byte.TYPE)) {
 				String name = FileNamePattern.build(bean.getClass(), beanName, autowired.bundle());
 				id = name;
-				value = resources.contentOf(name, context).parsedTo(binary()).asIs();
+				value = resources.get().contentOf(name, context).parsedTo(binary()).asIs();
 		} else {
 			ResourceKey key = buildKey(bean, field);
 			id = key.toString();
 			if (ResourceValueReference.class.equals(type)) {
-				value = new GenericResourceValueReference(resources, key);
+				value = new GenericResourceValueReference(resources.get(), key);
 			} else if (ResourceProvider.class.equals(type)) {
-				value = resources.forKey(key);
+				value = resources.get().forKey(key);
 			} else {
-				string = resources.get(key, context);
+				string = resources.get().get(key, context);
 			}
 		}
 		if (value == null) {

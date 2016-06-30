@@ -1,10 +1,11 @@
 package com.github.resource4j.spring.annotations.support;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.withoutContext;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +15,12 @@ import org.springframework.util.ReflectionUtils.FieldCallback;
 
 import com.github.resource4j.MandatoryValue;
 import com.github.resource4j.OptionalValue;
-import com.github.resource4j.files.MissingResourceFileException;
-import com.github.resource4j.files.parsers.ByteArrayParser;
-import com.github.resource4j.files.parsers.ResourceParser;
-import com.github.resource4j.files.parsers.StringParser;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.objects.parsers.ByteArrayParser;
+import com.github.resource4j.objects.parsers.ResourceParser;
+import com.github.resource4j.objects.parsers.StringParser;
 import com.github.resource4j.resources.Resources;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.spring.annotations.InjectResource;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 
@@ -31,11 +32,11 @@ public class InjectResourceCallback implements FieldCallback {
 	
 	private BeanFactory beanFactory;
 	
-	private Resources resources;
+	private Supplier<Resources> resources;
 
 	private String beanName;
 
-	public InjectResourceCallback(Object bean, String beanName, BeanFactory beanFactory, Resources resources) {
+	public InjectResourceCallback(Object bean, String beanName, BeanFactory beanFactory, Supplier<Resources> resources) {
 		this.bean = bean;
 		this.beanName = beanName;
 		this.beanFactory = beanFactory;
@@ -54,8 +55,9 @@ public class InjectResourceCallback implements FieldCallback {
 		
 		Object value = null;
 		try {
-			OptionalValue<? extends Object> optional = resources.contentOf(fileName, context)
-					.parsedTo(formatSpecifiedBy(type, annotation));
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			OptionalValue<? extends Object> optional = resources.get().contentOf(fileName, context)
+					.parsedTo((ResourceParser) formatSpecifiedBy(type, annotation));
 			
 			if (type.equals(OptionalValue.class) && genericMatch(field, optional.asIs())) {
 				value = optional;
@@ -69,7 +71,7 @@ public class InjectResourceCallback implements FieldCallback {
 				throw new IllegalArgumentException("Incompatible data type: expected " 
 						+ type.getName() + " for content of " + fileName);
 			}
-		} catch (MissingResourceFileException e) {
+		} catch (MissingResourceObjectException e) {
 			// ignore
 		}
 		if (annotation.required() && (value == null)) {

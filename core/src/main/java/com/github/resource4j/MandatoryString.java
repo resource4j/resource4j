@@ -3,7 +3,7 @@ package com.github.resource4j;
 import java.text.Format;
 import java.text.MessageFormat;
 
-import com.github.resource4j.util.TypeCastException;
+import com.github.resource4j.converters.TypeCastException;
 
 /**
  * Specialized representation of {@link MandatoryValue} for values of type String.
@@ -58,4 +58,6 @@ public interface MandatoryString extends MandatoryValue<String>, ResourceString 
      * @throws IllegalArgumentException as specified in {@link MessageFormat#format(String, Object...)}
      */
     String asFormatted(Object... arguments);
+
+
 }

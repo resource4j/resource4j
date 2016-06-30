@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
  * The core class of Resource4J API that provides access to resource values. 
@@ -50,30 +50,30 @@ public interface Resources {
     OptionalString get(ResourceKey key, ResourceResolutionContext context);
     
     /**
-     * Resolves file name in given locale as a resolution context and returns the reference to the file.
-     * @param name the file name
+     * Resolves object name in given locale as a resolution context and returns the reference to the object.
+     * @param name the object name
      * @param locale the locale to be used as resolution context
-     * @return reference to the resolved file
+     * @return reference to the resolved object
      * @since 1.1
      */
-    ResourceFile contentOf(String name, Locale locale);
+    ResourceObject contentOf(String name, Locale locale);
 
     /**
-     * Resolves file name in given resolution context and returns the reference to the file.
-     * @param name the name of the file
-     * @param context the context for searching the resource file as defined in documentation to {@link ResourceResolutionContext}.
-     * @return reference to resource file to work with
+     * Resolves object name in given resolution context and returns the reference to the object.
+     * @param name the name of the object
+     * @param context the context for searching the resource object as defined in documentation to {@link ResourceResolutionContext}.
+     * @return reference to resource object to work with
      * @see ResourceKey 
      * @since 2.0
      */
-    ResourceFile contentOf(String name, ResourceResolutionContext context);
+    ResourceObject contentOf(String name, ResourceResolutionContext context);
     
     /**
-     * Resolves file name without any resolution context.
-     * @param name the name of the file to load
-     * @return reference to the file for content loading and parsing
+     * Resolves object name without any resolution context.
+     * @param name the name of the object to load
+     * @return reference to the object for data loading and parsing
      * @since 2.0
      */
-    ResourceFile contentOf(String name);
+    ResourceObject contentOf(String name);
 
 }

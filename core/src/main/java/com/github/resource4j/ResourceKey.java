@@ -53,7 +53,15 @@ public class ResourceKey implements java.io.Serializable {
 		String id = idx < key.length() - 1 ? key.substring(idx + 1) : null;
 		return key(bundle, id);
 	}
-	
+
+
+    public ResourceKey relative(String id) {
+        ResourceKey full = plain(id);
+        if (full.getBundle() == null) return key(bundle, id);
+        return full;
+    }
+
+
     /**
      * Creates a bundle key corresponding to given class.
      * @param clazz a class owning the bundle
@@ -165,7 +173,18 @@ public class ResourceKey implements java.io.Serializable {
     public ResourceKey bundle() {
     	return new ResourceKey(bundle, null);
     }
-    
+
+    /**
+     * Returns unresolved name of resource object associated with this key
+     * @return unresolved name of resource object
+     */
+    public String objectName() {
+        if (bundle == null) {
+            return null;
+        }
+        return bundle.replace('.', '/');
+    }
+
     /**
      * Returns name of the bundle for this key
      * @return the bundle name

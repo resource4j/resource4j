@@ -1,10 +1,10 @@
 package com.github.resource4j.spring.context;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 public class RequestResolutionContextProvider implements ResolutionContextProvider {
 

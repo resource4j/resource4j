@@ -9,15 +9,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.files.ResourceFileException;
-import com.github.resource4j.files.parsers.AbstractValueParser;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
+import com.github.resource4j.objects.parsers.AbstractValueParser;
+import com.github.resource4j.objects.parsers.BundleParser;
+import com.github.resource4j.resources.discovery.ContentType;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigSyntax;
 import com.typesafe.config.ConfigValue;
 
-public class ConfigMapParser extends AbstractValueParser<Map<String, String>> {
+@ContentType(extension = ".config", mimeType = "text/x-java-properties")
+public class ConfigMapParser extends AbstractValueParser<Map<String, String>> implements BundleParser {
 
 	private ConfigParser parser;
 	
@@ -42,8 +45,8 @@ public class ConfigMapParser extends AbstractValueParser<Map<String, String>> {
 
 
 	@Override
-	protected Map<String, String> parse(ResourceFile file) throws IOException,
-			ResourceFileException {
+	protected Map<String, String> parse(ResourceObject file) throws IOException,
+			ResourceObjectException {
 		Config config = file.parsedTo(parser).asIs();
 
 		Map<String, String> result = new HashMap<String, String>();

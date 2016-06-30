@@ -1,13 +1,13 @@
 package com.github.resource4j.resources;
 
-import static com.github.resource4j.resources.resolution.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 
 import java.util.Locale;
 
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.files.ResourceFile;
-import com.github.resource4j.resources.resolution.ResourceResolutionContext;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 
 public class GenericResourceProvider implements ResourceProvider {
@@ -32,7 +32,7 @@ public class GenericResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public ResourceFile contentOf(String name, Locale locale) {
+    public ResourceObject contentOf(String name, Locale locale) {
         return resources.contentOf(name, locale);
     }
 
@@ -52,7 +52,7 @@ public class GenericResourceProvider implements ResourceProvider {
 	}
 
 	@Override
-	public ResourceFile contentOf(String name, ResourceResolutionContext context) {
+	public ResourceObject contentOf(String name, ResourceResolutionContext context) {
 		return resources.contentOf(name, context);
 	}
 
