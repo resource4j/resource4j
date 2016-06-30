@@ -11,8 +11,8 @@ import com.github.resource4j.OptionalString;
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ValueNotAcceptableException;
-import com.github.resource4j.util.TypeCastException;
-import com.github.resource4j.util.TypeConverter;
+import com.github.resource4j.converters.TypeCastException;
+import com.github.resource4j.converters.TypeConverter;
 
 /**
  * Generic implementation of {@link OptionalString}.

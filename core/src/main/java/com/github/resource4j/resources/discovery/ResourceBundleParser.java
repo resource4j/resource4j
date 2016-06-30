@@ -2,9 +2,7 @@ package com.github.resource4j.resources.discovery;
 
 import java.util.Map;
 
-import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.resources.CustomizableResources;
 
 /**
  * Helper interface for parsing resource objects into key-value bundles.

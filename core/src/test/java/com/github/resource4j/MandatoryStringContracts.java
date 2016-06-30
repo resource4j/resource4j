@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.junit.Test;
 
@@ -18,9 +19,15 @@ public abstract class MandatoryStringContracts extends MandatoryValueContracts {
 
 	
 	@Test
-	public void testAsCalendarReturnsDateParsedInGivenFormat() {		
-		Calendar calendar = new GregorianCalendar();	
+	public void testAsCalendarReturnsDateParsedInGivenFormat() {
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTimeZone(tz);
+
 		DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.US);
+		format.setTimeZone(tz);
+
 		String value = format.format(calendar.getTime()); 
 		
 		MandatoryString string = createMandatoryValue(anyResolvedSource(), anyKey(), value);

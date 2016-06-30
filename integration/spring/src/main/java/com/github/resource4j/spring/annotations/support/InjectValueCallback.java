@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +30,17 @@ public class InjectValueCallback implements FieldCallback {
 
 	private static final Logger LOG = LoggerFactory.getLogger(InjectValueCallback.class);
 	
-	private Resources resources;
+	private Supplier<Resources> resources;
 	
 	private Object bean;
 
 	private BeanFactory factory;
 
-	private ResourceProvider provider;
+	private Supplier<ResourceProvider> provider;
 
-	public InjectValueCallback(Object bean, BeanFactory factory, Resources resources, ResourceProvider provider) {
+	public InjectValueCallback(Object bean, BeanFactory factory,
+							   Supplier<Resources> resources,
+							   Supplier<ResourceProvider> provider) {
 		this.factory = factory;
 		this.resources = resources;
 		this.bean = bean;
@@ -49,15 +52,15 @@ public class InjectValueCallback implements FieldCallback {
 		InjectValue annotation = field.getAnnotation(InjectValue.class);
 		
 		
-		ResourceProvider actualProvider = provider;
+		Supplier<ResourceProvider> actualProvider = provider;
 		if (annotation.bundle().isEmpty()) {
 			if (provider == null) {
 				Class<?> bundleClass = annotation.bundleClass().equals(Object.class) ? 
 							bean.getClass() : annotation.bundleClass(); 
-				actualProvider = resources.forKey(bundle(bundleClass));
+				actualProvider = () -> resources.get().forKey(bundle(bundleClass));
 			}
 		} else {
-			actualProvider = resources.forKey(bundle(annotation.bundle()));
+			actualProvider = () -> resources.get().forKey(bundle(annotation.bundle()));
 		}
 
 		String name = annotation.value().isEmpty() ? field.getName() : annotation.value();
@@ -112,15 +115,15 @@ public class InjectValueCallback implements FieldCallback {
 				value.getClass().getSimpleName());
 	}
 
-	private Object getValue(ResourceProvider provider, Type expectedType, String name,
+	private Object getValue(Supplier<ResourceProvider> provider, Type expectedType, String name,
 			ResourceResolutionContext ctx) {
 		Object value;
 		if (ResourceValueReference.class.equals(expectedType)) {		
-			value = new GenericResourceValueReference(provider, name);
+			value = new GenericResourceValueReference(provider.get(), name);
 		} else if (ResourceProvider.class.equals(expectedType)) {
 			value = provider;
 		} else {
-			OptionalString string = provider.get(name, ctx);
+			OptionalString string = provider.get().get(name, ctx);
 			if (OptionalString.class.equals(expectedType)) {
 				value = string;
 			} else if (MandatoryString.class.equals(expectedType)) {
@@ -154,8 +157,7 @@ public class InjectValueCallback implements FieldCallback {
 	private ResourceResolutionContext getContext(Class<? extends ResolutionContextProvider> contextProviderType) {
 		ResourceResolutionContext ctx = withoutContext();
 		try {
-			ResolutionContextProvider provider = 
-				(ResolutionContextProvider) factory.getBean(contextProviderType);
+			ResolutionContextProvider provider = factory.getBean(contextProviderType);
 			ctx = provider.getContext();
 		} catch (NoSuchBeanDefinitionException e) {
 			try {

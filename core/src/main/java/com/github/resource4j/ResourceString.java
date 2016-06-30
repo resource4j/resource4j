@@ -2,7 +2,7 @@ package com.github.resource4j;
 
 import java.text.Format;
 
-import com.github.resource4j.util.TypeCastException;
+import com.github.resource4j.converters.TypeCastException;
 
 /**
  * Specialized representation of {@link ResourceValue} of type String that supports type conversions and formatting.

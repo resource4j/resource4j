@@ -1,57 +1,41 @@
 package com.github.resource4j.thymeleaf;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import com.github.resource4j.objects.providers.ClasspathResourceObjectProvider;
-import com.github.resource4j.objects.providers.MappingResourceObjectProvider;
-import com.github.resource4j.spring.SpringResourceObjectProvider;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import com.github.resource4j.resources.Resources;
+import com.github.resource4j.spring.config.Resource4jAutoConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.thymeleaf.spring3.SpringTemplateEngine;
+import org.springframework.context.annotation.DependsOn;
+import org.thymeleaf.dialect.IDialect;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.dialect.SpringStandardDialect;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import com.github.resource4j.objects.providers.ResourceObjectProvider;
-import com.github.resource4j.resources.DefaultResources;
-import com.github.resource4j.resources.Resources;
-import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
+import java.util.List;
+import java.util.Set;
 
 @Configuration
-public class ThymeleafResourceConfiguration implements ApplicationContextAware {
-	
-	private ApplicationContext applicationContext;
-	
-	@Bean
-	public ResourceObjectProvider fileFactory() {
-		MappingResourceObjectProvider factory = new MappingResourceObjectProvider();
-		Map<String, ResourceObjectProvider> mappings = new LinkedHashMap<>();
-		mappings.put(".+\\.properties$", new ClasspathResourceObjectProvider());
-		SpringResourceObjectProvider springResourceFactory = new SpringResourceObjectProvider();
-		springResourceFactory.setApplicationContext(applicationContext);
-		mappings.put(".+", springResourceFactory);
-		factory.setMappings(mappings);
-		return factory;
-	}
-	
-	@Bean
-	public Resources resources() {
-		DefaultResources resources = new DefaultResources();
-		resources.setFileFactory(fileFactory());
-		return resources;
-	}
-	
+@ConditionalOnBean(Resources.class)
+@AutoConfigureAfter(Resource4jAutoConfiguration.class)
+public class ThymeleafResourceConfiguration {
+
+	@Autowired
+	private Resources resources;
+
+	@Autowired(required = false)
+	private Set<IDialect> dialects;
+
 	@Bean
 	public Resource4jResourceResolver resourceResolver() {
-		return new Resource4jResourceResolver(resources());
+		return new Resource4jResourceResolver(resources);
 	}
 	
 	@Bean
 	public Resource4jMessageResolver messageResolver() {
-		return new Resource4jMessageResolver(resources());
+		return new Resource4jMessageResolver(resources);
 	}
 	
 	@Bean
@@ -64,25 +48,20 @@ public class ThymeleafResourceConfiguration implements ApplicationContextAware {
 		resolver.setSuffix(".html");
 		return resolver;
 	}
-	
+
 	@Bean
 	public SpringTemplateEngine defaultTemplateEngine() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
 		engine.setTemplateResolver(defaultTemplateResolver());
 		engine.setMessageResolver(messageResolver());
+		if (dialects != null) {
+            if (!dialects.stream().filter(dialect -> dialect instanceof SpringStandardDialect).findAny().isPresent()) {
+                dialects.add(new SpringStandardDialect());
+            }
+			engine.setDialects(dialects);
+		}
 		return engine;
 	}
-	
-	@Bean
-	public ResourceValueBeanPostProcessor resourceValueBeanPostProcessor() {
-		return new ResourceValueBeanPostProcessor();
-	}
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-	
 
 }

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@Import(DelegatingResource4jConfiguration.class)
+@Import(Resource4jAutoConfiguration.class)
 public @interface EnableResources {
 
 }

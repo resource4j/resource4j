@@ -1,10 +1,9 @@
 package com.github.resource4j.resources.context;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public final class ResourceResolutionContext implements Serializable {
 
@@ -19,7 +18,8 @@ public final class ResourceResolutionContext implements Serializable {
 			return 0;
 		}
 	};
-	
+	public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
+
 	public static ResourceResolutionContext withoutContext() {
 		return new ResourceResolutionContext(new ResourceResolutionComponent[0]);
 	}
@@ -59,10 +59,24 @@ public final class ResourceResolutionContext implements Serializable {
 	}
 	
 	public ResourceResolutionContext parent() {
-		ResourceResolutionComponent[] components = new ResourceResolutionComponent[this.components.length - 1];
-		for (int i = 0; i < this.components.length - 1; i++) {
-			components[i] = this.components[i];
-		}
+        if (isEmpty()) {
+            throw new IllegalStateException("Context is already empty: parent does not exist");
+        }
+
+        int length = this.components.length;
+        int lastIndex = length - 1;
+        ResourceResolutionComponent last = this.components[lastIndex];
+        if (!last.isReducible()) {
+            length = length - 1;
+        }
+
+        ResourceResolutionComponent[] components = new ResourceResolutionComponent[length];
+        System.arraycopy(this.components, 0, components, 0, lastIndex);
+
+        if (last.isReducible()) {
+            components[lastIndex] = last.reduce();
+        }
+
 		return new ResourceResolutionContext(components);
 	}
 	
@@ -93,7 +107,7 @@ public final class ResourceResolutionContext implements Serializable {
 		StringBuilder builder = new StringBuilder();
 		for (ResourceResolutionComponent component : components) {
 			if (builder.length() > 0) {
-				builder.append('-');
+				builder.append(DEFAULT_COMPONENT_SEPARATOR);
 			}
 			List<String> sections = component.sections();
 			boolean skipSeparator = true;
@@ -127,5 +141,20 @@ public final class ResourceResolutionContext implements Serializable {
 		}
 		return true;
 	}
-	
+
+	public static Stream<ResourceResolutionContext> parentsOf(ResourceResolutionContext context) {
+		return StreamSupport.stream(((Iterable<ResourceResolutionContext>)
+				() -> new Iterator<ResourceResolutionContext>() {
+            private ResourceResolutionContext current = context;
+            @Override
+            public boolean hasNext() {
+                return !current.isEmpty();
+            }
+            @Override
+            public ResourceResolutionContext next() {
+				current = current.parent();
+                return current;
+            }
+        }).spliterator(), false);
+	}
 }

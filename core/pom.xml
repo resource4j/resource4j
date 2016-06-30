@@ -8,23 +8,30 @@
 	</parent>
 
     <artifactId>resource4j-core</artifactId>
+    <packaging>jar</packaging>
 
     <name>Resource4J Core Library</name>
     <description>
         Resource4J Core Library provides all resource4j basic APIs as well as their default implementations.
     </description>
-    <url>https://github.com/ivan-gammel/resource4j</url>
+    <url>https://github.com/resource4j/resource4j</url>
 
     <licenses>
         <license>
             <name>Modified BSD License</name>
-            <url>https://github.com/ivan-gammel/resource4j/blob/master/LICENSE.txt</url>
+            <url>https://github.com/resource4j/resource4j/blob/master/LICENSE.txt</url>
             <distribution>repo</distribution>
             <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.resource4j</groupId>
+            <artifactId>converters</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- logging -->
         <dependency>

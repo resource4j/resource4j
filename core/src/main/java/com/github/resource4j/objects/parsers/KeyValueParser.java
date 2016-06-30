@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
+import com.github.resource4j.resources.discovery.ContentType;
 
-public class KeyValueParser extends AbstractValueParser<Map<String,String>> {
+@ContentType(extension = ".properties", mimeType = "text/x-java-properties")
+public class KeyValueParser extends AbstractValueParser<Map<String,String>> implements BundleParser {
     
 	private static final KeyValueParser INSTANCE = new KeyValueParser();
     

@@ -4,7 +4,7 @@ import java.text.Format;
 
 import com.github.resource4j.resources.Resources;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
-import com.github.resource4j.util.TypeCastException;
+import com.github.resource4j.converters.TypeCastException;
 
 /**
  * A wrapper of single value from the resource file. Values are identified by keys and can be of any type.

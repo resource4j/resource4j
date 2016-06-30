@@ -1,13 +1,17 @@
 package com.github.resource4j.objects;
 
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.Builder;
 import com.github.resource4j.test.Builders;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class ByteArrayResourceObjectBuilder implements Builder<ByteArrayResourceObject> {
 
     private String name = Builders.anyIdentifier();
 
-    private String resolution = "-en_US";
+    private String resolution = "";
 
     private String extension = ".txt";
 
@@ -17,6 +21,15 @@ public class ByteArrayResourceObjectBuilder implements Builder<ByteArrayResource
 
     public static ByteArrayResourceObjectBuilder anObject() {
         return new ByteArrayResourceObjectBuilder();
+    }
+
+    public static ByteArrayResourceObjectBuilder anObject(String path, ResourceResolutionContext ctx) {
+        ByteArrayResourceObjectBuilder builder = new ByteArrayResourceObjectBuilder();
+        int extDot = path.lastIndexOf('.');
+        builder.name = extDot > 0 ? path.substring(0, extDot) : path;
+        builder.extension = extDot > 0 ? path.substring(extDot) : "";
+        builder.resolution = ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR + ctx.toString();
+        return builder;
     }
 
     public static ByteArrayResourceObjectBuilder anObject(String name, String resolution, String extension) {
@@ -29,6 +42,11 @@ public class ByteArrayResourceObjectBuilder implements Builder<ByteArrayResource
 
     public ByteArrayResourceObjectBuilder withContent(byte[] content) {
         this.content = content;
+        return this;
+    }
+
+    public ByteArrayResourceObjectBuilder withContent(String content) {
+        this.content = content.getBytes(StandardCharsets.UTF_8);
         return this;
     }
 

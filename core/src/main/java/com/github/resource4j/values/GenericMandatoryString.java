@@ -5,8 +5,8 @@ import java.text.MessageFormat;
 import java.util.function.Function;
 
 import com.github.resource4j.*;
-import com.github.resource4j.util.TypeCastException;
-import com.github.resource4j.util.TypeConverter;
+import com.github.resource4j.converters.TypeCastException;
+import com.github.resource4j.converters.TypeConverter;
 
 /**
  * Generic implementation of {@link MandatoryString}.

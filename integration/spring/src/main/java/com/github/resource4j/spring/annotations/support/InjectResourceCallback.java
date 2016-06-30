@@ -5,6 +5,7 @@ import static com.github.resource4j.resources.context.ResourceResolutionContext.
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +32,11 @@ public class InjectResourceCallback implements FieldCallback {
 	
 	private BeanFactory beanFactory;
 	
-	private Resources resources;
+	private Supplier<Resources> resources;
 
 	private String beanName;
 
-	public InjectResourceCallback(Object bean, String beanName, BeanFactory beanFactory, Resources resources) {
+	public InjectResourceCallback(Object bean, String beanName, BeanFactory beanFactory, Supplier<Resources> resources) {
 		this.bean = bean;
 		this.beanName = beanName;
 		this.beanFactory = beanFactory;
@@ -55,7 +56,7 @@ public class InjectResourceCallback implements FieldCallback {
 		Object value = null;
 		try {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
-			OptionalValue<? extends Object> optional = resources.contentOf(fileName, context)
+			OptionalValue<? extends Object> optional = resources.get().contentOf(fileName, context)
 					.parsedTo((ResourceParser) formatSpecifiedBy(type, annotation));
 			
 			if (type.equals(OptionalValue.class) && genericMatch(field, optional.asIs())) {
