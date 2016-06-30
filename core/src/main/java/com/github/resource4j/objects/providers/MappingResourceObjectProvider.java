@@ -19,7 +19,7 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
  * 
  * @author Ivan Gammel
  */
-public class MappingResourceObjectProvider implements ResourceObjectProvider {
+public class MappingResourceObjectProvider implements ResourceObjectProvider, ResourceObjectProviderAdapter {
 
 	private List<Mapping> mappings;
 
@@ -46,22 +46,35 @@ public class MappingResourceObjectProvider implements ResourceObjectProvider {
 			throws MissingResourceObjectException {
 		for (Mapping mapping : mappings) {
 			if (mapping.pattern.matcher(name).matches()) {
-				return mapping.factory.get(name, context);
+				return mapping.provider.get(name, context);
 			}
 		}
 		throw new MissingResourceObjectException(name, context.toString());
+	}
+
+	@Override
+	public List<ResourceObjectProvider> unwrap() {
+		List<ResourceObjectProvider> result = new ArrayList<>();
+        for (Mapping mapping : mappings) {
+            if (mapping.provider instanceof ResourceObjectProviderAdapter) {
+                result.addAll(((ResourceObjectProviderAdapter) mapping.provider).unwrap());
+            } else {
+                result.add(mapping.provider);
+            }
+        }
+		return result;
 	}
 
 	private static class Mapping {
 
 		public Pattern pattern;
 		
-		public ResourceObjectProvider factory;
+		public ResourceObjectProvider provider;
 
-		public Mapping(Pattern pattern, ResourceObjectProvider factory) {
+		public Mapping(Pattern pattern, ResourceObjectProvider provider) {
 			super();
 			this.pattern = pattern;
-			this.factory = factory;
+			this.provider = provider;
 		}
 	}
 	

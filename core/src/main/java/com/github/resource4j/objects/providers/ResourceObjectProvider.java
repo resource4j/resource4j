@@ -22,10 +22,20 @@ public interface ResourceObjectProvider {
      */
     ResourceObject get(String name, ResourceResolutionContext context) throws ResourceObjectAccessException;
 
+    /**
+     * Returns provider that accepts requests only for objects which name matches given condition.
+     * @param nameMatcher name matching condition
+     * @return adapter that filters object requests, allowing to return only objects with matching names.
+     */
     default ResourceObjectProvider objectsLike(Predicate<String> nameMatcher) {
         return new SelectiveResourceObjectProvider(this, nameMatcher, null);
     }
 
+    /**
+     * Returns provider that accepts requests with resolution contexts matching given condition.
+     * @param contextMatcher context matching condition
+     * @return adapter that filters object requests, allowing to return only objects in matching contexts.
+     */
     default ResourceObjectProvider acceptContext(Predicate<ResourceResolutionContext> contextMatcher) {
         return new SelectiveResourceObjectProvider(this, null, contextMatcher);
     }

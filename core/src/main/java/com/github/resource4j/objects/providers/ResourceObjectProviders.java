@@ -1,16 +1,11 @@
 package com.github.resource4j.objects.providers;
 
-import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.objects.providers.mutable.FileResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.HeapResourceObjectRepository;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 import java.io.File;
 import java.time.Clock;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class ResourceObjectProviders {
 
@@ -34,41 +29,20 @@ public class ResourceObjectProviders {
         return new PatternMatchingConfigurator();
     }
 
-    public static ResourceObjectProviderAdaptDSL bind(ResourceObjectProvider provider) {
-        return new ResourceObjectProviderAdaptDSL(provider);
+    public static FilteringResourceObjectProviderDSL bind(ResourceObjectProvider provider) {
+        return new FilteringResourceObjectProviderDSL(provider);
     }
 
-    public static class ResourceObjectProviderAdaptDSL {
-        private ResourceObjectProvider provider;
-
-        public ResourceObjectProviderAdaptDSL(ResourceObjectProvider provider) {
-            this.provider = provider;
-        }
-
-        public ResourceObjectProviderAdapter to(String path) {
-            return new ResourceObjectProviderAdapter(provider, path);
-        }
-    }
-
-    public static class ResourceObjectProviderAdapter implements ResourceObjectProvider {
+    public final static class FilteringResourceObjectProviderDSL {
 
         private ResourceObjectProvider provider;
 
-        private String basePath;
-
-        public ResourceObjectProviderAdapter(ResourceObjectProvider provider, String basePath) {
+        private FilteringResourceObjectProviderDSL(ResourceObjectProvider provider) {
             this.provider = provider;
-            this.basePath = basePath;
         }
 
-        @Override
-        public ResourceObject get(String name, ResourceResolutionContext context) throws ResourceObjectAccessException {
-            String realName = basePath + (name.startsWith("/") ? name : '/' + name);
-            return provider.get(realName, context);
-        }
-
-        public List<ResourceObjectProvider> unwrap() {
-            return Arrays.asList(provider);
+        public FilteringResourceObjectProvider to(String path) {
+            return new FilteringResourceObjectProvider(provider, path);
         }
 
     }

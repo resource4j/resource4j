@@ -8,6 +8,8 @@ import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.objects.parsers.BundleParser;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
+import com.github.resource4j.objects.providers.FilteringResourceObjectProvider;
+import com.github.resource4j.objects.providers.ResourceObjectProviderAdapter;
 import com.github.resource4j.objects.providers.ResourceValueProvider;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
@@ -32,6 +34,7 @@ import static com.github.resource4j.resources.ResourcesConfigurationBuilder.conf
 import static com.github.resource4j.resources.cache.CacheRecord.initial;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.parentsOf;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toCollection;
 
 public class RefreshableResources extends AbstractResources {
@@ -90,11 +93,14 @@ public class RefreshableResources extends AbstractResources {
         configurator.configureSources(sources -> {
             this.providers = sources;
             this.providers.stream()
-                .filter(provider -> provider instanceof ResourceObjectRepository)
-                .forEach(provider -> {
-                    ResourceObjectRepository repository = (ResourceObjectRepository) provider;
-                    repository.addListener(listener);
-                });
+                    .map(RefreshableResources::unwrap)
+                    .flatMap(Collection::stream)
+                    .filter(provider -> provider instanceof ResourceObjectRepository)
+                    .distinct()
+                    .forEach(provider -> {
+                        ResourceObjectRepository repository = (ResourceObjectRepository) provider;
+                        repository.addListener(listener);
+                    });
         });
         configurator.configureFormats(formats -> this.bundleFormats = formats);
         configurator.configureDefaultBundle(bundle -> defaultBundle = bundle);
@@ -114,6 +120,12 @@ public class RefreshableResources extends AbstractResources {
 
         configurator.configurePostProcessing(p -> this.valuePostProcessor = p);
 
+    }
+
+    private static List<ResourceObjectProvider> unwrap(ResourceObjectProvider provider) {
+        return provider instanceof ResourceObjectProviderAdapter
+                ? ((ResourceObjectProviderAdapter) provider).unwrap()
+                : singletonList(provider);
     }
 
     private void resetCaches() {

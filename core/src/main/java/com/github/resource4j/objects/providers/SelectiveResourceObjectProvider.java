@@ -5,9 +5,11 @@ import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
-public class SelectiveResourceObjectProvider implements ResourceObjectProvider {
+public class SelectiveResourceObjectProvider implements ResourceObjectProvider, ResourceObjectProviderAdapter {
 
     private ResourceObjectProvider provider;
 
@@ -45,5 +47,13 @@ public class SelectiveResourceObjectProvider implements ResourceObjectProvider {
     public ResourceObjectProvider acceptContext(Predicate<ResourceResolutionContext> contextMatcher) {
         this.contextMatcher = this.contextMatcher.or(contextMatcher);
         return this;
+    }
+
+    @Override
+    public List<ResourceObjectProvider> unwrap() {
+        return provider instanceof ResourceObjectProviderAdapter
+                ? ((ResourceObjectProviderAdapter) provider).unwrap()
+                : Collections.singletonList(provider);
+
     }
 }
