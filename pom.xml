@@ -6,7 +6,7 @@
 
 	<groupId>com.github.resource4j</groupId>
 	<artifactId>resource4j-parent</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Resource4J</name>
@@ -91,7 +91,8 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
                 <configuration>
-                    <tagNameFormat>release-@{project.version}</tagNameFormat>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <remoteTagging>false</remoteTagging>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
