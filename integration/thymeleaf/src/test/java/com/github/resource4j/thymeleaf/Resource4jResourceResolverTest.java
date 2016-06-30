@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Locale;
 
+import com.github.resource4j.spring.config.Resource4jAutoConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={ ThymeleafResourceConfiguration.class })
+@ContextConfiguration(classes={ Resource4jAutoConfiguration.class, ThymeleafResourceConfiguration.class })
 public class Resource4jResourceResolverTest {
 
 	@Autowired

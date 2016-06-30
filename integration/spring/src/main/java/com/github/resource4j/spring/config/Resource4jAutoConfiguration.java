@@ -52,12 +52,12 @@ public class Resource4jAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(Resources.class)
-    public Resources resources() {
+    public Resources resources(SpringResourceObjectProvider springResourceObjects) {
         if (configuration == null) {
             configuration = configure()
                     .sources(patternMatching()
                                 .when(".+\\.properties$", classpath())
-                                .otherwise(springResourceObjects()))
+                                .otherwise(springResourceObjects))
                     .get();
         }
         return new RefreshableResources(configuration);
