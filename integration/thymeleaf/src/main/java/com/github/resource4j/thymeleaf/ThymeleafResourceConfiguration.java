@@ -7,9 +7,15 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.dialect.SpringStandardDialect;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
 import org.thymeleaf.templateresolver.TemplateResolver;
+
+import java.util.List;
+import java.util.Set;
 
 @Configuration
 @ConditionalOnBean(Resources.class)
@@ -18,6 +24,9 @@ public class ThymeleafResourceConfiguration {
 
 	@Autowired
 	private Resources resources;
+
+	@Autowired(required = false)
+	private Set<IDialect> dialects;
 
 	@Bean
 	public Resource4jResourceResolver resourceResolver() {
@@ -39,12 +48,18 @@ public class ThymeleafResourceConfiguration {
 		resolver.setSuffix(".html");
 		return resolver;
 	}
-	
+
 	@Bean
 	public SpringTemplateEngine defaultTemplateEngine() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
 		engine.setTemplateResolver(defaultTemplateResolver());
 		engine.setMessageResolver(messageResolver());
+		if (dialects != null) {
+            if (!dialects.stream().filter(dialect -> dialect instanceof SpringStandardDialect).findAny().isPresent()) {
+                dialects.add(new SpringStandardDialect());
+            }
+			engine.setDialects(dialects);
+		}
 		return engine;
 	}
 

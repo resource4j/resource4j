@@ -289,12 +289,6 @@ public class RefreshableResources extends AbstractResources {
 
             for (Iterator<ResolvedKey> iterator = parentKeys.descendingIterator(); iterator.hasNext(); ) {
                 ResolvedKey parentKey = iterator.next();
-                future = loadSingleValue(future, parentKey);
-            }
-            future = loadSingleValue(future, resolvedKey);
-
-            for (Iterator<ResolvedKey> iterator = parentKeys.descendingIterator(); iterator.hasNext(); ) {
-                ResolvedKey parentKey = iterator.next();
                 future = fireRequest(future, valueQueue,
                         () -> this.loadValueFromBundle(parentKey),
                         CachedResult::exists);
@@ -304,6 +298,13 @@ public class RefreshableResources extends AbstractResources {
                     () -> this.loadValueFromBundle(resolvedKey),
                     CachedResult::exists);
             valueRequests.put(resolvedKey, future);
+
+            for (Iterator<ResolvedKey> iterator = parentKeys.descendingIterator(); iterator.hasNext(); ) {
+                ResolvedKey parentKey = iterator.next();
+                future = loadSingleValue(future, parentKey);
+            }
+            future = loadSingleValue(future, resolvedKey);
+
             return future;
         }, val -> {
             if (valuePostProcessor == null) return val;

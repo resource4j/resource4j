@@ -1,4 +1,4 @@
-package com.github.resource4j.cms.security;
+package com.github.resource4j.demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

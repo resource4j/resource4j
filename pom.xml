@@ -25,7 +25,7 @@
 		<module>converters</module>
 		<module>core</module>
 		<module>integration</module>
-        <module>examples</module>
+        <module>demo</module>
 	</modules>
 
 	<licenses>

@@ -55,6 +55,7 @@ public class HeapResourceObjectRepository implements ResourceValueRepository {
     public HeapResourceObjectRepository(Clock clock) {
         this.clock = clock;
         this.marker = MarkerFactory.getMarker(toString());
+        LOG.debug("Resource path configured: <in memory>");
     }
 
     @Override
