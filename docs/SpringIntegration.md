@@ -11,9 +11,33 @@ resource4j-spring library dependency to your project. These features include:
 2. Support for Spring-based discovery of resource bundles.
 3. Support for session-scoped and request-scoped beans.
 
+Configuration
+-------------
+Resource4j supports Spring Boot auto-configuration. By adding **resource4j-spring** library
+as a dependency you will automatically get pre-configured Resource4j bean.
+
+You can customize Resource4j configuration by adding a RefreshableResourcesConfigurator bean,
+as shown in example below:
+
+```Java
+import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
+import static com.github.resource4j.objects.providers.ResourceObjectProviders.bind;
+import static com.github.resource4j.objects.providers.ResourceObjectProviders.patternMatching;
+
+@Bean
+public RefreshableResourcesConfigurator resourcesConfiguration(SpringResourceObjectProvider springResourceObjects) {
+    return configure().sources(
+                patternMatching()
+                    .when(".+\\.properties$", bind(springResourceObjects).to("classpath:/i18n"))
+                    .otherwise(bind(springResourceObjects).to("classpath:/templates")),
+                i18nDatabase())
+                .get();
+}
+```
+
 Annotation-driven injection
 ---------------------------
-With ResourceValueBeanPostProcessor configured, it is possible to inject resource providers,
+With ResourceValueBeanPostProcessor bean configured, it is possible to inject resource providers,
 resource value references and even the values of any type that can be instantiated from a string.
 Below is an example:
 
@@ -86,5 +110,10 @@ class EULA {
 
 What's next?
 ----------
-1. [Integration with Thymeleaf 2.1](docs/ThymeleafIntegration.md)
-2. [Extras](docs/Extras.md)
+4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
+5. [Extras](Extras.md)
+
+Previous sections
+-----------------
+1. [Basics](Basics.md)
+2. [Configuring resources](Configuration.md)

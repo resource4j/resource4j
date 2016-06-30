@@ -112,6 +112,10 @@ get MissingValueException with parse error message, as can be seen in this examp
 
 What's next?
 ------------
-3. [Integration with Spring Framework](docs/SpringIntegration.md)
-4. [Integration with Thymeleaf 2.1](docs/ThymeleafIntegration.md)
-5. [Extras](docs/Extras.md)
+3. [Integration with Spring Framework](SpringIntegration.md)
+4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
+5. [Extras](Extras.md)
+
+Previous sections
+-----------------
+1. [Basics](Basics.md)

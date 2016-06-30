@@ -1,18 +1,16 @@
 package com.github.resource4j.extras.xstream;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static com.github.resource4j.extras.xstream.XStreamParser.xml;
-import static org.junit.Assert.assertEquals;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
+import com.github.resource4j.objects.ByteArrayResourceObject;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import com.github.resource4j.ResourceObject;
-import org.junit.Test;
-
-import com.github.resource4j.objects.ByteArrayResourceObject;
-import com.github.resource4j.ResourceObjectException;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import static com.github.resource4j.extras.xstream.XStreamParser.xml;
+import static org.junit.Assert.assertEquals;
 
 public class XStreamParserTest {
 

@@ -138,7 +138,7 @@ using a ResourceProvider instead of Resources can be a good option:
 
 What's next?
 ----------
-1. [Configuring resources](docs/Configuration.md)
-2. [Integration with Spring Framework](docs/SpringIntegration.md)
-3. [Integration with Thymeleaf 2.1](docs/ThymeleafIntegration.md)
-4. [Extras](docs/Extras.md)
+2. [Configuring resources](Configuration.md)
+3. [Integration with Spring Framework](SpringIntegration.md)
+4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
+5. [Extras](Extras.md)
