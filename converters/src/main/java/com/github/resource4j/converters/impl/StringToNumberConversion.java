@@ -18,6 +18,7 @@ import static java.util.stream.Stream.of;
 public class StringToNumberConversion implements PrimitiveTypeConversion<String,Number> {
 
     Map<Class<?>,Function<Number,? extends Number>> NUMBER_CONVERSIONS = Collections.unmodifiableMap(of(
+            entry(Number.class, Function.identity()),
             entry(Byte.class, convert(Number::byteValue)),
             entry(Short.class, convert(Number::shortValue)),
             entry(Integer.class, convert(Number::intValue)),
@@ -48,6 +49,7 @@ public class StringToNumberConversion implements PrimitiveTypeConversion<String,
                 conversionPairs.add(new ConversionPair(String.class, entry.getValue()));
             }
         }
+        conversionPairs.add(new ConversionPair(String.class, Number.class));
         conversionPairs.add(new ConversionPair(String.class, BigDecimal.class));
         conversionPairs.add(new ConversionPair(String.class, BigInteger.class));
         return conversionPairs;

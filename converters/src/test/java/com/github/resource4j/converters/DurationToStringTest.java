@@ -30,13 +30,13 @@ public class DurationToStringTest {
     public void testNegativeDurationToStringConversion() {
         Duration duration = SOME_LONG_DURATION.negated();
         String actual = TypeConverter.convert(duration, String.class);
-        assertEquals("-" + SOME_LONG_DURATION_STRING, actual);
+        assertEquals(SOME_LONG_NEGATIVE_DURATION_STRING, actual);
     }
 
     @Test
     public void testStringToNegativeDurationConversion() {
         Duration expected = SOME_LONG_DURATION.negated();
-        Duration actual = TypeConverter.convert(SOME_LONG_DURATION_STRING, Duration.class);
+        Duration actual = TypeConverter.convert(SOME_LONG_NEGATIVE_DURATION_STRING, Duration.class);
         assertEquals(expected, actual);
     }
 
