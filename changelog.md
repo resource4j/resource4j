@@ -1,3 +1,7 @@
+Version 3.0.1
+-------------
+1. \#32 - added shortcuts for typical use cases in OptionalValue and Resources
+
 Version 3.0
 -----------
 1. Java 8 is now minimal requirement for using this library.

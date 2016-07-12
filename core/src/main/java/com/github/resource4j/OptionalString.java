@@ -16,4 +16,16 @@ public interface OptionalString extends OptionalValue<String>, ResourceString {
     @Override
     MandatoryString notNull() throws MissingValueException;
 
+    /**
+     * Shortcut to <code>ofType(type).notNull().asIs()</code>
+     * @param type
+     * @param <T>
+     * @return
+     * @throws MissingValueException
+     * @since 3.1
+     */
+    default <T> T required(Class<T> type) throws MissingValueException {
+        return ofType(type).notNull().asIs();
+    }
+
 }

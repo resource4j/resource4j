@@ -21,6 +21,8 @@ import com.github.resource4j.resources.impl.ResolvedName;
 import com.github.resource4j.resources.processors.CyclicReferenceException;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 import com.github.resource4j.values.GenericOptionalString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Clock;
 import java.util.*;
@@ -37,9 +39,11 @@ import static com.github.resource4j.resources.context.ResourceResolutionContext.
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toCollection;
 
-public class RefreshableResources extends AbstractResources {
+public class RefreshableResources implements Resources {
 
     private static final int DEFAULT_MAX_DEPTH = 20;
+
+    private static final Logger LOG = LoggerFactory.getLogger(RefreshableResources.class);
 
     private Cache<ResolvedKey, CachedValue> values;
 

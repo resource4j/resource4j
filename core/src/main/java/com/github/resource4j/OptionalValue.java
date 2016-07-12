@@ -237,4 +237,14 @@ public interface OptionalValue<V> extends ResourceValue<V> {
      */
     MandatoryValue<V> notNull() throws MissingValueException;
 
+    /**
+     * Shortcut to <code>notNull().asIs()</code>
+     * @return non-null value represented by this wrapper
+     * @throws MissingValueException if wrapped value is <code>null</code>
+     * @since 3.1
+     */
+	default V required() throws MissingValueException {
+        return notNull().asIs();
+    }
+
 }
