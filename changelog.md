@@ -1,6 +1,7 @@
-Version 3.0.1
+Version 3.1
 -------------
 1. \#32 - added shortcuts for typical use cases in OptionalValue and Resources
+2. \#36 - fixed ResourceValueBeanPostProcessor to autowire values before initialization
 
 Version 3.0
 -----------

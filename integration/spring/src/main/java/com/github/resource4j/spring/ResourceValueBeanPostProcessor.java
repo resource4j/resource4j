@@ -41,13 +41,13 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName)
+	public Object postProcessAfterInitialization(Object bean, String beanName)
 			throws BeansException {
 		return bean;
 	}
 
 	@Override
-	public Object postProcessAfterInitialization(final Object bean,
+	public Object postProcessBeforeInitialization(final Object bean,
 			final String beanName) throws BeansException {
 		
 		Supplier<ResourceProvider> provider = getResourceProvider(bean);
