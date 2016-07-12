@@ -22,8 +22,11 @@ Resource key can be created for arbitrary bundle, any class and enumeration cons
 	// bundle=example.MyService id=someKey
 	ResourceKey child = bundle.child("someKey");
 
-	// bundle=example.MyService id=someKey.invalid
+	// bundle=example.MyService id=someKey_invalid
 	ResourceKey invalid = child.child("invalid");
+
+	// bundle=example.MyEnum id=VALUE_child
+	ResourceKey enumChild = ResourceKey.key(MyEnum.VALUE, "child");
 
 Resource values
 ---------------
@@ -38,7 +41,12 @@ Initially resource value is returned as OptionalString wrapper: using methods fr
 	int intValue = integer.asIs(); // autoboxing
 	int intValue = integer.orDefault(5); // autoboxing
 
-	long fluentValue = resources.get(key, in(currentLocale)).ofType(Long.class).orDefault();
+	long fluentValue = resources.get(key, in(currentLocale)).ofType(Long.class).orDefault(5L);
+
+	// shortcut equivalents for notNull().asIs()
+	// both may throw MissingValueException
+	long fluentValue = resources.get(key).required(Long.class);
+	String text = resources.get(key).required();
 
 Resource objects and providers
 ------------------------------
