@@ -5,6 +5,7 @@ import static org.springframework.util.ReflectionUtils.doWithFields;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -49,7 +50,9 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 	@Override
 	public Object postProcessBeforeInitialization(final Object bean,
 			final String beanName) throws BeansException {
-		
+		if (bean.getClass().isSynthetic() || Proxy.isProxyClass(bean.getClass())) {
+            return bean;
+        }
 		Supplier<ResourceProvider> provider = getResourceProvider(bean);
 		
 		doWithFields(bean.getClass(), 
@@ -79,10 +82,11 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 	}
 
 	private Iterable<Package> packagesOf(Class<?> clazz) {
+		List<Package> packages = new ArrayList<>();
+
 		String name = clazz.getPackage().getName();
 		String[] components = name.split("\\.");
 		
-		List<Package> packages = new ArrayList<>();
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < components.length; i++) {
 			if (builder.length() > 0) {
