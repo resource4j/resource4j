@@ -1,0 +1,6 @@
+language: java
+
+# blocklist
+branches:
+  except:
+  - /^(?i:dev)-.*$/

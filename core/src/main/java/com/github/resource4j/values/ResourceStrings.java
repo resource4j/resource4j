@@ -19,7 +19,7 @@ public final class ResourceStrings {
      * Returns new instance of OptionalString with null string
      * @return empty OptionalString
      */
-    public static OptionalString asNull() {
+    public static OptionalString empty() {
         return new GenericOptionalString(RUNTIME_SOURCE, DEFAULT_KEY, null);
     }
 
@@ -28,7 +28,7 @@ public final class ResourceStrings {
      * @param value wrapped object
      * @return given object wrapped in OptionalString
      */
-    public static OptionalString asString(String value) {
+    public static OptionalString ofNullable(String value) {
         return new GenericOptionalString(RUNTIME_SOURCE, DEFAULT_KEY, value);
     }
 
@@ -38,7 +38,7 @@ public final class ResourceStrings {
      * @param value wrapped string
      * @return given object wrapped in OptionalString with given key
      */
-    public static OptionalString asString(ResourceKey key, String value) {
+    public static OptionalString ofNullable(ResourceKey key, String value) {
         return new GenericOptionalString(RUNTIME_SOURCE, key, value);
     }
 

@@ -20,7 +20,7 @@ public final class ResourceValues {
      * @param <T> type of the wrapped value
      * @return empty OptionalValue
      */
-    public static <T> OptionalValue<T> asNull() {
+    public static <T> OptionalValue<T> empty() {
         return new GenericOptionalValue<>(RUNTIME_SOURCE, DEFAULT_KEY, (T) null);
     }
 
@@ -30,7 +30,7 @@ public final class ResourceValues {
      * @param <T> type of the wrapped object
      * @return given object wrapped in OptionalValue
      */
-    public static <T> OptionalValue<T> asValue(T value) {
+    public static <T> OptionalValue<T> ofNullable(T value) {
         return new GenericOptionalValue<T>(RUNTIME_SOURCE, DEFAULT_KEY, value);
     }
 
@@ -41,7 +41,7 @@ public final class ResourceValues {
      * @param <T> type of the wrapped object
      * @return given object wrapped in OptionalValue with given key
      */
-    public static <T> OptionalValue<T> asValue(ResourceKey key, T value) {
+    public static <T> OptionalValue<T> ofNullable(ResourceKey key, T value) {
         return new GenericOptionalValue<T>(RUNTIME_SOURCE, key, value);
     }
 }
