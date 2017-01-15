@@ -17,7 +17,7 @@ public class CalendarToDateConversion implements Conversion<Calendar,Date> {
     }
 
     @Override
-    public Date convert(Calendar fromValue, Class<Date> toType, Optional<Object> pattern) throws TypeCastException {
+    public Date convert(Calendar fromValue, Class<Date> toType, Object pattern) throws TypeCastException {
         return fromValue.getTime();
     }
 

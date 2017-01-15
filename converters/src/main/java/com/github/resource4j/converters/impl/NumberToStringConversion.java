@@ -5,7 +5,9 @@ import com.github.resource4j.converters.TypeCastException;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class NumberToStringConversion implements PrimitiveTypeConversion<Number,String> {
 
@@ -23,24 +25,19 @@ public class NumberToStringConversion implements PrimitiveTypeConversion<Number,
     }
 
     @Override
-    public String convert(Number fromValue, Class<String> toType, Optional<Object> format) throws TypeCastException {
+    public String convert(Number fromValue, Class<String> toType, Object format) throws TypeCastException {
         NumberFormat formatter = null;
-        if (format.isPresent()) {
-            Object formatObject = format.get();
-            if (formatObject instanceof String) {
-                formatter = new DecimalFormat((String) formatObject);
-            } else if (formatObject instanceof NumberFormat) {
-                formatter = (NumberFormat) formatObject;
+        if (format != null) {
+            if (format instanceof String) {
+                formatter = new DecimalFormat((String) format);
+            } else if (format instanceof NumberFormat) {
+                formatter = (NumberFormat) format;
             }
         }
         if (formatter == null) {
             formatter = NumberFormat.getInstance();
         }
         return formatter.format(fromValue);
-    }
-
-    private String formatterClassName(Optional<Object> format) {
-        return format.isPresent() ? format.get().getClass().getSimpleName() : "null";
     }
 
 }

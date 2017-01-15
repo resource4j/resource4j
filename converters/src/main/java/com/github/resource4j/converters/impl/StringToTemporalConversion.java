@@ -11,7 +11,8 @@ import java.time.chrono.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 
@@ -34,12 +35,11 @@ public class StringToTemporalConversion implements Conversion<String,Temporal> {
     }
 
     @Override
-    public Temporal convert(String fromValue, Class<Temporal> toType, Optional<Object> pattern) throws TypeCastException {
+    public Temporal convert(String fromValue, Class<Temporal> toType, Object pattern) throws TypeCastException {
         DateTimeFormatter formatter = null;
-        if (pattern.isPresent()) {
-            Object formatObject = pattern.get();
-            if (formatObject instanceof String) {
-                formatter = ofPattern((String) formatObject);
+        if (pattern != null) {
+            if (pattern instanceof String) {
+                formatter = ofPattern((String) pattern);
             }
         }
         if (formatter == null) {

@@ -3,7 +3,6 @@ package com.github.resource4j.converters.impl;
 import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
-import java.util.Optional;
 import java.util.Set;
 
 import static com.github.resource4j.converters.ConversionPair.of;
@@ -17,7 +16,7 @@ public class StringToCharConversion implements PrimitiveTypeConversion<String,Ch
     }
 
     @Override
-    public Character convert(String fromValue, Class<Character> toType, Optional<Object> format) throws TypeCastException {
+    public Character convert(String fromValue, Class<Character> toType, Object format) throws TypeCastException {
         if (fromValue.length() == 0) {
             return null;
         }

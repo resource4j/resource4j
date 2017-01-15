@@ -5,7 +5,6 @@ import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
 import java.sql.Date;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.github.resource4j.converters.ConversionPair.of;
@@ -18,7 +17,7 @@ public class UtilDateToSQLDateConversion implements Conversion<java.util.Date,ja
     }
 
     @Override
-    public Date convert(java.util.Date fromValue, Class<Date> toType, Optional<Object> format) throws TypeCastException {
+    public Date convert(java.util.Date fromValue, Class<Date> toType, Object format) throws TypeCastException {
         return new Date(fromValue.getTime());
     }
 

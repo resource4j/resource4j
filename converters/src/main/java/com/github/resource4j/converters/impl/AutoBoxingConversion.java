@@ -21,7 +21,7 @@ public class AutoBoxingConversion implements PrimitiveTypeConversion<Object,Obje
     }
 
     @Override
-    public Object convert(Object fromValue, Class<Object> toType, Optional<Object> pattern) throws TypeCastException {
+    public Object convert(Object fromValue, Class<Object> toType, Object pattern) throws TypeCastException {
         return fromValue;
     }
 

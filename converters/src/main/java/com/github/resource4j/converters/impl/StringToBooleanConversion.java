@@ -4,7 +4,6 @@ import com.github.resource4j.converters.Conversion;
 import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +25,7 @@ public class StringToBooleanConversion implements Conversion<String,Boolean> {
     }
 
     @Override
-    public Boolean convert(String fromValue, Class<Boolean> toType, Optional<Object> pattern) throws TypeCastException {
+    public Boolean convert(String fromValue, Class<Boolean> toType, Object pattern) throws TypeCastException {
         return TRUE_VALUES.contains(fromValue.toLowerCase());
     }
 

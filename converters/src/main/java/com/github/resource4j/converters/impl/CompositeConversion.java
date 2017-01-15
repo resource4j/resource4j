@@ -26,11 +26,12 @@ public class CompositeConversion implements Conversion<Object, Object> {
     @Override
     public Set<ConversionPair> acceptedTypes() {
         ConversionPair pair = new ConversionPair(firstPair.from(), secondPair.to());
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(pair)));
+        return Collections.singleton(pair);
     }
 
     @Override
-    public Object convert(Object fromValue, Class<Object> toType, Optional<Object> format) throws TypeCastException {
+    @SuppressWarnings("unchecked")
+    public Object convert(Object fromValue, Class<Object> toType, Object format) throws TypeCastException {
         Object val = first.convert(fromValue, firstPair.to(), format);
         return second.convert(val, secondPair.to(), format);
     }

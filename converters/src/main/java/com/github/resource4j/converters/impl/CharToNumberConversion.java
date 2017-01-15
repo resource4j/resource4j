@@ -28,7 +28,7 @@ public class CharToNumberConversion implements PrimitiveTypeConversion<Character
     }
 
     @Override
-    public Number convert(Character fromValue, Class<Number> toType, Optional<Object> format) throws TypeCastException {
+    public Number convert(Character fromValue, Class<Number> toType, Object format) throws TypeCastException {
         int value = numbers.indexOf(fromValue);
         if (value >= 0) {
             return value;

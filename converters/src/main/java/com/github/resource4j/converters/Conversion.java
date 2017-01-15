@@ -7,6 +7,6 @@ public interface Conversion<F,T> {
 
     Set<ConversionPair> acceptedTypes();
 
-    T convert(F fromValue, Class<T> toType, Optional<Object> format) throws TypeCastException;
+    T convert(F fromValue, Class<T> toType, Object format) throws TypeCastException;
 
 }

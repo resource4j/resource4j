@@ -8,8 +8,8 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -56,17 +56,16 @@ public class StringToNumberConversion implements PrimitiveTypeConversion<String,
     }
 
     @Override
-    public Number convert(String fromValue, Class<Number> toType, Optional<Object> pattern) throws TypeCastException {
+    public Number convert(String fromValue, Class<Number> toType, Object pattern) throws TypeCastException {
         NumberFormat formatter = null;
-        if (pattern.isPresent()) {
-            Object formatObject = pattern.get();
-            if (formatObject instanceof String) {
-                DecimalFormat df = new DecimalFormat((String) formatObject);
+        if (pattern != null) {
+            if (pattern instanceof String) {
+                DecimalFormat df = new DecimalFormat((String) pattern);
                 if (toType.equals(BigDecimal.class) || toType.equals(BigInteger.class)) {
                     df.setParseBigDecimal(true);
                 }
-            } else if (formatObject instanceof NumberFormat) {
-                formatter = (NumberFormat) formatObject;
+            } else if (pattern instanceof NumberFormat) {
+                formatter = (NumberFormat) pattern;
             }
         }
         if (formatter == null) {

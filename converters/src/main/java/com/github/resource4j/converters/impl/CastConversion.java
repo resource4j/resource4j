@@ -15,7 +15,7 @@ public class CastConversion implements Conversion<Object,Object> {
     }
 
     @Override
-    public Object convert(Object fromValue, Class<Object> toType, Optional<Object> format) throws TypeCastException {
+    public Object convert(Object fromValue, Class<Object> toType, Object format) throws TypeCastException {
         return fromValue;
     }
 

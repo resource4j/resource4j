@@ -5,7 +5,6 @@ import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,7 +20,7 @@ public class NumberToInstantConversion implements Conversion<Number,Instant> {
     }
 
     @Override
-    public Instant convert(Number fromValue, Class<Instant> toType, Optional<Object> pattern) throws TypeCastException {
+    public Instant convert(Number fromValue, Class<Instant> toType, Object pattern) throws TypeCastException {
         return Instant.ofEpochMilli(fromValue.longValue());
     }
 

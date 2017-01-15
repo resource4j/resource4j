@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 public class TypeConverter {
 
+    @SuppressWarnings("WeakerAccess")
     public static TypeConverter converter() {
         return INSTANCE;
     }
@@ -30,7 +31,11 @@ public class TypeConverter {
             CalendarToDateConversion.class,
             CharToNumberConversion.class,
             UtilDateToSQLDateConversion.class,
-            StringToCharConversion.class
+            StringToCharConversion.class,
+            DateToLocalDateConversion.class,
+            LocalDateToDateConversion.class,
+            SQLTimeToLocalTimeConversion.class,
+            LocalTimeToSQLTimeConversion.class
     };
 
     private static final Class<?>[][] PATHS = new Class[][] {
@@ -51,9 +56,9 @@ public class TypeConverter {
 
     private Map<ConversionPair,Conversion> conversions = new LinkedHashMap<>();
 
+    @SuppressWarnings("WeakerAccess")
     public TypeConverter(Class<? extends Conversion>[] conversions, Class<?>[][] paths) {
-        this(Arrays.asList(conversions)
-                .stream()
+        this(Arrays.stream(conversions)
                 .map(c -> {
                     try {
                         return (Conversion) c.newInstance();
@@ -80,6 +85,7 @@ public class TypeConverter {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public TypeConverter(Conversion... conversions) {
         for (Conversion<?,?> conversion : conversions) {
             for (ConversionPair key : conversion.acceptedTypes()) {
@@ -110,8 +116,9 @@ public class TypeConverter {
      * @throws TypeCastException
      *             if conversion was not possible
      */
+    @SuppressWarnings("unchecked")
     public static <T> T convert(Object fromValue, Class<T> toType) throws TypeCastException {
-        return converter().convert(fromValue, toType, (String) null);
+        return convert(fromValue, toType, (String) null);
     }
 
     @SuppressWarnings("unchecked")
@@ -124,6 +131,7 @@ public class TypeConverter {
         return converter().doConvert(fromValue, toType, format);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T doConvert(Object fromValue, Class<T> toType, Object format) {
         if (fromValue == null) {
             return null;
@@ -155,12 +163,31 @@ public class TypeConverter {
                     Array.set(result, i, toItem);
                 }
             }
+        } else if (toType.isEnum()) {
+            if (Integer.class.isAssignableFrom(fromType)) {
+                int index = (Integer) fromValue;
+                result = toType.getEnumConstants()[index];
+            } else if (String.class.isInstance(fromValue)) {
+                for (T val : toType.getEnumConstants()) {
+                    if (val.toString().equals(fromValue)) {
+                        result = val;
+                        break;
+                    }
+                }
+            }
+        }
+        if (fromType.isEnum()) {
+            if (Integer.class.isAssignableFrom(toType)) {
+                result = (T) (Integer) Enum.class.cast(fromValue).ordinal();
+            } else if (toType == String.class) {
+                result = (T) String.valueOf(fromValue);
+            }
         }
         if (result == null) {
             ConversionPair key = new ConversionPair(fromType, toType);
             Conversion<Object, T> conversion = (Conversion<Object, T>) conversions.get(key);
             if (conversion != null) {
-                result = conversion.convert(fromValue, toType, Optional.ofNullable(format));
+                result = conversion.convert(fromValue, toType, format);
             }
         }
         if (result == null && toType == String.class) {

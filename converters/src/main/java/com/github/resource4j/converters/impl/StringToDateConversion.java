@@ -7,7 +7,10 @@ import com.github.resource4j.converters.TypeCastException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TimeZone;
 
 public class StringToDateConversion implements Conversion<String,Date> {
     /**
@@ -25,15 +28,14 @@ public class StringToDateConversion implements Conversion<String,Date> {
     }
 
     @Override
-    public Date convert(String fromValue, Class<Date> toType, Optional<Object> pattern) throws TypeCastException {
+    public Date convert(String fromValue, Class<Date> toType, Object pattern) throws TypeCastException {
         DateFormat format = null;
-        if (pattern.isPresent()) {
-            Object formatObject = pattern.get();
-            if (formatObject instanceof String) {
-                format = new SimpleDateFormat((String) formatObject);
+        if (pattern != null) {
+            if (pattern instanceof String) {
+                format = new SimpleDateFormat((String) pattern);
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
-            } else if (formatObject instanceof DateFormat) {
-                format = (DateFormat) formatObject;
+            } else if (pattern instanceof DateFormat) {
+                format = (DateFormat) pattern;
             }
         }
         if (format == null) {

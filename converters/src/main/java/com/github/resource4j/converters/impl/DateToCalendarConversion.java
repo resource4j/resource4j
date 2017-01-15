@@ -6,6 +6,9 @@ import com.github.resource4j.converters.TypeCastException;
 
 import java.util.*;
 
+import static com.github.resource4j.converters.impl.TimeConversions.toZoneId;
+import static java.util.TimeZone.getTimeZone;
+
 public class DateToCalendarConversion implements Conversion<java.util.Date,Calendar> {
 
     @Override
@@ -19,9 +22,9 @@ public class DateToCalendarConversion implements Conversion<java.util.Date,Calen
     }
 
     @Override
-    public Calendar convert(Date fromValue, Class<Calendar> toType, Optional<Object> pattern) throws TypeCastException {
+    public Calendar convert(Date fromValue, Class<Calendar> toType, Object pattern) throws TypeCastException {
         GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.setTimeZone(getTimeZone(toZoneId(pattern)));
         calendar.setTime(fromValue);
         return calendar;
     }
