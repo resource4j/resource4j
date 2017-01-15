@@ -35,7 +35,8 @@ public class TypeConverter {
             DateToLocalDateConversion.class,
             LocalDateToDateConversion.class,
             SQLTimeToLocalTimeConversion.class,
-            LocalTimeToSQLTimeConversion.class
+            LocalTimeToSQLTimeConversion.class,
+            IntegerNumberConversion.class
     };
 
     private static final Class<?>[][] PATHS = new Class[][] {
