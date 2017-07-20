@@ -7,14 +7,12 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.dialect.SpringStandardDialect;
 import org.thymeleaf.templatemode.StandardTemplateModeHandlers;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
-import java.util.List;
 import java.util.Set;
 
 @Configuration
@@ -55,7 +53,7 @@ public class ThymeleafResourceConfiguration {
 		engine.setTemplateResolver(defaultTemplateResolver());
 		engine.setMessageResolver(messageResolver());
 		if (dialects != null) {
-            if (!dialects.stream().filter(dialect -> dialect instanceof SpringStandardDialect).findAny().isPresent()) {
+            if (dialects.stream().noneMatch(dialect -> dialect instanceof SpringStandardDialect)) {
                 dialects.add(new SpringStandardDialect());
             }
 			engine.setDialects(dialects);

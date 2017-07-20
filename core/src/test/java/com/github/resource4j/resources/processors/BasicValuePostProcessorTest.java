@@ -1,32 +1,41 @@
 package com.github.resource4j.resources.processors;
 
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.junit.Test;
 
+import static com.github.resource4j.resources.context.ResourceResolutionContext.with;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 
 public class BasicValuePostProcessorTest {
 
-    public static final ResourceResolver RESOLVER = k -> "[" + k + "]";
+    public static final ResourceResolver RESOLVER = (k, params) ->
+            String.format("[%s%s%s]",
+                k,
+                params.size() > 0 ? ":" : "",
+                params.values().stream().map(Object::toString).collect(joining("_")));
     private BasicValuePostProcessor processor = new BasicValuePostProcessor();
 
     @Test
     public void shouldReturnSameValueWhenNoSubstitutionsPresent() {
         String text = "Simple text";
-        String result = processor.process(RESOLVER, text);
+        String result = processor.process(text, withoutContext(), RESOLVER);
         assertEquals(text, result);
     }
 
     @Test
     public void shouldReturnSubstitutionWhenValueIsAlias() {
         final String alias = "{name}";
-        String result = processor.process(RESOLVER, alias);
+        String result = processor.process(alias, withoutContext(), RESOLVER);
         assertEquals("[name]", result);
     }
 
     @Test
     public void shouldReturnEscapedKeyWithoutSubstitution() {
         final String alias = "{:name}";
-        String result = processor.process(RESOLVER, alias);
+        String result = processor.process(alias, withoutContext(), RESOLVER);
         assertEquals("{name}", result);
     }
 
@@ -34,7 +43,7 @@ public class BasicValuePostProcessorTest {
     public void shouldFailWithCorrectPartialResultWhenEscapedKeyIsEmpty() {
         String result = null;
         try {
-            processor.process(RESOLVER, "{:}");
+            processor.process("{:}", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -43,13 +52,13 @@ public class BasicValuePostProcessorTest {
 
     @Test
     public void shouldReturnEmptyStringWhenEmptyStringProcessed() {
-        String result = processor.process(RESOLVER, "");
+        String result = processor.process("", withoutContext(), RESOLVER);
         assertEquals("", result);
     }
 
     @Test
     public void shouldReturnCorrectStringWhenTwoConsequentialValuesProcessed() {
-        String result = processor.process(RESOLVER, "{1}{2}");
+        String result = processor.process("{1}{2}", withoutContext(), RESOLVER);
         assertEquals("[1][2]", result);
     }
 
@@ -57,7 +66,7 @@ public class BasicValuePostProcessorTest {
     public void shouldFailWithCorrectPartialResultOnEscapingAtTheEndOfString() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value \\");
+            processor.process("Value \\", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -68,7 +77,7 @@ public class BasicValuePostProcessorTest {
     public void shouldFailWithCorrectPartialResultOnOpeningAtTheEndOfString() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value {");
+            processor.process("Value {", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -79,7 +88,7 @@ public class BasicValuePostProcessorTest {
     public void shouldFailWithCorrectPartialResultOnIncompleteMacroAtTheEndOfString() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value {test");
+            processor.process("Value {test", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -90,7 +99,7 @@ public class BasicValuePostProcessorTest {
     public void shouldCorrectlyHandleOpeningAndEscapingAtTheEndOfString() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value {\\");
+            processor.process("Value {\\", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -99,15 +108,15 @@ public class BasicValuePostProcessorTest {
 
     @Test
     public void shouldReturnCorrectStringWithEscapingInMacroName() {
-        String result = processor.process(RESOLVER, "Value {1\\0}");
-        assertEquals("Value [1\\0]", result);
+        String result = processor.process("Value {1\\0}", withoutContext(), RESOLVER);
+        assertEquals("Value [10]", result);
     }
 
     @Test
     public void shouldReturnCorrectStringWithEscapingOpening() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value \\{0}");
+            processor.process("Value \\{0}", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -116,22 +125,88 @@ public class BasicValuePostProcessorTest {
 
     @Test
     public void shouldReturnCorrectStringWithEscapingEnding() {
-        String result = processor.process(RESOLVER, "Value \\}");
+        String result = processor.process("Value \\}", withoutContext(), RESOLVER);
         assertEquals("Value }", result);
     }
+    @Test
+    public void shouldFailWithCorrectPartialResultOnEmptyLastParam() {
+        String result = null;
+        try {
+            processor.process("{test;param;}", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("{test;param;}", result);
+    }
+
+    @Test
+    public void shouldFailWithCorrectPartialResultOnIncompleteMacroWithParams() {
+        String result = null;
+        try {
+            processor.process("Value {test;param", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("Value {test;param", result);
+    }
+
+    @Test
+    public void shouldFailWithCorrectPartialResultOnIncompleteMacroWithParamLiteral() {
+        String result = null;
+        try {
+            processor.process("Value {test;param;:lit", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("Value {test;param;:lit", result);
+    }
+
+    @Test
+    public void shouldFailWithCorrectPartialResultOnIncompleteMacroWithParamLiteralStart() {
+        String result = null;
+        try {
+            processor.process("Value {test;param;:", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("Value {test;param;:", result);
+    }
+    @Test
+    public void shouldFailWithCorrectPartialResultOnIncompleteMacroWithParamLiteralStartEscape() {
+        String result = null;
+        try {
+            processor.process("Value {test;param;:\\", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("Value {test;param;:\\", result);
+    }
+
     @Test
     public void shouldFailWithCorrectPartialResultOnEscapedEndingInMacro() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value {0\\}");
+            processor.process("Value {0\\}", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
-        assertEquals("Value {0}", result);
+        assertEquals("Value {0\\}", result);
     }
+
+    @Test
+    public void shouldFailWithColonAsParameterFirstCharacter() {
+        String result = null;
+        try {
+            processor.process("Value {val;:char}", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("Value {val;:char}", result);
+    }
+
     @Test
     public void shouldReturnCorrectStringWithEscapingEscapeChar() {
-        String result = processor.process(RESOLVER, "Value \\\\");
+        String result = processor.process("Value \\\\", withoutContext(), RESOLVER);
         assertEquals("Value \\", result);
     }
 
@@ -139,7 +214,7 @@ public class BasicValuePostProcessorTest {
     public void shouldFailWithCorrectPartialResultOnNestedSubstitution() {
         String result = null;
         try {
-            processor.process(RESOLVER, "Value {0{1}}");
+            processor.process("Value {0{1}}", withoutContext(), RESOLVER);
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
@@ -150,11 +225,39 @@ public class BasicValuePostProcessorTest {
     public void shouldFailWithCorrectPartialResultOnSubstituteNotFound() {
         String result = null;
         try {
-            processor.process(k -> "0".equals(k) ? null : "[" + k + "]", "Value {0} {1}");
+            processor.process("Value {0} {1}", withoutContext(), (k, params) -> "0".equals(k) ? null : "[" + k + "]");
         } catch (ValuePostProcessingException e) {
             result = e.getPartialResult();
         }
         assertEquals("Value {0} [1]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyPassTwoValues() {
+        final String alias = "{number;count} {apple;count}";
+        String result = processor.process(alias, withoutContext(), RESOLVER);
+        assertEquals("[number.[count]:[count]] [apple.[count]:[count]]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyParseSingleVariableParameter() {
+        final String alias = "{name;count}";
+        String result = processor.process(alias, withoutContext(), RESOLVER);
+        assertEquals("[name.[count]:[count]]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyParseSingleVariableParameterWithProperty() {
+        final String alias = "{name;count:upper}";
+        String result = processor.process(alias, with("count",1), RESOLVER);
+        assertEquals("[name.[COUNT]:[COUNT]]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyParseParamWithEscaping() {
+        final String alias = "{name;\\:}";
+        String result = processor.process(alias, withoutContext(), RESOLVER);
+        assertEquals("[name.[:]:[:]]", result);
     }
 
 }

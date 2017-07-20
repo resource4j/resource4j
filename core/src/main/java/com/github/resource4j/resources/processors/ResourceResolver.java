@@ -1,8 +1,10 @@
 package com.github.resource4j.resources.processors;
 
 
+import java.util.Map;
+
 public interface ResourceResolver {
 
-    String get(String name);
+    Object get(String name, Map<String, Object> params);
 
 }

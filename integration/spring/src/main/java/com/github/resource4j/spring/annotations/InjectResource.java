@@ -11,7 +11,7 @@ import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 
 /**
- * <p>Indicates that annotated field must be initialized from the specified resource file using 
+ * <p>Indicates that annotated field must be initialized from the specified resource file parameterized
  * default type-based parser or custom one, specified in parsedBy attribute.
  * Resource file can be specified as absolute or relative path to the package of the bean.
  * When '*' character is used instead of file name, bean name is used with provided extension.</p>
@@ -55,7 +55,7 @@ public @interface InjectResource {
 	boolean required() default true;
 	
 	/**
-	 * Annotated resource is composite data type that must be parsed from string using given parser.
+	 * Annotated resource is composite data type that must be parsed from string parameterized given parser.
 	 * @return class of parser
 	 */
 	@SuppressWarnings("rawtypes")

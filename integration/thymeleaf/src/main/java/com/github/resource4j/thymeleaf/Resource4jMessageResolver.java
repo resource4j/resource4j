@@ -1,9 +1,8 @@
 package com.github.resource4j.thymeleaf;
 
-import static com.github.resource4j.ResourceKey.plain;
-
-import java.util.Locale;
-
+import com.github.resource4j.MissingValueException;
+import com.github.resource4j.resources.Resources;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.Arguments;
@@ -12,8 +11,14 @@ import org.thymeleaf.messageresolver.AbstractMessageResolver;
 import org.thymeleaf.messageresolver.MessageResolution;
 import org.thymeleaf.util.Validate;
 
-import com.github.resource4j.MissingValueException;
-import com.github.resource4j.resources.Resources;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static com.github.resource4j.ResourceKey.plain;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.context;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.resolve;
 
 public class Resource4jMessageResolver extends AbstractMessageResolver {
 
@@ -32,14 +37,23 @@ public class Resource4jMessageResolver extends AbstractMessageResolver {
         Locale locale = arguments.getContext().getLocale();
 		Validate.notNull(locale, "Locale in context cannot be null");
         Validate.notNull(key, "Message key cannot be null");
-
         String templateName = arguments.getTemplateName();
-		LOG.trace("[THYMELEAF][{}] Resolving message with key \"{}\" for template \"{}\" and locale \"{}\". Messages will be retrieved from Spring's MessageSource infrastructure.", new Object[] {TemplateEngine.threadIndex(), key, templateName, locale});
+		LOG.trace("[THYMELEAF][{}] Resolving message with key \"{}\" for template \"{}\" and locale \"{}\". Messages will be retrieved from Spring's MessageSource infrastructure.", TemplateEngine.threadIndex(), key, templateName, locale);
         try {
-            String resolvedMessage = resources.get(plain(key), locale)
+            Map<String, Object> params = new HashMap<>();
+            for (int i = 0; i < messageParameters.length; i++) {
+                if (messageParameters[i] instanceof Map) {
+                    params.putAll((Map) messageParameters[i]);
+                } else {
+                    params.put(String.valueOf(i), messageParameters[i]);
+                }
+            }
+            ResourceResolutionContext context = context(resolve(locale), params);
+            String resolvedMessage = resources.get(plain(key), context)
             		.notNull()
-            		.asFormatted(messageParameters);
-            resolvedMessage.replace("'", "\\'");
+            		.asIs();
+            // TODO: why was it here?
+//            resolvedMessage = resolvedMessage.replace("'", "\\'");
             return new MessageResolution(resolvedMessage);
         } catch (MissingValueException e) {
         	// According to contract for message resolver

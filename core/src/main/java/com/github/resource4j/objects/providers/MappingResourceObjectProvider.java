@@ -13,7 +13,7 @@ import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 /**
- * This resource object provider provides a mechanism to load resource objects from different contexts using pattern
+ * This resource object provider provides a mechanism to load resource objects from different contexts parameterized pattern
  * matching. E.g. you can set ".properties" files to be loaded from classpath, ".html" files to be loaded
  * from web application root folder etc.
  * 

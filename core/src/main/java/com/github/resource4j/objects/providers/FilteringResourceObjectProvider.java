@@ -4,7 +4,6 @@ import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

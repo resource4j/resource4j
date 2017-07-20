@@ -31,7 +31,7 @@ public interface MandatoryString extends MandatoryValue<String>, ResourceString 
     <T> T as(Class<T> type);
 
     /**
-     * Performs conversion of the contained value to given type using given formatting pattern and returns result.
+     * Performs conversion of the contained value to given type parameterized given formatting pattern and returns result.
      * @param type class object for the expected type of value
      * @param format the formatting pattern
      * @param <T> the expected type of value
@@ -41,7 +41,7 @@ public interface MandatoryString extends MandatoryValue<String>, ResourceString 
     <T> T as(Class<T> type, String format);
 
     /**
-     * Performs conversion of the contained value to given type using given format and returns result.
+     * Performs conversion of the contained value to given type parameterized given format and returns result.
      * @param type class object for the expected type of value
      * @param format the formatter object
      * @param <T> the expected type of value
@@ -51,7 +51,7 @@ public interface MandatoryString extends MandatoryValue<String>, ResourceString 
     <T> T as(Class<T> type, Format format);
 
     /**
-     * Formats the given arguments using resource value and {@link MessageFormat} and returns the result string.
+     * Formats the given arguments parameterized resource value and {@link MessageFormat} and returns the result string.
      * Implementation of this method assumed to be thread-safe.
      * @param arguments the arguments to format
      * @return formatted string

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--/*@thymesVar id="locale" type="java.util.Locale"*/-->
+<html th:lang="${locale}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{document.header}">Information</title>
+</head>
+<body>
+    <header>
+        <h1 th:text="#{document.header}">Information</h1>
+    </header>
+    <article th:include="article">
+        <p>There's no translation to your language</p>
+    </article>
+    <footer>
+        <span th:text="#{document.copyright_holder}">Acme Inc.</span>
+        &copy;
+        <span th:text="#{document.copyright_year}">2017</span>
+    </footer>
+</body>
+</html>

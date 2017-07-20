@@ -11,7 +11,7 @@ import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
 
 /**
- * Injects value of annotated field using Resource4J framework.
+ * Injects value of annotated field parameterized Resource4J framework.
  * @author Ivan Gammel
  * @see com.github.resource4j.resources.Resources
  * @see InjectResource

@@ -8,7 +8,6 @@ import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.objects.parsers.BundleParser;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
-import com.github.resource4j.objects.providers.FilteringResourceObjectProvider;
 import com.github.resource4j.objects.providers.ResourceObjectProviderAdapter;
 import com.github.resource4j.objects.providers.ResourceValueProvider;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
@@ -19,6 +18,7 @@ import com.github.resource4j.resources.impl.FallbackFuture;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
 import com.github.resource4j.resources.processors.CyclicReferenceException;
+import com.github.resource4j.resources.processors.ResourceResolver;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 import com.github.resource4j.values.GenericOptionalString;
 import org.slf4j.Logger;
@@ -37,6 +37,7 @@ import static com.github.resource4j.resources.cache.CacheRecord.initial;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.parentsOf;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toCollection;
 
 public class RefreshableResources implements Resources {
@@ -84,6 +85,8 @@ public class RefreshableResources implements Resources {
 
     private ResourceValuePostProcessor valuePostProcessor;
 
+    private ParametrizedKeyBuilder keyBuilder;
+
     private ResourceObjectRepositoryListener listener = event -> {
         LOG.info("Repository {} updated: clearing caches...", event.source());
         resetCaches();
@@ -123,7 +126,7 @@ public class RefreshableResources implements Resources {
                 queue -> this.objectQueue = queue);
 
         configurator.configurePostProcessing(p -> this.valuePostProcessor = p);
-
+        configurator.configureKeyBuilder(kb -> this.keyBuilder = kb);
     }
 
     private static List<ResourceObjectProvider> unwrap(ResourceObjectProvider provider) {
@@ -189,9 +192,16 @@ public class RefreshableResources implements Resources {
 
         if (value.is(CacheRecord.StateType.EXISTS)) {
             CachedBundle cachedBundle = value.get();
-            String valueString = cachedBundle.get(resolvedKey.key().getId());
+            String valueString = null;
+            if (keyBuilder == null || resolvedKey.context().parameters().isEmpty()) {
+                valueString = cachedBundle.get(resolvedKey.key().getId());
+            } else {
+                String key = keyBuilder.forDeclaredParams(resolvedKey);
+                String declaration = cachedBundle.get(key);
+                String id = keyBuilder.forResolvedKey(resolvedKey, declaration);
+                valueString = cachedBundle.get(id);
+            }
             return new CachedValue(valueString, cachedBundle.source());
-
         }
 
         return new CachedValue(null, null);
@@ -314,10 +324,22 @@ public class RefreshableResources implements Resources {
             if (valuePostProcessor == null) return val;
             String string = val.value();
             if (string == null) return val;
-            string = valuePostProcessor.process(id -> doGet(resolvedKey.relative(id)).asIs(), string);
+            ResourceResolver resolver = (id, valueParams) ->
+                    resolvedKey.relative(id, valueParams)
+                            .find(this::inParams, this::inResources);
+            string = valuePostProcessor.process(string, resolvedKey.context(), resolver);
             return new CachedValue(string, val.source());
         });
         return toOptionalString(resolvedKey, value);
+    }
+
+    private Optional<Object> inResources(ResolvedKey resolvedKey) {
+        return ofNullable(doGet(resolvedKey).asIs());
+    }
+
+    private Optional<Object> inParams(ResolvedKey resolvedKey) {
+        Object value = resolvedKey.params().get(resolvedKey.id());
+        return ofNullable(value);
     }
 
     private Future<CachedValue> loadSingleValue(Future<CachedValue> future, ResolvedKey parentKey) {
@@ -427,8 +449,7 @@ public class RefreshableResources implements Resources {
     }
 
     protected Deque<ResourceObjectProvider> getSortedProviders() {
-        return this.providers.stream()
-                        .collect(toCollection(ArrayDeque::new));
+        return new ArrayDeque<>(this.providers);
     }
 
     protected Future<ResourceObject> fireAllRequests(ResolvedName resolvedKey, Future<ResourceObject> future) {

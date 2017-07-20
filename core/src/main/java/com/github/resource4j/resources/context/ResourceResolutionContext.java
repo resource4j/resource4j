@@ -8,52 +8,104 @@ import java.util.stream.StreamSupport;
 public final class ResourceResolutionContext implements Serializable {
 
 	private static final long serialVersionUID = 13975482752L;
-	
-	public static final Comparator<ResourceResolutionContext> COMPARATOR = new Comparator<ResourceResolutionContext>() {
-		@Override
-		public int compare(ResourceResolutionContext c1,
-				ResourceResolutionContext c2) {
-			if (c1.contains(c2)) return 1;
-			if (c2.contains(c1)) return -1;
-			return 0;
-		}
-	};
+
 	public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
 
-	public static ResourceResolutionContext withoutContext() {
-		return new ResourceResolutionContext(new ResourceResolutionComponent[0]);
-	}
-	
-	public static ResourceResolutionContext in(Object... objects) {
-		ResourceResolutionComponent[] components = new ResourceResolutionComponent[objects.length];
-		for (int i = 0; i < objects.length; i++) {
-			if (objects[i] == null) {
-				components[i] = new StringResolutionComponent("");
-			} else if (objects[i] instanceof ResourceResolutionComponent) {
-				components[i] = (ResourceResolutionComponent) objects[i];
-			} else if (objects[i] instanceof Locale) {
-				components[i] = new LocaleResolutionComponent((Locale) objects[i]);
-			} else if (objects[i] instanceof String) {
-				components[i] = new StringResolutionComponent((String) objects[i]);
-			} else if (objects[i] instanceof String[]) {
-				components[i] = new StringResolutionComponent((String[]) objects[i]);
-			} else {
-				components[i] = new StringResolutionComponent(String.valueOf(objects[i]));
-			}
-		}
-		return new ResourceResolutionContext(components);
+    /**
+     * Helper method to wrap varags into array with {@link #context(ResourceResolutionComponent[],Map)}
+     * @param resolutionParams
+     * @since 3.1
+     * @return
+     */
+	public static ResourceResolutionComponent[] resolve(Object... resolutionParams) {
+        ResourceResolutionComponent[] components = new ResourceResolutionComponent[resolutionParams.length];
+        for (int i = 0; i < resolutionParams.length; i++) {
+            if (resolutionParams[i] == null) {
+                components[i] = new StringResolutionComponent("");
+            } else if (resolutionParams[i] instanceof ResourceResolutionComponent) {
+                components[i] = (ResourceResolutionComponent) resolutionParams[i];
+            } else if (resolutionParams[i] instanceof Locale) {
+                components[i] = new LocaleResolutionComponent((Locale) resolutionParams[i]);
+            } else if (resolutionParams[i] instanceof String) {
+                components[i] = new StringResolutionComponent((String) resolutionParams[i]);
+            } else if (resolutionParams[i] instanceof String[]) {
+                components[i] = new StringResolutionComponent((String[]) resolutionParams[i]);
+            } else {
+                components[i] = new StringResolutionComponent(String.valueOf(resolutionParams[i]));
+            }
+        }
+	    return components;
+    }
+
+    /**
+     * Convenience wrapper for message parameters
+     * @param params
+     * @return
+     */
+    public static Map<String, Object> with(Object... params) {
+        Map<String, Object> map = new HashMap<>();
+        for (int i = 0; i < params.length; i++) {
+            map.put(String.valueOf(i), params[i]);
+        }
+        return map;
+    }
+
+    /**
+     * Build resolution context in which message will be discovered and built
+     * @param components resolution components, used to identify message bundle
+     * @param messageParams message parameters will be substituted in message and used in pattern matching
+     * @since 3.1
+     * @return immutable resolution context instance for given parameters
+     */
+	public static ResourceResolutionContext context(ResourceResolutionComponent[] components,
+                                                    Map<String, Object> messageParams) {
+        return new ResourceResolutionContext(components, messageParams);
+    }
+
+    public static ResourceResolutionContext withoutContext() {
+		return new ResourceResolutionContext(new ResourceResolutionComponent[0], null);
 	}
 
-	private ResourceResolutionComponent[] components;
+    public static ResourceResolutionContext in(Object... objects) {
+        return context(resolve(objects), null);
+    }
 
-	public ResourceResolutionContext(ResourceResolutionComponent[] components) {
+	public static ResourceResolutionContext withParams(Object... params) {
+        return parameterized(with(params));
+    }
+
+    public static ResourceResolutionContext with(String name, Object value) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put(name, value);
+        return parameterized(params);
+    }
+
+    public static ResourceResolutionContext parameterized(Map<String, Object> params) {
+        return new ResourceResolutionContext(new ResourceResolutionComponent[0], params);
+    }
+
+	private final ResourceResolutionComponent[] components;
+
+    private final Map<String,Object> parameters;
+
+    public ResourceResolutionContext(ResourceResolutionComponent[] components) {
+        this.components = components;
+        this.parameters = Collections.emptyMap();
+    }
+
+	public ResourceResolutionContext(ResourceResolutionComponent[] components, Map<String, Object> parameters) {
 		this.components = components;
+		this.parameters = parameters == null ? null : Collections.unmodifiableMap(parameters);
 	}
 	
 	public ResourceResolutionComponent[] components() {
 		return this.components;
 	}
-	
+
+	public Map<String,Object> parameters() {
+	    return this.parameters != null ? this.parameters : Collections.emptyMap();
+    }
+
 	public boolean isEmpty() {
 		return this.components.length == 0;
 	}
@@ -76,8 +128,7 @@ public final class ResourceResolutionContext implements Serializable {
         if (last.isReducible()) {
             components[lastIndex] = last.reduce();
         }
-
-		return new ResourceResolutionContext(components);
+		return new ResourceResolutionContext(components, parameters);
 	}
 	
 	@Override
@@ -97,10 +148,8 @@ public final class ResourceResolutionContext implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ResourceResolutionContext other = (ResourceResolutionContext) obj;
-		if (!Arrays.equals(components, other.components))
-			return false;
-		return true;
-	}
+        return Arrays.equals(components, other.components);
+    }
 
 	@Override
 	public String toString() {
@@ -157,4 +206,19 @@ public final class ResourceResolutionContext implements Serializable {
             }
         }).spliterator(), false);
 	}
+
+    public ResourceResolutionContext merge(Map<String, Object> params) {
+        Map<String, Object> map;
+        if (params.size() > 0) {
+            if (this.parameters.size() > 0) {
+                map = new HashMap<>(this.parameters);
+                map.putAll(params);
+            } else {
+                map = params;
+            }
+        } else {
+            map = this.parameters;
+        }
+        return new ResourceResolutionContext(this.components, map);
+    }
 }

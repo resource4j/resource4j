@@ -61,7 +61,7 @@ public interface ResourceValue<V> {
     ResourceString asString() throws TypeCastException;
     
     /**
-	 * Converts this value to resource string using given conversion pattern.
+	 * Converts this value to resource string parameterized given conversion pattern.
 	 * @param format conversion pattern
 	 * @return resource string
 	 * @throws TypeCastException if conversion failed
@@ -70,7 +70,7 @@ public interface ResourceValue<V> {
     ResourceString asString(String format) throws TypeCastException;
     
     /**
-	 * Converts this value to resource string using given conversion pattern.
+	 * Converts this value to resource string parameterized given conversion pattern.
 	 * @param format conversion pattern
 	 * @return resource string
 	 * @throws TypeCastException if conversion failed

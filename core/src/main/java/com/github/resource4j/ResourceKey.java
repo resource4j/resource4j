@@ -56,9 +56,7 @@ public class ResourceKey implements java.io.Serializable {
 
 
     public ResourceKey relative(String id) {
-        ResourceKey full = plain(id);
-        if (full.getBundle() == null) return key(bundle, id);
-        return full;
+        return key(bundle, id);
     }
 
 

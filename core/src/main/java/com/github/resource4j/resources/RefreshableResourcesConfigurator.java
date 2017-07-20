@@ -33,4 +33,6 @@ public interface RefreshableResourcesConfigurator {
                                  Consumer<ExecutorService> poolConsumer);
 
     void configurePostProcessing(Consumer<ResourceValuePostProcessor> consumer);
+
+    void configureKeyBuilder(Consumer<ParametrizedKeyBuilder> consumer);
 }

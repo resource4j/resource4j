@@ -31,6 +31,7 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
     private ResourceKey defaultBundle = ResourceKey.bundle("i18n.resources");
     private List<BundleFormat> formats = singletonList(format(propertyMap()));
     private ResourceValuePostProcessor valuePostProcessor = null;
+    private ParametrizedKeyBuilder keyBuilder = null;
 
     private Supplier<BasicValueCache<ResolvedKey, CachedValue>> valueCache = BasicValueCache::new;
     private Supplier<ExecutorService> valueExecutor = () -> buildThreadPool("value");
@@ -72,6 +73,11 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         return this;
     }
 
+    public ResourcesConfigurationBuilder buildParamKeysWith(ParametrizedKeyBuilder kb) {
+        this.keyBuilder = kb;
+        return this;
+    }
+
     public Configuration get() {
         return new Configuration();
     }
@@ -100,6 +106,11 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         @Override
         public void configurePostProcessing(Consumer<ResourceValuePostProcessor> consumer) {
             consumer.accept(valuePostProcessor);
+        }
+
+        @Override
+        public void configureKeyBuilder(Consumer<ParametrizedKeyBuilder> consumer) {
+            consumer.accept(keyBuilder);
         }
 
         @Override

@@ -62,11 +62,11 @@ public interface ResourceObject {
 	InputStream asStream();
 
 	/**
-	 * Parse the data of this object using given parser and return it in OptionalValue,
+	 * Parse the data of this object parameterized given parser and return it in OptionalValue,
 	 * which will be empty if the object does not exist.
 	 * @param parser a parser to use
 	 * @param <T> type of data to be returned in OptionalValue.
-	 * @return data of this object parsed to OptionalValue using given parser.
+	 * @return data of this object parsed to OptionalValue parameterized given parser.
 	 */
 	default <T> OptionalValue<T> parsedTo(ResourceParser<T, ? extends OptionalValue<T>> parser) {
 		return parser.parse(key(), this);

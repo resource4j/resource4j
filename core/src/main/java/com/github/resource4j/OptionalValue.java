@@ -74,7 +74,7 @@ public interface OptionalValue<V> extends ResourceValue<V> {
     }
     
     /**
-	 * Converts this value to resource string using given conversion pattern.
+	 * Converts this value to resource string parameterized given conversion pattern.
 	 * @param format conversion pattern
 	 * @return resource string
 	 * @throws TypeCastException if conversion failed
@@ -90,7 +90,7 @@ public interface OptionalValue<V> extends ResourceValue<V> {
     }
     
     /**
-	 * Converts this value to resource string using given conversion pattern.
+	 * Converts this value to resource string parameterized given conversion pattern.
 	 * @param format conversion pattern
 	 * @return resource string
 	 * @throws TypeCastException if conversion failed

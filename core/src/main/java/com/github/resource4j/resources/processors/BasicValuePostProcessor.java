@@ -1,6 +1,12 @@
 package com.github.resource4j.resources.processors;
 
 import com.github.resource4j.ResourceException;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
+import com.github.resource4j.resources.processors.parser.BasicStateMachine;
+import com.github.resource4j.resources.processors.strategies.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BasicValuePostProcessor implements ResourceValuePostProcessor {
 
@@ -8,86 +14,41 @@ public class BasicValuePostProcessor implements ResourceValuePostProcessor {
         return new BasicValuePostProcessor();
     }
 
+    private List<PropertyResolver> resolutionStrategies;
+
+    public BasicValuePostProcessor() {
+        this.resolutionStrategies = new ArrayList<>();
+        this.resolutionStrategies.add(new DateFormatStrategy());
+        this.resolutionStrategies.add(new StringCaseStrategy());
+        this.resolutionStrategies.add(new NumberPluralizationStrategy());
+        this.resolutionStrategies.add(new ReflectionStrategy());
+    }
+
     @Override
-    public String process(ResourceResolver resolver, String value) throws ResourceException {
-        StringBuilder result = new StringBuilder();
-        StringBuilder current = result;
-        boolean escape = false;
-        boolean macro = false;
-        boolean partialResult = false;
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (escape) {
-                if (c != '{' && c != '}' && c != '\\') {
-                    current.append('\\');
-                }
-                escape = false;
-                current.append(c);
-                if (macro && c == '}') {
-                    macro = false;
-                    result.append('{').append(current);
-                    current = result;
-                    partialResult = true;
-                }
-            } else {
-                switch (c) {
-                    case '{':
-                        if (macro) {
-                            result.append('{');
-                            result.append(current);
-                            partialResult = true;
-                        } else {
-                            macro = true;
-                        }
-                        current = new StringBuilder();
+    public String process(String value, ResourceResolutionContext context, ResourceResolver resolver) throws ResourceException {
+        BasicStateMachine machine = BasicStateMachine.start((key, property, params) -> {
+            Object val = resolver.get(key, params);
+            if (property != null) {
+                for (PropertyResolver strategy : resolutionStrategies) {
+                    Object resolution = strategy.resolve(val, property, context, resolver);
+                    if (resolution != null) {
+                        val = resolution;
                         break;
-                    case '}':
-                        if (macro) {
-                            String key = current.toString();
-                            String substitute = null;
-                            if (key.startsWith(":")) {
-                                if (key.length() > 1) {
-                                    substitute = "{" + key.substring(1) + "}";
-                                }
-                            } else {
-                                substitute = resolver.get(key);
-                            }
-                            if (substitute != null) {
-                                result.append(substitute);
-                            } else {
-                                result.append('{').append(key).append('}');
-                                partialResult = true;
-                            }
-                            current = result;
-                            macro = false;
-                        } else {
-                            partialResult = true;
-                            current.append(c);
-                        }
-                        break;
-                    case '\\':
-                        escape = true;
-                        break;
-                    default:
-                        current.append(c);
+                    }
                 }
             }
+            return val;
+        });
+        char[] chars = value.toCharArray();
+        for (char c : chars) {
+            machine.onReceived(c);
         }
-        if (current != result) {
-            partialResult = true;
-            if (macro) {
-                result.append('{');
-            }
-            result.append(current);
-        }
-        if (escape) {
-            partialResult = true;
-            result.append('\\');
-        }
+        boolean partialResult = !machine.onComplete();
+        String result = machine.toString();
         if (partialResult) {
-            throw new ValuePostProcessingException(result.toString());
+            throw new ValuePostProcessingException(result);
         }
-        return result.toString();
+        return result;
     }
 
 }

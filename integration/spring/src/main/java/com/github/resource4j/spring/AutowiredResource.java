@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 
 
 /**
- * The annotated property will be pre-populated during bean initialization by Spring using Resource4J API.
+ * The annotated property will be pre-populated during bean initialization by Spring parameterized Resource4J API.
  * 
  * @author Ivan Gammel
- * @deprecated use {@link com.github.resource4j.spring.annotations.InjectValue} instead
+ * @deprecated use {@link com.github.resource4j.spring.annotations.InjectValue} instead. Will be removed in version 4.0.
  */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

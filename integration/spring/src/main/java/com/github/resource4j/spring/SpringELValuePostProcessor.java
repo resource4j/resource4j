@@ -1,6 +1,8 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.ResourceException;
+import com.github.resource4j.converters.*;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.resources.processors.ResourceResolver;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
 import com.github.resource4j.resources.processors.ValuePostProcessingException;
@@ -11,6 +13,11 @@ import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.*;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import java.util.Collections;
+
+import static com.github.resource4j.converters.TypeConverter.convert;
+import static java.util.Collections.emptyMap;
 
 public class SpringELValuePostProcessor implements ResourceValuePostProcessor, BeanFactoryAware {
 
@@ -24,7 +31,7 @@ public class SpringELValuePostProcessor implements ResourceValuePostProcessor, B
     }
 
     @Override
-    public String process(ResourceResolver resolver, String val) throws ResourceException {
+    public String process(String val, ResourceResolutionContext context, ResourceResolver resolver) throws ResourceException {
         String value = val;
         if (value.startsWith("~")) {
             return value.substring(1);
@@ -35,14 +42,14 @@ public class SpringELValuePostProcessor implements ResourceValuePostProcessor, B
         try {
             value = value.substring(1);
             Expression expression = parser.parseExpression(value);
-            StandardEvaluationContext context = new StandardEvaluationContext();
-            context.setBeanResolver((evaluationContext, beanName) -> {
-                String value1 = resolver.get(beanName);
+            StandardEvaluationContext evalContext = new StandardEvaluationContext();
+            evalContext.setBeanResolver((ctx, beanName) -> {
+                String value1 = convert(resolver.get(beanName, emptyMap()), String.class);
                 if (value1 != null) {
                     return value1;
                 }
                 return beanFactoryResolver != null
-                        ? beanFactoryResolver.resolve(context, beanName)
+                        ? beanFactoryResolver.resolve(ctx, beanName)
                         : null;
             });
             Object resolvedValue = expression.getValue(context, String.class);
