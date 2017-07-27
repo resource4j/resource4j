@@ -13,6 +13,7 @@ import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigSyntax;
 
+@SuppressWarnings("WeakerAccess")
 public class ConfigParser extends AbstractValueParser<Config> {
 
 	private ConfigParseOptions options;
@@ -41,8 +42,7 @@ public class ConfigParser extends AbstractValueParser<Config> {
 			ResourceObjectException {
 		try {
 			InputStreamReader reader = new InputStreamReader(file.asStream());
-			Config config = ConfigFactory.parseReader(reader, options);
-			return config;
+            return ConfigFactory.parseReader(reader, options);
 		} catch (ConfigException e) {
 			throw new ResourceObjectFormatException(file, e);
 		}

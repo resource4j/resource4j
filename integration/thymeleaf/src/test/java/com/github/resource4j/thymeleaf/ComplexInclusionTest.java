@@ -56,7 +56,6 @@ public class ComplexInclusionTest {
         map.put("count", 1);
         context.setVariable("model", map);
         String content = engine.process("index", context);
-        System.out.println(content);
     }
 
 }

@@ -11,6 +11,14 @@ import static com.github.resource4j.resources.processors.parser.BasicStateMachin
 import static com.github.resource4j.resources.processors.parser.StateBuilder.aState;
 import static com.github.resource4j.resources.processors.parser.StateMachineBuilder.aStateMachine;
 
+/**
+ * text := plain_text? (macro[plain_text])*
+ * macro := '{' macro_def '}'
+ * macro_def := escaped_macro | macro_name (param)*
+ * escaped_macro := ':'
+ * param := literal [ ':' property ]
+ * property := literal
+ */
 public class BasicStateMachine implements StateMachineListener<BasicStateMachine.Action> {
 
     private final StateMachineValueResolver resolver;

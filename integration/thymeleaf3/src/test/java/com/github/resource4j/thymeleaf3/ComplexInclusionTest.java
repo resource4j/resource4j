@@ -2,6 +2,7 @@ package com.github.resource4j.thymeleaf3;
 
 import com.github.resource4j.resources.RefreshableResourcesConfigurator;
 import com.github.resource4j.spring.config.Resource4jAutoConfiguration;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.processors.BasicValuePostProcessor.macroSubstitution;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes={ ComplexInclusionTest.class, Resource4jAutoConfiguration.class, Thymeleaf3ResourceConfiguration.class })
 @Configuration
@@ -53,7 +55,6 @@ public class ComplexInclusionTest {
         map.put("count", 1);
         context.setVariable("model", map);
         String content = engine.process("index", context);
-        System.out.println(content);
     }
 
 }

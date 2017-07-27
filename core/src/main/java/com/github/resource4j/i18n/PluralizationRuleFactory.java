@@ -1,11 +1,16 @@
 package com.github.resource4j.i18n;
 
+import com.github.resource4j.i18n.plural_rules.PredicateParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -21,37 +26,14 @@ public class PluralizationRuleFactory implements Supplier<Map<Locale, Pluralizat
      * @return index of pluralization rules
      */
     private Map<Locale, PluralizationRule> createRules() {
-        try {
-            Map<Locale, PluralizationRule> index = new HashMap<>();
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(getClass().getResourceAsStream("/cldr/common/supplemental/plurals.xml"));
-            NodeList ruleList = document.getElementsByTagName("pluralRules");
-            for (int i = 0; i < ruleList.getLength(); i++) {
-                Element rules = (Element) ruleList.item(i);
-                String[] locales = rules.getAttribute("locales").split(" ");
-                NodeList ruleDefs = rules.getElementsByTagName("pluralRule");
-                List<PluralizationCase> cases = new ArrayList<>();
-                for (int j = 0; j < ruleDefs.getLength(); j++) {
-                    Element rule = (Element) ruleDefs.item(j);
-                    String count = rule.getAttribute("count");
-                    String text = rule.getTextContent();
-                    cases.add(aCase(PredicateParser.parse(text), PluralCategory.valueOf(count)));
-                }
-                for (String locale : locales) {
-                    PluralizationRuleBuilder ruleBuilder = aRuleFor(Locale.forLanguageTag(locale));
-                    for (PluralizationCase pluralizationCase : cases) {
-                        ruleBuilder.add(pluralizationCase);
-                    }
-                    PluralizationRule rule = ruleBuilder.build();
-                    index.put(rule.language(), rule);
-                }
-            }
-            return index;
-        } catch (Exception e) {
-            throw new IllegalStateException("Cannot load pluralization rules", e);
-        }
+        Map<Locale, PluralizationRule> map = new HashMap<>();
+        PluralizationRule rule = PluralizationRuleBuilder
+                .aRuleFor(Locale.ENGLISH)
+                .add(aCase(number -> number.toString().equals("1"), PluralCategory.one))
+                .add(aCase(number -> true, PluralCategory.many))
+                .build();
+        map.put(Locale.ENGLISH, rule);
+        return map;
     }
 
     @Override

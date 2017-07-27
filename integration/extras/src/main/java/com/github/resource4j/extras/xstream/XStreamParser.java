@@ -33,7 +33,7 @@ public class XStreamParser<T> extends AbstractValueParser<T> {
 	
 	@Override
 	protected T parse(ResourceObject file) throws IOException, ResourceObjectException {
-		Object object = Object.class;
+		Object object = null;
 		try {
 			object = xstream.fromXML(file.asStream());
 			return type.cast(object);

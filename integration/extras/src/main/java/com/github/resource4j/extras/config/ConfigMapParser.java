@@ -19,6 +19,7 @@ import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigSyntax;
 import com.typesafe.config.ConfigValue;
 
+@SuppressWarnings("WeakerAccess")
 @ContentType(extension = ".config", mimeType = "text/x-java-properties")
 public class ConfigMapParser extends AbstractValueParser<Map<String, String>> implements BundleParser {
 
