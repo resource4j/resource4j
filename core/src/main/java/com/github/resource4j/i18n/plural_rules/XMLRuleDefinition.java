@@ -19,9 +19,9 @@ import java.util.*;
 import static com.github.resource4j.i18n.GenericPluralizationCase.aCase;
 import static com.github.resource4j.i18n.PluralizationRuleBuilder.aRuleFor;
 
-public class XMLRuleDefinition {
+public final class XMLRuleDefinition {
 
-    public Map<Locale, PluralizationRule> load() {
+    public static Map<Locale, PluralizationRule> load() {
         try {
             Map<Locale, PluralizationRule> index = new HashMap<>();
 
@@ -36,7 +36,7 @@ public class XMLRuleDefinition {
                     return null;
                 }
             });
-            Document document = builder.parse(getClass().getResourceAsStream("/cldr/common/supplemental/plurals.xml"));
+            Document document = builder.parse(XMLRuleDefinition.class.getResourceAsStream("/cldr/common/supplemental/plurals.xml"));
             NodeList ruleList = document.getElementsByTagName("pluralRules");
             for (int i = 0; i < ruleList.getLength(); i++) {
                 Element rules = (Element) ruleList.item(i);

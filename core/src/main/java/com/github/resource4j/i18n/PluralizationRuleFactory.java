@@ -1,6 +1,7 @@
 package com.github.resource4j.i18n;
 
 import com.github.resource4j.i18n.plural_rules.PredicateParser;
+import com.github.resource4j.i18n.plural_rules.XMLRuleDefinition;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -26,13 +27,7 @@ public class PluralizationRuleFactory implements Supplier<Map<Locale, Pluralizat
      * @return index of pluralization rules
      */
     private Map<Locale, PluralizationRule> createRules() {
-        Map<Locale, PluralizationRule> map = new HashMap<>();
-        PluralizationRule rule = PluralizationRuleBuilder
-                .aRuleFor(Locale.ENGLISH)
-                .add(aCase(number -> number.toString().equals("1"), PluralCategory.one))
-                .add(aCase(number -> true, PluralCategory.many))
-                .build();
-        map.put(Locale.ENGLISH, rule);
+        Map<Locale, PluralizationRule> map = XMLRuleDefinition.load();
         return map;
     }
 
