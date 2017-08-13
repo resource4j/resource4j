@@ -1,4 +1,4 @@
-package com.github.resource4j.i18n.plural_rules.bnf;
+package com.github.resource4j.util.bnf;
 
 import org.junit.Test;
 

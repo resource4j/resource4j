@@ -1,8 +1,8 @@
-package com.github.resource4j.i18n;
+package com.github.resource4j.i18n.plural_rules;
 
 import java.util.Locale;
 
-public interface PluralizationRule {
+public interface PluralRule {
 
     Locale language();
 

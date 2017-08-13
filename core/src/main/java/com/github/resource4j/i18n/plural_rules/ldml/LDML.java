@@ -1,8 +1,8 @@
-package com.github.resource4j.i18n.plural_rules;
+package com.github.resource4j.i18n.plural_rules.ldml;
 
-import com.github.resource4j.i18n.plural_rules.bnf.Cursor;
-import com.github.resource4j.i18n.plural_rules.bnf.MatchResult;
-import com.github.resource4j.i18n.plural_rules.bnf.ValueMatchResult;
+import com.github.resource4j.util.bnf.Cursor;
+import com.github.resource4j.util.bnf.Match;
+import com.github.resource4j.util.bnf.ValueMatch;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -10,9 +10,9 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static com.github.resource4j.i18n.plural_rules.LDMLMath.fraction;
-import static com.github.resource4j.i18n.plural_rules.bnf.ValueMatchResult.valueMatched;
-import static com.github.resource4j.i18n.plural_rules.bnf.ValueMatchResult.valueNotMatched;
+import static com.github.resource4j.i18n.plural_rules.ldml.LDMLMath.fraction;
+import static com.github.resource4j.util.bnf.ValueMatch.valueMatched;
+import static com.github.resource4j.util.bnf.ValueMatch.valueNotMatched;
 import static java.math.BigInteger.ZERO;
 
 /**
@@ -29,18 +29,20 @@ import static java.math.BigInteger.ZERO;
  * decimalValue  = value ('.' value)?
  * digit         = 0|1|2|3|4|5|6|7|8|9
  */
-public class LDML {
+final class LDML {
 
-    static ValueMatchResult<BinaryOperator<Predicate<Number>>> or(Cursor cursor) {
+    private LDML() { }
+
+    static ValueMatch<BinaryOperator<Predicate<Number>>> or(Cursor cursor) {
         return logic(cursor, "or", Predicate::or);
     }
     
-    private static ValueMatchResult<BinaryOperator<Predicate<Number>>> and(Cursor cursor) {
+    private static ValueMatch<BinaryOperator<Predicate<Number>>> and(Cursor cursor) {
         return logic(cursor, "and", Predicate::and);
     }
 
-    private static ValueMatchResult<BinaryOperator<Predicate<Number>>> logic(Cursor cursor,
-                                                                             String op, BinaryOperator<Predicate<Number>>  operator) {
+    private static ValueMatch<BinaryOperator<Predicate<Number>>> logic(Cursor cursor,
+                                                                       String op, BinaryOperator<Predicate<Number>>  operator) {
         boolean matches = cursor.probe()
                 .expectDelimiters()
                 .expect(op)
@@ -51,19 +53,11 @@ public class LDML {
     /**
      * and_condition = relation ('and' relation)*
      */
-    static ValueMatchResult<Predicate<Number>> andCondition(Cursor cursor) {
-        ValueMatchResult<Predicate<Number>> list = LDML.relation(cursor);
-        ValueMatchResult<Predicate<Number>> result;
-        do {
-            result = list;
-            list = list
-                    .then(LDML::and)
-                    .then(LDML::relation);
-        } while (list.value.isPresent());
-        return result;
+    static ValueMatch<Predicate<Number>> andCondition(Cursor cursor) {
+        return cursor.expect(LDML::relation, LDML::and);
     }
 
-    private static ValueMatchResult<Predicate<Number>> relation(Cursor cursor) {
+    private static ValueMatch<Predicate<Number>> relation(Cursor cursor) {
         return cursor.expect(LDML::expression)
                 .thenEither(
                     LDML::equal,
@@ -71,7 +65,7 @@ public class LDML {
                 .then(LDML::rangeList);
     }
 
-    private static ValueMatchResult<BiFunction<Function<Number, Number>, RangeList, Predicate<Number>>> equal(Cursor cursor) {
+    private static ValueMatch<BiFunction<Function<Number, Number>, RangeList, Predicate<Number>>> equal(Cursor cursor) {
         if (cursor.probe()
                 .expectDelimiters().expect("=").expectDelimiters()
                 .matches()) {
@@ -81,7 +75,7 @@ public class LDML {
         }
     }
 
-    private static ValueMatchResult<BiFunction<Function<Number, Number>, RangeList, Predicate<Number>>> notEqual(Cursor cursor) {
+    private static ValueMatch<BiFunction<Function<Number, Number>, RangeList, Predicate<Number>>> notEqual(Cursor cursor) {
         if (cursor.probe()
                 .expectDelimiters().expect("!=").expectDelimiters()
                 .matches()) {
@@ -91,23 +85,16 @@ public class LDML {
         }
     }
 
-    private static ValueMatchResult<RangeList> rangeList(Cursor cursor) {
-        ValueMatchResult<RangeList> result = LDML.range(cursor);
-        ValueMatchResult<RangeList> list = result;
-        do {
-            result = list;
-            list = list.then(LDML::rangeListSeparator)
-                .then(LDML::range);
-        } while (list.value.isPresent());
-        return result;
+    private static ValueMatch<RangeList> rangeList(Cursor cursor) {
+        return cursor.expect(LDML::range, LDML::rangeListSeparator);
     }
 
-    private static ValueMatchResult<RangeList> range(Cursor cursor) {
-        ValueMatchResult<Number> minResult = value(cursor);
-        if (minResult.value.isPresent()) {
-            Number min = minResult.value.get();
+    private static ValueMatch<RangeList> range(Cursor cursor) {
+        ValueMatch<Number> minResult = value(cursor);
+        if (minResult.isPresent()) {
+            Number min = minResult.get();
             if (cursor.probe().expect("\\.\\.").matches()) {
-                return value(cursor).value
+                return value(cursor)
                         .map(max -> valueMatched(cursor, new RangeList(min, max)))
                         .orElse(valueNotMatched(cursor));
             } else {
@@ -117,19 +104,19 @@ public class LDML {
         return valueNotMatched(cursor);
     }
 
-    private static ValueMatchResult<? extends BiFunction<RangeList, RangeList, RangeList>> rangeListSeparator(Cursor cursor) {
+    private static ValueMatch<? extends BiFunction<RangeList, RangeList, RangeList>> rangeListSeparator(Cursor cursor) {
         return cursor.probe().maybeDelimiters().expect(",").maybeDelimiters().matches()
                 ? valueMatched(cursor, RangeList::add)
                 : valueNotMatched(cursor);
     }
 
 
-    private static ValueMatchResult<Function<Number, Number>> expression(Cursor cursor) {
+    private static ValueMatch<Function<Number, Number>> expression(Cursor cursor) {
         return cursor.expect(LDML::operand)
                 .thenMaybe(LDML::modulo);
     }
 
-    private static ValueMatchResult<Function<Number, Number>> operand(Cursor cursor) {
+    private static ValueMatch<Function<Number, Number>> operand(Cursor cursor) {
         Optional<String> match = cursor.probe().expectOneOf("n", "i", "f", "t", "v", "w").match();
         if (match.isPresent()) {
             Function<Number, Number> function = Function.identity();
@@ -147,22 +134,22 @@ public class LDML {
         return valueNotMatched(cursor);
     }
 
-    private static ValueMatchResult<Function<Function<Number, Number>, Function<Number, Number>>> modulo(Cursor cursor) {
+    private static ValueMatch<Function<Function<Number, Number>, Function<Number, Number>>> modulo(Cursor cursor) {
         boolean matches = cursor.probe().expectDelimiters()
                 .expectOneOf("mod", "%")
                 .expectDelimiters()
                 .matches();
         if (matches) {
-            MatchResult<Number> divider = LDML.value(cursor);
-            if (divider.value.isPresent()) {
-                Function<Number, Number> modulo = number -> number.longValue() % divider.value.get().longValue();
+            Match<Number> divider = LDML.value(cursor);
+            if (divider.isPresent()) {
+                Function<Number, Number> modulo = number -> number.longValue() % divider.get().longValue();
                 return valueMatched(cursor, function -> function.andThen(modulo));
             }
         }
         return valueNotMatched(cursor);
     }
 
-    static ValueMatchResult<Number> value(Cursor cursor) {
+    static ValueMatch<Number> value(Cursor cursor) {
         return cursor.probe().expect("[0-9]+")
                 .match()
                 .map(Integer::parseInt)

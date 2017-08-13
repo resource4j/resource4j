@@ -1,21 +1,21 @@
-package com.github.resource4j.i18n.plural_rules;
+package com.github.resource4j.i18n.plural_rules.ldml;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Comparator;
 
-public class NumberComparator implements Comparator<Number> {
+class NumberComparator implements Comparator<Number> {
 
-    public static NumberComparator compareNumbers() {
+    static NumberComparator compareNumbers() {
         return new NumberComparator();
     }
 
+    @SuppressWarnings("unchecked")
     public int compare(Number x, Number y) {
         if (x.getClass().equals(y.getClass()) && Comparable.class.isInstance(x)) {
             // all number types are comparable
-            int val = Comparator.<Comparable>naturalOrder()
+            return Comparator.<Comparable>naturalOrder()
                     .compare((Comparable) x, (Comparable) y);
-            return val;
         }
         if(isSpecial(x) || isSpecial(y))
             return Double.compare(x.doubleValue(), y.doubleValue());
@@ -23,11 +23,11 @@ public class NumberComparator implements Comparator<Number> {
             return toBigDecimal(x).compareTo(toBigDecimal(y));
     }
 
-    private static boolean isSpecial(Number x) {
-        boolean specialDouble = x instanceof Double
-                && (Double.isNaN((Double) x) || Double.isInfinite((Double) x));
-        boolean specialFloat = x instanceof Float
-                && (Float.isNaN((Float) x) || Float.isInfinite((Float) x));
+    private static boolean isSpecial(Number num) {
+        boolean specialDouble = num instanceof Double
+                && (Double.isNaN((Double) num) || Double.isInfinite((Double) num));
+        boolean specialFloat = num instanceof Float
+                && (Float.isNaN((Float) num) || Float.isInfinite((Float) num));
         return specialDouble || specialFloat;
     }
 

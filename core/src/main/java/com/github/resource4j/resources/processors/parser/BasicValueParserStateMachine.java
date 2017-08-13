@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.resource4j.resources.processors.parser.BasicStateMachine.Action.*;
-import static com.github.resource4j.resources.processors.parser.BasicStateMachine.StateId.*;
+import static com.github.resource4j.resources.processors.parser.BasicValueParserStateMachine.Action.*;
+import static com.github.resource4j.resources.processors.parser.BasicValueParserStateMachine.StateId.*;
 import static com.github.resource4j.resources.processors.parser.StateBuilder.aState;
 import static com.github.resource4j.resources.processors.parser.StateMachineBuilder.aStateMachine;
 
@@ -19,7 +19,7 @@ import static com.github.resource4j.resources.processors.parser.StateMachineBuil
  * param := literal [ ':' property ]
  * property := literal
  */
-public class BasicStateMachine implements StateMachineListener<BasicStateMachine.Action> {
+public class BasicValueParserStateMachine implements StateMachineListener<BasicValueParserStateMachine.Action> {
 
     private final StateMachineValueResolver resolver;
     private final StateMachineInstance<Action, StateId> machine;
@@ -32,13 +32,13 @@ public class BasicStateMachine implements StateMachineListener<BasicStateMachine
     private String name;
     private Map<String, Object> params = new LinkedHashMap<>();
 
-    public BasicStateMachine(StateMachineValueResolver resolver) {
+    public BasicValueParserStateMachine(StateMachineValueResolver resolver) {
         this.resolver = resolver;
         this.machine = MACHINE.start(this);
     }
 
-    public static BasicStateMachine start(StateMachineValueResolver resolver) {
-        return new BasicStateMachine(resolver);
+    public static BasicValueParserStateMachine start(StateMachineValueResolver resolver) {
+        return new BasicValueParserStateMachine(resolver);
     }
 
     public void onReceived(char c) {

@@ -2,7 +2,7 @@ package com.github.resource4j.resources.processors;
 
 import com.github.resource4j.ResourceException;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
-import com.github.resource4j.resources.processors.parser.BasicStateMachine;
+import com.github.resource4j.resources.processors.parser.BasicValueParserStateMachine;
 import com.github.resource4j.resources.processors.strategies.*;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class BasicValuePostProcessor implements ResourceValuePostProcessor {
 
     @Override
     public String process(String value, ResourceResolutionContext context, ResourceResolver resolver) throws ResourceException {
-        BasicStateMachine machine = BasicStateMachine.start((key, property, params) -> {
+        BasicValueParserStateMachine machine = BasicValueParserStateMachine.start((key, property, params) -> {
             Object val = resolver.get(key, params);
             if (property != null) {
                 for (PropertyResolver strategy : resolutionStrategies) {

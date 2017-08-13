@@ -1,4 +1,4 @@
-package com.github.resource4j.i18n.plural_rules;
+package com.github.resource4j.i18n.plural_rules.ldml;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class LDMLMath {
+final class LDMLMath {
 
     private static Map<Class<? extends Number>, Function<Number, Number>> ABS =
             add(Integer.class, Math::abs)
@@ -21,11 +21,11 @@ public class LDMLMath {
             .add(BigDecimal.class, BigDecimal::abs)
             .build();
 
-    public static Number abs(Number number) {
+    static Number abs(Number number) {
         return ABS.get(number.getClass()).apply(number);
     }
 
-    public static Number trunc(Number number) {
+    static Number trunc(Number number) {
         if (number instanceof Float || number instanceof Double) {
            return (long) number.doubleValue();
         } else if (number instanceof BigDecimal) {
@@ -36,7 +36,7 @@ public class LDMLMath {
         }
     }
 
-    public static Optional<BigInteger> fraction(Number number, boolean preserveTrailingZeros) {
+    static Optional<BigInteger> fraction(Number number, boolean preserveTrailingZeros) {
         if (number instanceof Float || number instanceof Double) {
             number = BigDecimal.valueOf(number.doubleValue());
         }
@@ -54,7 +54,7 @@ public class LDMLMath {
     }
 
 
-    public static Number size(BigInteger fraction) {
+    static Number size(BigInteger fraction) {
         return fraction == null ? 0 : fraction.toString(10).length();
     }
 
@@ -73,5 +73,7 @@ public class LDMLMath {
             return Collections.unmodifiableMap(map);
         }
     }
+
+    private LDMLMath() { }
 
 }

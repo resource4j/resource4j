@@ -43,8 +43,7 @@ public class TestConfiguration {
                 .sources(springObjectProvider())
                 .postProcessingBy(valuePostProcessor())
                 .get();
-        Resources resources = new RefreshableResources(configuration);
-        return resources;
+        return new RefreshableResources(configuration);
     }
 
 }

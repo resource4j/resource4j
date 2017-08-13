@@ -1,4 +1,4 @@
-package com.github.resource4j.i18n.plural_rules.bnf;
+package com.github.resource4j.util.bnf;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -9,20 +9,17 @@ public class CursorProbe {
 
     private final String text;
 
-    private final int start;
-
     private final Consumer<Integer> callback;
 
     private int position;
 
-    public CursorProbe(String text, int start, Consumer<Integer> callback) {
+    private String matchingValue = null;
+
+    CursorProbe(String text, int start, Consumer<Integer> callback) {
         this.text = text;
-        this.start = start;
         this.callback = callback;
         this.position = start;
     }
-
-    private String matchingValue = null;
 
     public CursorProbe expect(String patternString) {
         match(patternString, true);
@@ -56,6 +53,11 @@ public class CursorProbe {
         return this;
     }
 
+    public CursorProbe maybeDelimiters() {
+        match("\\s*", false);
+        return this;
+    }
+
     public CursorProbe expectOneOf(String... equivalents) {
         for (String pattern : equivalents) {
             Optional<String> result = match(pattern, true);
@@ -74,9 +76,5 @@ public class CursorProbe {
         return Optional.ofNullable(matchingValue);
     }
 
-    public CursorProbe maybeDelimiters() {
-        match("\\s*", false);
-        return this;
-    }
 }
 

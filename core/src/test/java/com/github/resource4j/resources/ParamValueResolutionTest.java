@@ -29,7 +29,7 @@ public class ParamValueResolutionTest {
     }
 
     @Test
-    public void testPatternMatchingWithPluralizationMany() {
+    public void testPatternMatchingWithPluralizationOther() {
         MandatoryString value = resources.get(key("fruit", "apples"), with("count", 2)).notNull();
         assertEquals("Count: two apples", value.asIs());
     }

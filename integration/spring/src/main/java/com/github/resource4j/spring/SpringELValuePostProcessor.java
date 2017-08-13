@@ -52,11 +52,10 @@ public class SpringELValuePostProcessor implements ResourceValuePostProcessor, B
                         ? beanFactoryResolver.resolve(ctx, beanName)
                         : null;
             });
-            Object resolvedValue = expression.getValue(context, String.class);
+            Object resolvedValue = expression.getValue(evalContext, String.class);
             return String.valueOf(resolvedValue);
         } catch (EvaluationException e) {
             String expr = e.getExpressionString();
-            e.printStackTrace();
             throw new ValuePostProcessingException(expr != null ? expr : value);
         }
     }

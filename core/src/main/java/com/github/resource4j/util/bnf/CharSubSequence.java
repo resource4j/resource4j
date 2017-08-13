@@ -1,4 +1,4 @@
-package com.github.resource4j.i18n.plural_rules.bnf;
+package com.github.resource4j.util.bnf;
 
 public class CharSubSequence implements CharSequence {
 
@@ -9,7 +9,7 @@ public class CharSubSequence implements CharSequence {
     private int end;
 
 
-    public CharSubSequence(String value, int start, int end) {
+    CharSubSequence(String value, int start, int end) {
         this.value = value;
         this.start = start;
         this.end = end;
