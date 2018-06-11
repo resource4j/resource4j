@@ -207,10 +207,14 @@ public final class ResourceResolutionContext implements Serializable {
         }).spliterator(), false);
 	}
 
+    public ResourceResolutionContext with(Map<String, Object> params) {
+        return this.merge(params);
+    }
+
     public ResourceResolutionContext merge(Map<String, Object> params) {
         Map<String, Object> map;
-        if (params.size() > 0) {
-            if (this.parameters.size() > 0) {
+        if (params != null && params.size() > 0) {
+            if (this.parameters != null && this.parameters.size() > 0) {
                 map = new HashMap<>(this.parameters);
                 map.putAll(params);
             } else {

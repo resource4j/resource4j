@@ -35,11 +35,19 @@ public class FallbackFuture<T> implements Future<T> {
 
 	@Override
 	public T get() throws InterruptedException, ExecutionException {
-		T value = future.get();
-		if (validator.test(value) || (parent == null)) {
-			return value;
-		}
-		return parent.get();
+	    try {
+            T value = future.get();
+            if (validator.test(value) || (parent == null)) {
+                return value;
+            }
+            return parent.get();
+        } catch (ExecutionException e) {
+	        if (parent != null) {
+	            return parent.get();
+            } else {
+	            throw e;
+            }
+        }
 	}
 
 	@Override

@@ -13,13 +13,11 @@ public class CacheRecord<V> implements java.io.Serializable {
 	}
 
 	public synchronized CacheRecord<V> fail(Throwable e) {
-		assert this.holder.state == StateType.PENDING : "Only changes of PENDING state allowed";
 		this.holder = new Holder<>(e);
 		return this;
 	}
 
 	public synchronized CacheRecord<V> store(V value, Supplier<Long> created) {
-		assert this.holder.state == StateType.PENDING : "Only changes of PENDING state allowed";
 		this.holder = new Holder<>(value, created);
 		return this;
 	}

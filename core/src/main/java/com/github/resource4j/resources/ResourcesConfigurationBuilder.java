@@ -58,6 +58,14 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         return this;
     }
 
+    /**
+     * Define acceptable formats for resource bundles (only .properties are included by default).
+     * When bundle with the same name exists in multiple formats, priority increases from first to last
+     * format in this list. E.g. if formats are defined in the order (properties, json), then if both
+     * bundles exist, json bundle will be taken.
+     * @param formats acceptable formats
+     * @return this
+     */
     public ResourcesConfigurationBuilder formats(BundleFormat... formats) {
         this.formats = Arrays.asList(formats);
         return this;
@@ -147,7 +155,9 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         @Override
         public Thread newThread(Runnable r) {
             final String threadName = String.format(THREAD_NAME_PATTERN, name, counter.incrementAndGet());
-            return new Thread(r, threadName);
+            Thread thread = new Thread(r, threadName);
+            thread.setDaemon(true);
+            return thread;
 
         }
     }
