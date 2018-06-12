@@ -1,8 +1,6 @@
 package com.github.resource4j.resources.cache;
 
-import java.io.Serializable;
-
-public class CachedValue implements Serializable, CachedResult {
+public class CachedValue implements CachedResult {
 
 	String value;
 

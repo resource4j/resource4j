@@ -14,7 +14,6 @@ import org.thymeleaf.util.Validate;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static com.github.resource4j.ResourceKey.plain;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.context;
@@ -43,7 +42,9 @@ public class Resource4jMessageResolver extends AbstractMessageResolver {
             Map<String, Object> params = new HashMap<>();
             for (int i = 0; i < messageParameters.length; i++) {
                 if (messageParameters[i] instanceof Map) {
-                    params.putAll((Map) messageParameters[i]);
+                    ((Map<?, ?>) messageParameters[i]).forEach((k, v) -> {
+                        params.put(String.valueOf(k), v);
+                    });
                 } else {
                     params.put(String.valueOf(i), messageParameters[i]);
                 }

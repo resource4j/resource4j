@@ -10,7 +10,7 @@ class NumberComparator implements Comparator<Number> {
         return new NumberComparator();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "raw" })
     public int compare(Number x, Number y) {
         if (x.getClass().equals(y.getClass()) && Comparable.class.isInstance(x)) {
             // all number types are comparable

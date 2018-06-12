@@ -15,13 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
-import sun.security.util.ObjectIdentifier;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.time.Clock;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -170,11 +171,12 @@ public class HeapResourceObjectRepository implements ResourceValueRepository {
 
 
     @Override
+    @SuppressWarnings({ "unchecked", "raw" })
     public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
         try {
             GetResult result = doGet(key.objectName(), context);
-            Map<String,String> map = result.holder.data instanceof Map
-                    ? (Map<String,String>) result.holder.data
+            Map<String, String> map = result.holder.data instanceof Map
+                    ? (Map<String, String>) result.holder.data
                     : Collections.emptyMap();
             String value = map.get(key.getId());
             return new GenericOptionalString(result.resolvedName, key, value);

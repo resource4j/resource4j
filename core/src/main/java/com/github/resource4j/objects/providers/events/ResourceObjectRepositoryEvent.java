@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 public class ResourceObjectRepositoryEvent implements Serializable {
 
+    private static final long serialVersionUID = 1;
+
     private final String source;
 
     private final ResourceObjectEventType type;

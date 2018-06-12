@@ -2,10 +2,9 @@ package com.github.resource4j.resources.impl;
 
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class ResolvedName implements Serializable {
+public class ResolvedName {
 
     private String name;
 

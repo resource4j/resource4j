@@ -1,9 +1,8 @@
 package com.github.resource4j.resources.cache;
 
-import java.io.Serializable;
 import java.util.Map;
 
-public class CachedBundle implements Serializable, CachedResult {
+public class CachedBundle implements CachedResult {
 
     private String source;
 

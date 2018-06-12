@@ -211,6 +211,10 @@ public final class ResourceResolutionContext implements Serializable {
         return this.merge(params);
     }
 
+    public ResourceResolutionContext add(String key, Object value) {
+        return this.merge(Collections.singletonMap(key, value));
+    }
+
     public ResourceResolutionContext merge(Map<String, Object> params) {
         Map<String, Object> map;
         if (params != null && params.size() > 0) {
