@@ -7,9 +7,10 @@ import java.util.stream.StreamSupport;
 
 public final class ResourceResolutionContext implements Serializable {
 
-	private static final long serialVersionUID = 13975482752L;
+    private static final long serialVersionUID = 13975482752L;
 
-	public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
+    public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
+    public static final String DEFAULT_SECTION_SEPARATOR = "_";
 
     /**
      * Helper method to wrap varags into array with {@link #context(ResourceResolutionComponent[],Map)}
@@ -164,7 +165,7 @@ public final class ResourceResolutionContext implements Serializable {
 				if (skipSeparator) {
 					skipSeparator = false;
 				} else {
-					builder.append('_');
+					builder.append(DEFAULT_SECTION_SEPARATOR);
 				}
 				builder.append(section);
 			}

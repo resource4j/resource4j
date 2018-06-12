@@ -6,6 +6,8 @@ import com.github.resource4j.objects.providers.resolvers.DefaultObjectNameResolv
 import com.github.resource4j.objects.providers.resolvers.ObjectNameResolver;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
+import java.util.function.Supplier;
+
 public abstract class AbstractFileResourceObjectProvider implements ResourceObjectProvider {
 
     private ObjectNameResolver resolver = new DefaultObjectNameResolver();
@@ -17,8 +19,9 @@ public abstract class AbstractFileResourceObjectProvider implements ResourceObje
         this.resolver = resolver;
     }
 
-    public void setResolver(ObjectNameResolver resolver) {
-        this.resolver = resolver;
+    public AbstractFileResourceObjectProvider with(Supplier<? extends ObjectNameResolver> resolver) {
+        this.resolver = resolver.get();
+        return this;
     }
 
     protected ObjectNameResolver resolver() {
