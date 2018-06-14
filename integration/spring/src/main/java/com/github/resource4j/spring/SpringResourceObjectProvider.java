@@ -1,10 +1,8 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.providers.AbstractFileResourceObjectProvider;
-import com.github.resource4j.objects.providers.ResourceObjectProvider;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -12,13 +10,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
-import org.springframework.core.io.ResourceLoader;
-
 import static org.springframework.core.io.ResourceLoader.CLASSPATH_URL_PREFIX;
 
 public class SpringResourceObjectProvider
-		extends AbstractFileResourceObjectProvider
+		extends AbstractFileResourceObjectProvider<SpringResourceObjectProvider>
 		implements ApplicationContextAware {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SpringResourceObjectProvider.class);
@@ -30,7 +25,12 @@ public class SpringResourceObjectProvider
 		LOG.debug("Resource path configured: <managed by Spring Framework>");		
 	}
 
-    @Override
+	@Override
+	protected SpringResourceObjectProvider self() {
+		return this;
+	}
+
+	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;

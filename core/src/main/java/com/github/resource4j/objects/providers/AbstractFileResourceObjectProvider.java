@@ -8,7 +8,8 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 import java.util.function.Supplier;
 
-public abstract class AbstractFileResourceObjectProvider implements ResourceObjectProvider {
+public abstract class AbstractFileResourceObjectProvider<P extends AbstractFileResourceObjectProvider<P>>
+        implements ResourceObjectProvider {
 
     private ObjectNameResolver resolver = new DefaultObjectNameResolver();
 
@@ -19,9 +20,11 @@ public abstract class AbstractFileResourceObjectProvider implements ResourceObje
         this.resolver = resolver;
     }
 
-    public AbstractFileResourceObjectProvider with(Supplier<? extends ObjectNameResolver> resolver) {
+    protected abstract P self();
+
+    public P with(Supplier<? extends ObjectNameResolver> resolver) {
         this.resolver = resolver.get();
-        return this;
+        return self();
     }
 
     protected ObjectNameResolver resolver() {

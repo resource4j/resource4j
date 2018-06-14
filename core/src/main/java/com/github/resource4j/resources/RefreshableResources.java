@@ -42,7 +42,7 @@ import static java.util.stream.Collectors.toCollection;
 
 public class RefreshableResources implements Resources {
 
-    private static final int DEFAULT_MAX_DEPTH = 20;
+    protected static final int DEFAULT_MAX_DEPTH = 20;
 
     private static final Logger LOG = LoggerFactory.getLogger(RefreshableResources.class);
 
@@ -109,6 +109,7 @@ public class RefreshableResources implements Resources {
                         repository.addListener(listener);
                     });
         });
+        configurator.configureMaxDepth(d -> this.maxDepth = d);
         configurator.configureFormats(formats -> this.bundleFormats = formats);
         configurator.configureDefaultBundle(bundle -> defaultBundle = bundle);
 
@@ -127,6 +128,10 @@ public class RefreshableResources implements Resources {
 
         configurator.configurePostProcessing(p -> this.valuePostProcessor = p);
         configurator.configureKeyBuilder(kb -> this.keyBuilder = kb);
+    }
+
+    protected int getMaxDepth() {
+        return maxDepth;
     }
 
     private static List<ResourceObjectProvider> unwrap(ResourceObjectProvider provider) {
@@ -170,8 +175,7 @@ public class RefreshableResources implements Resources {
 
     private ResolvedName bundleName(ResourceKey key, ResourceResolutionContext context) {
         String objectName = key.objectName();
-        ResolvedName name = new ResolvedName(objectName, context);
-        return name;
+        return new ResolvedName(objectName, context);
     }
 
     private CachedValue loadValueFromBundle(ResolvedKey resolvedKey) {
@@ -278,20 +282,25 @@ public class RefreshableResources implements Resources {
 	public OptionalString get(ResourceKey key, ResourceResolutionContext context) {
 	    ResolvedKey resolvedKey = new ResolvedKey(key, context);
         try {
-            return doGet(resolvedKey);
+            return get(resolvedKey);
         } catch (CyclicReferenceException e) {
             return new GenericOptionalString(null, key, null, e);
         }
 	}
 
-    private OptionalString doGet(ResolvedKey resolvedKey) {
+    private OptionalString get(ResolvedKey resolvedKey) {
         int depth = cycleDetector.get();
         if (depth < maxDepth) {
             cycleDetector.set(depth + 1);
         } else {
             throw new CyclicReferenceException();
         }
+        OptionalString string = doGet(resolvedKey);
+        cycleDetector.set(depth);
+        return string;
+    }
 
+    private OptionalString doGet(ResolvedKey resolvedKey) {
         CacheRecord<CachedValue> value = values.putIfAbsent(resolvedKey, initialRecord());
         // Cached value may be updated with loaded results so we use the double-check locking here
         fetchIfNotInitialized(value, resolvedKey, valueRequests, () -> {
@@ -334,7 +343,7 @@ public class RefreshableResources implements Resources {
     }
 
     private Optional<Object> inResources(ResolvedKey resolvedKey) {
-        return ofNullable(doGet(resolvedKey).asIs());
+        return ofNullable(get(resolvedKey).asIs());
     }
 
     private Optional<Object> inParams(ResolvedKey resolvedKey) {

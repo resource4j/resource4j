@@ -5,7 +5,6 @@ import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.cache.Cache;
 import com.github.resource4j.resources.cache.CachedBundle;
-import com.github.resource4j.resources.cache.CachedObject;
 import com.github.resource4j.resources.cache.CachedValue;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
@@ -18,6 +17,8 @@ import java.util.function.Consumer;
 public interface RefreshableResourcesConfigurator {
 
     void configureFormats(Consumer<List<BundleFormat>> consumer);
+
+    default void configureMaxDepth(Consumer<Integer> consumer) {}
 
     void configureSources(Consumer<List<ResourceObjectProvider>> consumer);
 

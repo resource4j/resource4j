@@ -44,6 +44,8 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
 
     private int poolSize = 2;
 
+    private int maxDepth = RefreshableResources.DEFAULT_MAX_DEPTH;
+
     public static ResourcesConfigurationBuilder configure() {
         return new ResourcesConfigurationBuilder();
     }
@@ -73,6 +75,11 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
 
     public ResourcesConfigurationBuilder poolSize(int threadsPerPool) {
         this.poolSize = threadsPerPool;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder maxCycleDepth(int depth) {
+        this.maxDepth = depth;
         return this;
     }
 
@@ -109,6 +116,11 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         @Override
         public void configureFormats(Consumer<List<BundleFormat>> consumer) {
             consumer.accept(formats);
+        }
+
+        @Override
+        public void configureMaxDepth(Consumer<Integer> consumer) {
+            consumer.accept(maxDepth);
         }
 
         @Override
