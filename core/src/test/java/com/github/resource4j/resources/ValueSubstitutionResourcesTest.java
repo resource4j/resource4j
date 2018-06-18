@@ -12,11 +12,10 @@ import org.junit.Test;
 
 import java.time.Clock;
 
+import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ValueSubstitutionResourcesTest {
 
@@ -29,10 +28,13 @@ public class ValueSubstitutionResourcesTest {
     private String ref(ResourceKey key) {
         return "{" + key.getId() + "}";
     }
+    private String longRef(ResourceKey key) {
+        return "{" + key.getBundle() + "." + key.getId() + "}";
+    }
 
     @Test
     public void shouldReturnSubstitutedValue() {
-        ResourceKey bundle = ResourceKey.bundle("test.bundle");
+        ResourceKey bundle = bundle("test.bundle");
         ResourceKey key1 = bundle.child("value1");
         ResourceKey key2 = bundle.child("value2");
         String value = "OK";
@@ -44,8 +46,20 @@ public class ValueSubstitutionResourcesTest {
     }
 
     @Test
+    public void shouldReturnSubstitutedValueFromAnotherBundle() {
+        ResourceKey key1 = bundle("test.bundle1").child("value1");
+        ResourceKey key2 = bundle("test.bundle2").child("value2");
+        String value = "OK";
+        repository.put(key1, withoutContext(), value);
+        repository.put(key2, withoutContext(), longRef(key1));
+
+        OptionalString result = resources.get(key2, withoutContext());
+        assertEquals(value, result.asIs());
+    }
+
+    @Test
     public void shouldReturnSubstitutedValuesWithNesting() {
-        ResourceKey bundle = ResourceKey.bundle("test.bundle");
+        ResourceKey bundle = bundle("test.bundle");
         ResourceKey key1 = bundle.child("value1");
         ResourceKey key2 = bundle.child("value2");
         ResourceKey key3 = bundle.child("value3");
@@ -61,7 +75,7 @@ public class ValueSubstitutionResourcesTest {
 
     @Test
     public void shouldThrowMissingValueIfSubstitutionFails() {
-        ResourceKey bundle = ResourceKey.bundle("test.bundle");
+        ResourceKey bundle = bundle("test.bundle");
         ResourceKey key1 = bundle.child("value1");
         ResourceKey key2 = bundle.child("value2");
         String value = "OK";
@@ -82,7 +96,7 @@ public class ValueSubstitutionResourcesTest {
 
     @Test
     public void shouldDetectReferenceToSelf() {
-        ResourceKey bundle = ResourceKey.bundle("test.bundle");
+        ResourceKey bundle = bundle("test.bundle");
         ResourceKey key = bundle.child("value1");
         repository.put(key, withoutContext(), ref(key));
 
@@ -100,7 +114,7 @@ public class ValueSubstitutionResourcesTest {
 
     @Test
     public void shouldDetectCyclicDependencies() {
-        ResourceKey bundle = ResourceKey.bundle("test.bundle");
+        ResourceKey bundle = bundle("test.bundle");
         ResourceKey key1 = bundle.child("value1");
         ResourceKey key2 = bundle.child("value2");
         ResourceKey key3 = bundle.child("value3");

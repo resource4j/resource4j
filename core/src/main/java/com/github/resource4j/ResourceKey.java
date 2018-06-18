@@ -56,6 +56,9 @@ public class ResourceKey implements java.io.Serializable {
 
 
     public ResourceKey relative(String id) {
+	    if (id.indexOf(BUNDLE_ID_SEPARATOR) > 0) {
+	        return plain(id);
+        }
         return key(bundle, id);
     }
 
