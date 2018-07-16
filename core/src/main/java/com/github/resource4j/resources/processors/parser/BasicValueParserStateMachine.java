@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.github.resource4j.ResourceKey.ID_COMPONENT_DELIMITER;
 import static com.github.resource4j.resources.processors.parser.BasicValueParserStateMachine.Action.*;
 import static com.github.resource4j.resources.processors.parser.BasicValueParserStateMachine.StateId.*;
 import static com.github.resource4j.resources.processors.parser.StateBuilder.aState;
@@ -126,7 +127,7 @@ public class BasicValueParserStateMachine implements StateMachineListener<BasicV
         }
         // NB: linked hashmap preserves order of parameters
         for (Map.Entry<String, Object> entry : params.entrySet()) {
-            key.append('.').append(entry.getValue());
+            key.append(ID_COMPONENT_DELIMITER).append(entry.getValue());
         }
         Object value = resolver.resolve(key.toString(), property, params);
 //        Object value = resourceResolver.get(key.toString(), params);

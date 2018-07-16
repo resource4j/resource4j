@@ -236,28 +236,28 @@ public class BasicValuePostProcessorTest {
     public void shouldCorrectlyPassTwoValues() {
         final String alias = "{number;count} {apple;count}";
         String result = processor.process(alias, withoutContext(), RESOLVER);
-        assertEquals("[number.[count]:[count]] [apple.[count]:[count]]", result);
+        assertEquals("[number_[count]:[count]] [apple_[count]:[count]]", result);
     }
 
     @Test
     public void shouldCorrectlyParseSingleVariableParameter() {
         final String alias = "{name;count}";
         String result = processor.process(alias, withoutContext(), RESOLVER);
-        assertEquals("[name.[count]:[count]]", result);
+        assertEquals("[name_[count]:[count]]", result);
     }
 
     @Test
     public void shouldCorrectlyParseSingleVariableParameterWithProperty() {
         final String alias = "{name;count:upper}";
         String result = processor.process(alias, with("count",1), RESOLVER);
-        assertEquals("[name.[COUNT]:[COUNT]]", result);
+        assertEquals("[name_[COUNT]:[COUNT]]", result);
     }
 
     @Test
     public void shouldCorrectlyParseParamWithEscaping() {
         final String alias = "{name;\\:}";
         String result = processor.process(alias, withoutContext(), RESOLVER);
-        assertEquals("[name.[:]:[:]]", result);
+        assertEquals("[name_[:]:[:]]", result);
     }
 
 }

@@ -23,6 +23,13 @@ public class ParamValueResolutionTest {
             .get());
 
     @Test
+    public void testMultipleStringsSameParamWithPluralizationOne() {
+        MandatoryString value = resources.get(key("temporal", "years"), with("count", 2)).notNull();
+        assertEquals("years", value.asIs());
+    }
+
+
+    @Test
     public void testPatternMatchingWithPluralizationOne() {
         MandatoryString value = resources.get(key("fruit", "apples"), with("count", 1)).notNull();
         assertEquals("Count: one apple", value.asIs());

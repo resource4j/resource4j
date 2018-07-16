@@ -25,7 +25,17 @@ Resources resources = new RefreshableResources();
 ```
 3. Add resource bundles and content files to your classpath:
     <pre><code>/com/mycompany/data/Country-en_US.properties:
-	discount=0.1</code></pre>
+	discount=0.1
+
+    # Formatting
+	custom_format=MMMM d, yyyy
+    today=Today is {date:custom_format}
+
+    # Pluralization
+    duration={count} {years;count:pluralize}
+    years_one=year
+    years_other=years
+	</code></pre>
 	<pre><code>/docs/EULA.txt:
 	Lorem ipsum dolorem sit amet.</code></pre>         	
 4. Get some value:
@@ -33,8 +43,16 @@ Resources resources = new RefreshableResources();
 ```Java
 BigDecimal localDiscount = resources.get(key(Country.class, "discount"), in(Locale.US))
 			.notNull()
-			.as(BigDecimal.class);
-```			
+			.as(BigDecimal.class); // 0.1
+
+String date = resources.get(key(Country.class, "today"), in(Locale.US).with("date", LocalDate.of(2018, 1, 1)))
+            .notNull()
+            .asIs(); // "January 1, 2018"
+
+String duration = resources.get(key(Country.class, "duration"), in(Locale.US).with("count", 3))
+            .notNull()
+            .asIs(); // "3 years"
+```
 5. Load content:
 
 ```Java
@@ -47,31 +65,48 @@ Dependency management
 ---------------------
 If you are using Maven, please, add following lines to your POM file:
 
+```xml
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-core</artifactId>
-		<version>3.0.0</version>
+		<version>3.1.3</version>
 	</dependency>
+```
+
 For integration with Spring and (optionally) Thymeleaf, add following:
 
+```xml
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-spring</artifactId>
-		<version>3.0.0</version>
+		<version>3.1.3</version>
 	</dependency>
+```
+
+For using Resource4j as message provider in Thymeleaf, add following:
+
+```xml
+	<dependency>
+		<groupId>com.github.resource4j</groupId>
+		<artifactId>resource4j-thymeleaf3</artifactId>
+		<version>3.1.3</version>
+	</dependency>
+```
 
 To add support of HOCON or XStream configuration files add Extras library:
 
+```xml
     <dependency>
         <groupId>com.github.resource4j</groupId>
         <artifactId>resource4j-extras</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.3</version>
     </dependency>
+```
 
 Learn more
 ----------
 1. [Basics](docs/Basics.md)
 2. [Configuring resources](docs/Configuration.md)
 3. [Integration with Spring Framework](docs/SpringIntegration.md)
-4. [Integration with Thymeleaf 2.1](docs/ThymeleafIntegration.md)
+4. [Integration with Thymeleaf](docs/ThymeleafIntegration.md)
 5. [Extras](docs/Extras.md)
