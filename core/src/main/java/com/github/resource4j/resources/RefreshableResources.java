@@ -96,6 +96,10 @@ public class RefreshableResources implements Resources {
         this(configure().get());
     }
 
+    public RefreshableResources(Supplier<? extends RefreshableResourcesConfigurator> configurator) {
+        this(configurator.get());
+    }
+
     public RefreshableResources(RefreshableResourcesConfigurator configurator) {
         configurator.configureSources(sources -> {
             this.providers = sources;
@@ -205,6 +209,7 @@ public class RefreshableResources implements Resources {
                 String id = keyBuilder.forResolvedKey(resolvedKey, declaration);
                 valueString = cachedBundle.get(id);
             }
+            LOG.trace("Returning " + resolvedKey + " from bundle " + cachedBundle.source());
             return new CachedValue(valueString, cachedBundle.source());
         }
 

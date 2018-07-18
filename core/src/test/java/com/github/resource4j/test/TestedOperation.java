@@ -1,7 +1,6 @@
 package com.github.resource4j.test;
 
 import java.time.Clock;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -32,6 +31,10 @@ public class TestedOperation<P,R> {
 
     public static <T> ConditionalConsumer<T> notify(Predicate<T> predicate, CountDownLatch latch) {
         return new ConditionalConsumer<>(predicate, latch::countDown);
+    }
+
+    public static <T> ConditionalConsumer<T> notify(Predicate<T> predicate, Runnable runnable) {
+        return new ConditionalConsumer<>(predicate, runnable);
     }
 
     private static void doWait(long millis) {

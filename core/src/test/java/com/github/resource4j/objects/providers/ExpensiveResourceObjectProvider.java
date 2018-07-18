@@ -78,6 +78,10 @@ public class ExpensiveResourceObjectProvider implements ResourceObjectProvider {
             getMethodTest.before(TestedOperation.sleep(params -> params.equals(this.params), millis));
         }
 
+        public void notify(Runnable runnable) {
+            getMethodTest.before(TestedOperation.notify(params -> params.equals(this.params), runnable));
+        }
+
         public void await(CountDownLatch latch) {
             getMethodTest.before(TestedOperation.await(params -> params.equals(this.params), latch));
         }

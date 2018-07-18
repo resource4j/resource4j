@@ -6,7 +6,7 @@ import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.cache.Cache;
 import com.github.resource4j.resources.cache.CachedBundle;
 import com.github.resource4j.resources.cache.CachedValue;
-import com.github.resource4j.resources.cache.impl.BasicValueCache;
+import com.github.resource4j.resources.cache.Caches;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
@@ -33,13 +33,13 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
     private ResourceValuePostProcessor valuePostProcessor = null;
     private ParametrizedKeyBuilder keyBuilder = null;
 
-    private Supplier<BasicValueCache<ResolvedKey, CachedValue>> valueCache = BasicValueCache::new;
+    private Supplier<Cache<ResolvedKey, CachedValue>> valueCache = Caches.always();
     private Supplier<ExecutorService> valueExecutor = () -> buildThreadPool("value");
 
-    private Supplier<BasicValueCache<ResolvedName, CachedBundle>> bundleCache = BasicValueCache::new;
+    private Supplier<Cache<ResolvedName, CachedBundle>> bundleCache = Caches.always();
     private Supplier<ExecutorService> bundleExecutor = () -> buildThreadPool("bundle");
 
-    private Supplier<BasicValueCache<ResolvedName, ResourceObject>> objectCache = BasicValueCache::new;
+    private Supplier<Cache<ResolvedName, ResourceObject>> objectCache = Caches.always();
     private Supplier<ExecutorService> objectExecutor = () -> buildThreadPool("object");
 
     private int poolSize = 2;
@@ -75,6 +75,21 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
 
     public ResourcesConfigurationBuilder poolSize(int threadsPerPool) {
         this.poolSize = threadsPerPool;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder cacheValues(Supplier<Cache<ResolvedKey, CachedValue>> cache) {
+        this.valueCache = cache;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder cacheBundles(Supplier<Cache<ResolvedName, CachedBundle>> cache) {
+        this.bundleCache = cache;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder cacheObjects(Supplier<Cache<ResolvedName, ResourceObject>> cache) {
+        this.objectCache = cache;
         return this;
     }
 

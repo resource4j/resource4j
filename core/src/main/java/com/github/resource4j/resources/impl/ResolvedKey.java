@@ -3,10 +3,15 @@ package com.github.resource4j.resources.impl;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.time.temporal.Temporal;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+
+import static com.github.resource4j.resources.context.ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR;
 
 public class ResolvedKey implements java.io.Serializable {
 
@@ -39,10 +44,32 @@ public class ResolvedKey implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return key.toString() + "(" + paramCount + ")"
-                + (context.isEmpty()
-                    ? ""
-                    : ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR + context.toString());
+        StringBuilder builder = new StringBuilder(key.toString());
+        if (!context.parameters().isEmpty()) {
+            context.parameters().forEach((k, v) -> builder.append(';').append(k).append('=').append(escaped(v)));
+        }
+        if (!context.isEmpty()) {
+            builder.append(DEFAULT_COMPONENT_SEPARATOR).append(context);
+        }
+        return builder.toString();
+    }
+
+    private String escaped(Object v) {
+        if (v == null) {
+            return "";
+        } else if (v instanceof Number) {
+            return v.toString();
+        } else if (v instanceof Boolean) {
+            return v.toString();
+        } else if (v instanceof Temporal) {
+            return v.toString();
+        } else {
+            try {
+                return URLEncoder.encode(v.toString(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                return "";
+            }
+        }
     }
 
     public ResourceResolutionContext context() {

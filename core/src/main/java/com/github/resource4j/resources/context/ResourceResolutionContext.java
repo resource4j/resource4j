@@ -87,7 +87,7 @@ public final class ResourceResolutionContext implements Serializable {
 
 	private final ResourceResolutionComponent[] components;
 
-    private final Map<String,Object> parameters;
+    private final Map<String, Object> parameters;
 
     public ResourceResolutionContext(ResourceResolutionComponent[] components) {
         this.components = components;
@@ -103,7 +103,7 @@ public final class ResourceResolutionContext implements Serializable {
 		return this.components;
 	}
 
-	public Map<String,Object> parameters() {
+	public Map<String, Object> parameters() {
 	    return this.parameters != null ? this.parameters : Collections.emptyMap();
     }
 
@@ -136,7 +136,7 @@ public final class ResourceResolutionContext implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(components);
+		result = prime * result + Arrays.hashCode(components) + Objects.hashCode(parameters);
 		return result;
 	}
 
@@ -149,6 +149,13 @@ public final class ResourceResolutionContext implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ResourceResolutionContext other = (ResourceResolutionContext) obj;
+		if (this.parameters != null) {
+		    if (!this.parameters.equals(other.parameters)) {
+		        return false;
+            }
+        } else if (other.parameters != null) {
+		    return false;
+        }
         return Arrays.equals(components, other.components);
     }
 
