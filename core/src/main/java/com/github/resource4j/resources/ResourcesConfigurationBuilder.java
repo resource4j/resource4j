@@ -6,7 +6,7 @@ import com.github.resource4j.objects.providers.ResourceObjectProvider;
 import com.github.resource4j.resources.cache.Cache;
 import com.github.resource4j.resources.cache.CachedBundle;
 import com.github.resource4j.resources.cache.CachedValue;
-import com.github.resource4j.resources.cache.impl.BasicValueCache;
+import com.github.resource4j.resources.cache.Caches;
 import com.github.resource4j.resources.impl.ResolvedKey;
 import com.github.resource4j.resources.impl.ResolvedName;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
@@ -33,16 +33,18 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
     private ResourceValuePostProcessor valuePostProcessor = null;
     private ParametrizedKeyBuilder keyBuilder = null;
 
-    private Supplier<BasicValueCache<ResolvedKey, CachedValue>> valueCache = BasicValueCache::new;
+    private Supplier<Cache<ResolvedKey, CachedValue>> valueCache = Caches.always();
     private Supplier<ExecutorService> valueExecutor = () -> buildThreadPool("value");
 
-    private Supplier<BasicValueCache<ResolvedName, CachedBundle>> bundleCache = BasicValueCache::new;
+    private Supplier<Cache<ResolvedName, CachedBundle>> bundleCache = Caches.always();
     private Supplier<ExecutorService> bundleExecutor = () -> buildThreadPool("bundle");
 
-    private Supplier<BasicValueCache<ResolvedName, ResourceObject>> objectCache = BasicValueCache::new;
+    private Supplier<Cache<ResolvedName, ResourceObject>> objectCache = Caches.always();
     private Supplier<ExecutorService> objectExecutor = () -> buildThreadPool("object");
 
     private int poolSize = 2;
+
+    private int maxDepth = RefreshableResources.DEFAULT_MAX_DEPTH;
 
     public static ResourcesConfigurationBuilder configure() {
         return new ResourcesConfigurationBuilder();
@@ -58,6 +60,14 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         return this;
     }
 
+    /**
+     * Define acceptable formats for resource bundles (only .properties are included by default).
+     * When bundle with the same name exists in multiple formats, priority increases from first to last
+     * format in this list. E.g. if formats are defined in the order (properties, json), then if both
+     * bundles exist, json bundle will be taken.
+     * @param formats acceptable formats
+     * @return this
+     */
     public ResourcesConfigurationBuilder formats(BundleFormat... formats) {
         this.formats = Arrays.asList(formats);
         return this;
@@ -65,6 +75,26 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
 
     public ResourcesConfigurationBuilder poolSize(int threadsPerPool) {
         this.poolSize = threadsPerPool;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder cacheValues(Supplier<Cache<ResolvedKey, CachedValue>> cache) {
+        this.valueCache = cache;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder cacheBundles(Supplier<Cache<ResolvedName, CachedBundle>> cache) {
+        this.bundleCache = cache;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder cacheObjects(Supplier<Cache<ResolvedName, ResourceObject>> cache) {
+        this.objectCache = cache;
+        return this;
+    }
+
+    public ResourcesConfigurationBuilder maxCycleDepth(int depth) {
+        this.maxDepth = depth;
         return this;
     }
 
@@ -101,6 +131,11 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         @Override
         public void configureFormats(Consumer<List<BundleFormat>> consumer) {
             consumer.accept(formats);
+        }
+
+        @Override
+        public void configureMaxDepth(Consumer<Integer> consumer) {
+            consumer.accept(maxDepth);
         }
 
         @Override
@@ -147,7 +182,9 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
         @Override
         public Thread newThread(Runnable r) {
             final String threadName = String.format(THREAD_NAME_PATTERN, name, counter.incrementAndGet());
-            return new Thread(r, threadName);
+            Thread thread = new Thread(r, threadName);
+            thread.setDaemon(true);
+            return thread;
 
         }
     }

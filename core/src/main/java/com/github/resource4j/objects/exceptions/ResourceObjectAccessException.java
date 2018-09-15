@@ -4,6 +4,8 @@ import com.github.resource4j.ResourceObjectException;
 
 public class ResourceObjectAccessException extends ResourceObjectException {
 
+    private static final long serialVersionUID = 1;
+
     public ResourceObjectAccessException(String name) {
         super(name);
     }

@@ -19,7 +19,6 @@
 		<module>converters</module>
 		<module>core</module>
 		<module>integration</module>
-        <module>demo</module>
 	</modules>
 
 	<licenses>

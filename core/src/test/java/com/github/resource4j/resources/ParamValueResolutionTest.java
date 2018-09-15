@@ -1,12 +1,11 @@
 package com.github.resource4j.resources;
 
 import com.github.resource4j.MandatoryString;
+import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.processors.BasicValuePostProcessor;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.objects.providers.ResourceObjectProviders.classpath;
@@ -21,6 +20,21 @@ public class ParamValueResolutionTest {
             .sources(classpath())
             .postProcessingBy(new BasicValuePostProcessor())
             .get());
+
+    @Test
+    public void testMultipleStringsSameParamWithPluralizationOne() {
+        MandatoryString value = resources.get(key("temporal", "years"), with("count", 2)).notNull();
+        assertEquals("years", value.asIs());
+    }
+
+    @Test
+    public void testMultipleRequestsWithDifferentParameter() {
+        ResourceKey key = key("temporal", "years");
+        String value1 = resources.get(key, with("count", 2)).notNull().asIs();
+        assertEquals("years", value1);
+        String value2 = resources.get(key, with("count", 1)).notNull().asIs();
+        assertEquals("year", value2);
+    }
 
     @Test
     public void testPatternMatchingWithPluralizationOne() {

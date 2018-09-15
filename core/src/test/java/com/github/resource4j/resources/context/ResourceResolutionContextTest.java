@@ -3,6 +3,7 @@ package com.github.resource4j.resources.context;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import org.junit.Test;
 public class ResourceResolutionContextTest {
 
 	@Test
-	public void testLocaleParentsEnumeratedCorrectly() throws Exception {
+	public void testLocaleParentsEnumeratedCorrectly() {
         ResourceResolutionContext context = in(Locale.GERMANY);
         List<ResourceResolutionContext> contexts = new ArrayList<>();
         do {
@@ -29,7 +30,7 @@ public class ResourceResolutionContextTest {
     }
 
 	@Test
-	public void testFactoryMethodResultToStringIsCorrect() throws Exception {
+	public void testFactoryMethodResultToStringIsCorrect() {
 		ResourceResolutionContext context = in("A", Locale.US, "B");
 		assertEquals("A-en_US-B", context.toString());
 	}
@@ -60,5 +61,40 @@ public class ResourceResolutionContextTest {
 		ResourceResolutionContext parent = in("A", Locale.ENGLISH, "Test");
 		ResourceResolutionContext child = in("A", Locale.US, "Test", "B");
 		assertTrue(parent.contains(child));
+	}
+
+	@Test
+	public void testContextsWithoutParametersEqual() {
+		ResourceResolutionContext first = in("A", Locale.US, "Test");
+		ResourceResolutionContext second = in("A", Locale.US, "Test");
+		assertEquals(first, second);
+	}
+
+	@Test
+	public void testContextsWithSameParametersEqual() {
+		ResourceResolutionContext first = in("A", Locale.US, "Test").add("count", 1);
+		ResourceResolutionContext second = in("A", Locale.US, "Test").add("count", 1);
+		assertEquals(first, second);
+	}
+
+	@Test
+	public void testContextsWithDifferentParameterValuesNotEqual() {
+		ResourceResolutionContext first = in("A", Locale.US, "Test").add("count", 1);
+		ResourceResolutionContext second = in("A", Locale.US, "Test").add("count", 2);
+		assertNotEquals(first, second);
+	}
+
+	@Test
+	public void testContextWithoutParametersNotEqualToContextWithParmeters() {
+		ResourceResolutionContext first = in("A", Locale.US, "Test");
+		ResourceResolutionContext second = in("A", Locale.US, "Test").add("count", 1);
+		assertNotEquals(first, second);
+	}
+
+	@Test
+	public void testContextWithParametersNotEqualToContextWithoutParmeters() {
+		ResourceResolutionContext first = in("A", Locale.US, "Test").add("count", 1);
+		ResourceResolutionContext second = in("A", Locale.US, "Test");
+		assertNotEquals(first, second);
 	}
 }

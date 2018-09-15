@@ -14,7 +14,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Clock;
 
-public class ClasspathResourceObjectProvider extends AbstractFileResourceObjectProvider {
+public class ClasspathResourceObjectProvider
+        extends AbstractFileResourceObjectProvider<ClasspathResourceObjectProvider> {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ClasspathResourceObjectProvider.class);
 
@@ -25,6 +26,11 @@ public class ClasspathResourceObjectProvider extends AbstractFileResourceObjectP
 	public ClasspathResourceObjectProvider() {
         this(Resources.class.getClassLoader(), Clock.systemUTC());
 	}
+
+    @Override
+    protected ClasspathResourceObjectProvider self() {
+        return this;
+    }
 
     public ClasspathResourceObjectProvider(ClassLoader loader) {
         this(loader, Clock.systemUTC());

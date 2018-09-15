@@ -1,13 +1,13 @@
 package example.i18n;
 
-import com.github.resource4j.spring.AutowiredResource;
+import com.github.resource4j.spring.annotations.InjectValue;
 
 public class Greeting {
 
-	@AutowiredResource(bundle = "main")
+	@InjectValue(bundle = "main")
 	private String name;
 	
-	@AutowiredResource(bundleClass = Messages.class)
+	@InjectValue(bundleClass = Messages.class)
 	private String welcome;
 
 	public String getName() {

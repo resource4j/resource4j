@@ -8,7 +8,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.text.Format;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 public class TypeConverter {
 
@@ -39,6 +40,7 @@ public class TypeConverter {
             IntegerNumberConversion.class
     };
 
+    @SuppressWarnings("raw")
     private static final Class<?>[][] PATHS = new Class[][] {
             new Class[] { String.class, Date.class, Calendar.class },
             new Class[] { String.class, Date.class, GregorianCalendar.class },
@@ -59,16 +61,16 @@ public class TypeConverter {
 
     @SuppressWarnings("WeakerAccess")
     public TypeConverter(Class<? extends Conversion>[] conversions, Class<?>[][] paths) {
-        this(Arrays.stream(conversions)
+        this(stream(conversions)
                 .map(c -> {
                     try {
                         return (Conversion) c.newInstance();
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         return null;
                     }
                 })
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList()).toArray(new Conversion[0]));
+                .toArray(Conversion[]::new));
 
         CastConversion cast = new CastConversion();
 

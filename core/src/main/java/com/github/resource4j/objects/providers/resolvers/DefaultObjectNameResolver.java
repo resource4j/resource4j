@@ -3,22 +3,28 @@ package com.github.resource4j.objects.providers.resolvers;
 import com.github.resource4j.resources.context.ResourceResolutionComponent;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 
+import java.util.function.Supplier;
+
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static java.lang.String.join;
 
 public class DefaultObjectNameResolver implements ObjectNameResolver {
 
-    public static final String FILE_NAME_SEPARATOR = "-";
+    public static final String FILE_NAME_SEPARATOR = ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR;
 
-    public static final String COMPONENT_SEPARATOR = "-";
+    public static final String COMPONENT_SEPARATOR = ResourceResolutionContext.DEFAULT_COMPONENT_SEPARATOR;
 
-    public static final String SECTION_SEPARATOR = "_";
+    public static final String SECTION_SEPARATOR = ResourceResolutionContext.DEFAULT_SECTION_SEPARATOR;
 
     private String fileNameSeparator = FILE_NAME_SEPARATOR;
 
     private String componentSeparator = COMPONENT_SEPARATOR;
 
     private String sectionSeparator = SECTION_SEPARATOR;
+
+    public static Builder defaultResolver() {
+        return new Builder();
+    }
 
     public DefaultObjectNameResolver() {
     }
@@ -60,6 +66,34 @@ public class DefaultObjectNameResolver implements ObjectNameResolver {
 
         fileName.append(extension);
         return fileName.toString();
+    }
+
+    public static class Builder implements Supplier<DefaultObjectNameResolver> {
+        private String fileNameSeparator = FILE_NAME_SEPARATOR;
+        private String componentSeparator = COMPONENT_SEPARATOR;
+        private String sectionSeparator = SECTION_SEPARATOR;
+        private Builder() {
+        }
+
+        public Builder withFileNameSeparator(String fileNameSeparator) {
+            this.fileNameSeparator = fileNameSeparator;
+            return this;
+        }
+
+        public Builder withComponentSeparator(String componentSeparator) {
+            this.componentSeparator = componentSeparator;
+            return this;
+        }
+
+        public Builder withSectionSeparator(String sectionSeparator) {
+            this.sectionSeparator = sectionSeparator;
+            return this;
+        }
+
+        @Override
+        public DefaultObjectNameResolver get() {
+            return new DefaultObjectNameResolver(fileNameSeparator, componentSeparator, sectionSeparator);
+        }
     }
 
 }

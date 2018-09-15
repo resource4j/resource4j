@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.time.Clock;
 import java.util.Locale;
 
+import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
 import static com.github.resource4j.objects.parsers.ResourceParsers.propertyMap;
 import static com.github.resource4j.objects.providers.resolvers.ResourceObjectProviderPredicates.name;
@@ -23,8 +24,7 @@ import static com.github.resource4j.resources.context.ResourceResolutionContext.
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static com.github.resource4j.resources.discovery.PropertyBundleBuilder.aPropertiesBundle;
 import static com.github.resource4j.test.Builders.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class RefreshableResourcesTest extends AbstractResourcesTest {
 
@@ -34,12 +34,23 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     }
 
     @Test
+    public void cycleDetectorShouldNotBlockBigBundles() {
+        RefreshableResources resources = new RefreshableResources(configure().maxCycleDepth(10).get());
+        assertTrue(resources.getMaxDepth() < 30);
+        for (int i = 0; i < 30; i++) {
+            String idx = i < 10 ? "0" + i : String.valueOf(i);
+            String value = resources.get(key("big", "value" + idx)).asIs();
+            assertNotNull(value);
+        }
+    }
+
+    @Test
     public void shouldReturnNewValueAfterBundleIsAddedToRepository() throws Exception {
         Clock clock = Clock.systemUTC();
         String bundleName = "folder.bundle";
         String objectName = "folder/bundle.properties";
 
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
         ResourceResolutionContext ctx = withoutContext();
 
         ResourceObjectRepository repository = new HeapResourceObjectRepository(clock);
@@ -61,7 +72,7 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     public void shouldReturnNewValueAfterItIsAddedToRepository() throws Exception {
         Clock clock = Clock.systemUTC();
         String bundleName = "folder.bundle";
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
         ResourceResolutionContext ctx = withoutContext();
 
         ResourceValueRepository repository = new HeapResourceObjectRepository(clock);
@@ -84,7 +95,7 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     public void shouldReturnNewValueAfterItIsModifiedInRepository() throws Exception {
         Clock clock = Clock.systemUTC();
         String bundleName = "folder.bundle";
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
         ResourceResolutionContext ctx = withoutContext();
 
         ResourceValueRepository repository = new HeapResourceObjectRepository(clock);
@@ -108,7 +119,7 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     public void shouldNotFindValueAfterItIsRemovedFromRepository() throws Exception {
         Clock clock = Clock.systemUTC();
         String bundleName = "folder.bundle";
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
         ResourceResolutionContext ctx = withoutContext();
 
         ResourceValueRepository repository = new HeapResourceObjectRepository(clock);
@@ -132,7 +143,7 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     public void test_value_loaded_with_source_supporting_requested_format() throws Exception {
         String bundleName = "folder.bundle";
         String objectName = "folder/bundle.properties";
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
 
         Clock clock = Clock.systemUTC();
 
@@ -220,7 +231,7 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     public void test_value_reloaded_when_source_modified() throws Exception {
         String bundleName = "folder.bundle";
         String objectName = "folder/bundle.properties";
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
         Clock clock = Clock.systemUTC();
         ResourceResolutionContext ctx = in("ctx");
         ResourceObject bundle1 = given(
@@ -245,7 +256,7 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
     public void test_value_loaded_from_slow_source_with_higher_priority() throws Exception {
         String bundleName = "folder.bundle";
         String objectName = "folder/bundle.properties";
-        ResourceKey key = ResourceKey.key(bundleName, "value");
+        ResourceKey key = key(bundleName, "value");
 
         Clock clock = Clock.systemUTC();
 

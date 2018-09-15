@@ -7,9 +7,10 @@ import java.util.stream.StreamSupport;
 
 public final class ResourceResolutionContext implements Serializable {
 
-	private static final long serialVersionUID = 13975482752L;
+    private static final long serialVersionUID = 13975482752L;
 
-	public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
+    public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
+    public static final String DEFAULT_SECTION_SEPARATOR = "_";
 
     /**
      * Helper method to wrap varags into array with {@link #context(ResourceResolutionComponent[],Map)}
@@ -86,7 +87,7 @@ public final class ResourceResolutionContext implements Serializable {
 
 	private final ResourceResolutionComponent[] components;
 
-    private final Map<String,Object> parameters;
+    private final Map<String, Object> parameters;
 
     public ResourceResolutionContext(ResourceResolutionComponent[] components) {
         this.components = components;
@@ -102,7 +103,7 @@ public final class ResourceResolutionContext implements Serializable {
 		return this.components;
 	}
 
-	public Map<String,Object> parameters() {
+	public Map<String, Object> parameters() {
 	    return this.parameters != null ? this.parameters : Collections.emptyMap();
     }
 
@@ -135,7 +136,7 @@ public final class ResourceResolutionContext implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(components);
+		result = prime * result + Arrays.hashCode(components) + Objects.hashCode(parameters);
 		return result;
 	}
 
@@ -148,6 +149,13 @@ public final class ResourceResolutionContext implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		ResourceResolutionContext other = (ResourceResolutionContext) obj;
+		if (this.parameters != null) {
+		    if (!this.parameters.equals(other.parameters)) {
+		        return false;
+            }
+        } else if (other.parameters != null) {
+		    return false;
+        }
         return Arrays.equals(components, other.components);
     }
 
@@ -164,7 +172,7 @@ public final class ResourceResolutionContext implements Serializable {
 				if (skipSeparator) {
 					skipSeparator = false;
 				} else {
-					builder.append('_');
+					builder.append(DEFAULT_SECTION_SEPARATOR);
 				}
 				builder.append(section);
 			}
@@ -207,10 +215,18 @@ public final class ResourceResolutionContext implements Serializable {
         }).spliterator(), false);
 	}
 
+    public ResourceResolutionContext with(Map<String, Object> params) {
+        return this.merge(params);
+    }
+
+    public ResourceResolutionContext add(String key, Object value) {
+        return this.merge(Collections.singletonMap(key, value));
+    }
+
     public ResourceResolutionContext merge(Map<String, Object> params) {
         Map<String, Object> map;
-        if (params.size() > 0) {
-            if (this.parameters.size() > 0) {
+        if (params != null && params.size() > 0) {
+            if (this.parameters != null && this.parameters.size() > 0) {
                 map = new HashMap<>(this.parameters);
                 map.putAll(params);
             } else {

@@ -24,7 +24,7 @@ import static com.github.resource4j.objects.providers.events.ResourceObjectRepos
 import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.modified;
 
 public class FileResourceObjectRepository
-        extends AbstractFileResourceObjectProvider
+        extends AbstractFileResourceObjectProvider<FileResourceObjectRepository>
         implements ResourceObjectRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FileResourceObjectRepository.class);
@@ -56,7 +56,12 @@ public class FileResourceObjectRepository
 		LOG.debug("Resource path configured: " + base.getAbsolutePath());
 	}
 
-	@Override
+    @Override
+    protected FileResourceObjectRepository self() {
+        return this;
+    }
+
+    @Override
 	public FileResourceObject get(String name, String actualName) throws MissingResourceObjectException {
 		File file = new File(base, actualName);
 		LOG.trace("Requested file: {}", file.getAbsolutePath());
