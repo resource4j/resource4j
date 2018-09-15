@@ -65,7 +65,8 @@
 		<logback.version>1.1.7</logback.version>
 
 		<!-- Integration -->
-		<springframework.version>4.2.5.RELEASE</springframework.version>
+		<springframework.version>5.0.9.RELEASE</springframework.version>
+		<spring-boot.version>2.0.5.RELEASE</spring-boot.version>
 		<aspectj.version>1.8.6</aspectj.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -294,6 +295,12 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-autoconfigure</artifactId>
+				<version>${spring-boot.version}</version>
 			</dependency>
 
 			<!-- test dependencies -->

@@ -1,31 +1,26 @@
 package com.github.resource4j.spring;
 
-import static com.github.resource4j.ResourceKey.key;
-import static org.springframework.util.ReflectionUtils.doWithFields;
-
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.util.ReflectionUtils.FieldFilter;
-
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.ResourceProvider;
 import com.github.resource4j.resources.Resources;
 import com.github.resource4j.spring.annotations.InjectBundle;
 import com.github.resource4j.spring.annotations.InjectResource;
 import com.github.resource4j.spring.annotations.InjectValue;
-import com.github.resource4j.spring.annotations.support.AutowiredResourceCallback;
 import com.github.resource4j.spring.annotations.support.InjectResourceCallback;
 import com.github.resource4j.spring.annotations.support.InjectValueCallback;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+import static com.github.resource4j.ResourceKey.key;
+import static org.springframework.util.ReflectionUtils.doWithFields;
 
 @SuppressWarnings("deprecation")
 public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware {
@@ -54,10 +49,7 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
             return bean;
         }
 		Supplier<ResourceProvider> provider = getResourceProvider(bean);
-		
-		doWithFields(bean.getClass(), 
-			new AutowiredResourceCallback(resources(), bean, beanName),
-				field -> field.isAnnotationPresent(AutowiredResource.class));
+
 		doWithFields(bean.getClass(), 
 				new InjectValueCallback(bean, beanFactory, resources(), provider),
 				field -> field.isAnnotationPresent(InjectValue.class));
