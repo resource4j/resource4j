@@ -1,8 +1,8 @@
 package com.github.resource4j.resources.discovery;
 
-import java.util.List;
-
 import com.github.resource4j.resources.context.ResourceResolutionContext;
+
+import java.util.List;
 
 public interface ResourceFileEnumerationStrategy {
 

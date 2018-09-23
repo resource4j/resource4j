@@ -1,16 +1,14 @@
 package com.github.resource4j.resources.context;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Test;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
+import static org.junit.Assert.*;
 
 public class ResourceResolutionContextTest {
 

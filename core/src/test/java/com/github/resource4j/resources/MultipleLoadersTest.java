@@ -4,9 +4,7 @@ import org.junit.Test;
 
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.objects.parsers.ResourceParsers.propertyMap;
-import static com.github.resource4j.objects.providers.ResourceObjectProviders.bind;
-import static com.github.resource4j.objects.providers.ResourceObjectProviders.classpath;
-import static com.github.resource4j.objects.providers.ResourceObjectProviders.patternMatching;
+import static com.github.resource4j.objects.providers.ResourceObjectProviders.*;
 import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static org.junit.Assert.assertEquals;

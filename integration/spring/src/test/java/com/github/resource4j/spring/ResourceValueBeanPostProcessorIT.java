@@ -1,11 +1,8 @@
 package com.github.resource4j.spring;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.assertEquals;
-
-import java.util.Locale;
-
 import com.github.resource4j.spring.test.TestConfiguration;
+import example.i18n.Greeting;
+import example.i18n.Messages;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +14,10 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import example.i18n.Greeting;
-import example.i18n.Messages;
+import java.util.Locale;
+
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)

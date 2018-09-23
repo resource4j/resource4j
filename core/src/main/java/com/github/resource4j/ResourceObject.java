@@ -1,8 +1,8 @@
 package com.github.resource4j;
 
-import java.io.InputStream;
-
 import com.github.resource4j.objects.parsers.ResourceParser;
+
+import java.io.InputStream;
 
 /**
  * Resource object is a reference to a binary data object in a resource storage, that can be subsequently

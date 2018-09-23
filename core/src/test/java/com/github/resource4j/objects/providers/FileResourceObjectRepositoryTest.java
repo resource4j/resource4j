@@ -1,9 +1,5 @@
 package com.github.resource4j.objects.providers;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.providers.mutable.FileResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;

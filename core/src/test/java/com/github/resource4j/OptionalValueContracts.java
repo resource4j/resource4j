@@ -1,11 +1,11 @@
 package com.github.resource4j;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public abstract class OptionalValueContracts extends ResourceValueContracts {
 	

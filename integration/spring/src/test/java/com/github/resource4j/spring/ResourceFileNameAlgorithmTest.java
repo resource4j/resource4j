@@ -1,12 +1,10 @@
 package com.github.resource4j.spring;
 
-import static org.junit.Assert.assertEquals;
-
+import com.github.resource4j.spring.annotations.support.FileNamePattern;
+import example.document.DocumentTemplate;
 import org.junit.Test;
 
-import com.github.resource4j.spring.annotations.support.FileNamePattern;
-
-import example.document.DocumentTemplate;
+import static org.junit.Assert.assertEquals;
 
 public class ResourceFileNameAlgorithmTest {
 

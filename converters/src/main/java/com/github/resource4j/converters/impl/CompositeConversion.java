@@ -4,7 +4,8 @@ import com.github.resource4j.converters.Conversion;
 import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
 
 @SuppressWarnings({"unchecked", "raw"})
 public class CompositeConversion implements Conversion<Object, Object> {

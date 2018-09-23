@@ -2,7 +2,6 @@ package com.github.resource4j.objects.providers;
 
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
-import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

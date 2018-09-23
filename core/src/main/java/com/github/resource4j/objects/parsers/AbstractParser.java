@@ -1,9 +1,12 @@
 package com.github.resource4j.objects.parsers;
 
-import java.io.IOException;
-
-import com.github.resource4j.*;
+import com.github.resource4j.OptionalValue;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectException;
+
+import java.io.IOException;
 
 /**
  * Basic implementation of a {@link ResourceParser} that provides a framework for specialized implementations.

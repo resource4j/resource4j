@@ -1,6 +1,6 @@
 package com.github.resource4j.converters;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -8,9 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.junit.Test;
-
-import com.github.resource4j.converters.TypeConverter;
+import static org.junit.Assert.*;
 
 public class TypeCastTest {
 

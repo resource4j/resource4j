@@ -1,13 +1,14 @@
 package com.github.resource4j.resources.context;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import org.junit.Test;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultResolutionContextMatcherTest {
 	

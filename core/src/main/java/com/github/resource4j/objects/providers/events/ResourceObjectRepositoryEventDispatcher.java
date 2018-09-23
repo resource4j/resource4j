@@ -1,13 +1,11 @@
 package com.github.resource4j.objects.providers.events;
 
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.function.Consumer;
 
 public class ResourceObjectRepositoryEventDispatcher implements ResourceObjectRepositoryListener {
 

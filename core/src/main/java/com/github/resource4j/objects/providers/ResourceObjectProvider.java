@@ -1,7 +1,6 @@
 package com.github.resource4j.objects.providers;
 
 import com.github.resource4j.ResourceObject;
-import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 

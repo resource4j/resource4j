@@ -1,15 +1,15 @@
 package com.github.resource4j.objects.parsers;
 
+import com.github.resource4j.OptionalString;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.values.GenericOptionalString;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
-
-import com.github.resource4j.OptionalString;
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.ResourceObject;
-import com.github.resource4j.values.GenericOptionalString;
 
 /**
  * @author Ivan Gammel

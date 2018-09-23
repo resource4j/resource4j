@@ -1,20 +1,5 @@
 package com.github.resource4j.objects.providers;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
-import static com.github.resource4j.objects.parsers.ResourceParsers.string;
-import static com.github.resource4j.objects.providers.ResourceObjectProviders.filesIn;
-import static com.github.resource4j.objects.providers.ResourceObjectProviders.inHeap;
-import static com.github.resource4j.objects.providers.ResourceObjectProviders.patternMatching;
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static com.github.resource4j.test.Builders.given;
-import static com.github.resource4j.test.TestClock.testFixed;
-import static java.time.Clock.systemUTC;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-
-import java.util.Locale;
-
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.providers.mutable.FileResourceObjectRepository;
@@ -22,6 +7,17 @@ import com.github.resource4j.test.TestClock;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.util.Locale;
+
+import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
+import static com.github.resource4j.objects.providers.ResourceObjectProviders.*;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static com.github.resource4j.test.Builders.given;
+import static com.github.resource4j.test.TestClock.testFixed;
+import static java.time.Clock.systemUTC;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class MappingResourceObjectProviderTest {
 

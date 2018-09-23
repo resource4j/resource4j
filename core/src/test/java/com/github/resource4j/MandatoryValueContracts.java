@@ -1,8 +1,8 @@
 package com.github.resource4j;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertSame;
 
 public abstract class MandatoryValueContracts extends ResourceValueContracts {
 

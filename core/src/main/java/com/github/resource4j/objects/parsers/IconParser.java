@@ -2,12 +2,10 @@ package com.github.resource4j.objects.parsers;
 
 import com.github.resource4j.ResourceObject;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 public class IconParser extends AbstractValueParser<Icon> {
 

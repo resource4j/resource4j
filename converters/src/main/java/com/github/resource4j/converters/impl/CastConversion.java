@@ -4,7 +4,6 @@ import com.github.resource4j.converters.Conversion;
 import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
-import java.util.Optional;
 import java.util.Set;
 
 public class CastConversion implements Conversion<Object,Object> {

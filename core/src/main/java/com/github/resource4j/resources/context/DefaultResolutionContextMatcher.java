@@ -1,11 +1,11 @@
 package com.github.resource4j.resources.context;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 
 public class DefaultResolutionContextMatcher implements ResolutionContextMatcher {
 

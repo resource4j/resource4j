@@ -1,7 +1,6 @@
 package com.github.resource4j.spring;
 
 import com.github.resource4j.ResourceException;
-import com.github.resource4j.converters.*;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.resources.processors.ResourceResolver;
 import com.github.resource4j.resources.processors.ResourceValuePostProcessor;
@@ -10,11 +9,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.context.expression.BeanFactoryResolver;
-import org.springframework.expression.*;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-
-import java.util.Collections;
 
 import static com.github.resource4j.converters.TypeConverter.convert;
 import static java.util.Collections.emptyMap;

@@ -13,7 +13,6 @@ import org.junit.Test;
 import java.time.Clock;
 import java.util.Locale;
 
-import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
 import static com.github.resource4j.objects.parsers.ResourceParsers.binary;
 import static com.github.resource4j.objects.providers.ResourceObjectRepositoryLogger.contain;

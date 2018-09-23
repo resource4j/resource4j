@@ -1,12 +1,12 @@
 package com.github.resource4j.values;
 
-import java.text.Format;
-import java.text.MessageFormat;
-import java.util.function.Function;
-
 import com.github.resource4j.*;
 import com.github.resource4j.converters.TypeCastException;
 import com.github.resource4j.converters.TypeConverter;
+
+import java.text.Format;
+import java.text.MessageFormat;
+import java.util.function.Function;
 
 /**
  * Generic implementation of {@link MandatoryString}.

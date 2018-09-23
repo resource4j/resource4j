@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.Locale;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DefaultObjectNameResolverTest {
 

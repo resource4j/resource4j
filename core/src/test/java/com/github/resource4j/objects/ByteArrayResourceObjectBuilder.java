@@ -4,7 +4,6 @@ import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.Builder;
 import com.github.resource4j.test.Builders;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class ByteArrayResourceObjectBuilder implements Builder<ByteArrayResourceObject> {

@@ -1,10 +1,5 @@
 package com.github.resource4j.objects.providers.mutable;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.Clock;
-
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.FileResourceObject;
 import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectException;
@@ -12,16 +7,18 @@ import com.github.resource4j.objects.exceptions.InvalidResourceObjectException;
 import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.exceptions.ResourceObjectRepositoryException;
 import com.github.resource4j.objects.providers.AbstractFileResourceObjectProvider;
-import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEventDispatcher;
 import com.github.resource4j.objects.providers.events.ResourceObjectRepositoryListener;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.created;
-import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.deleted;
-import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.modified;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.Clock;
+
+import static com.github.resource4j.objects.providers.events.ResourceObjectRepositoryEvent.*;
 
 public class FileResourceObjectRepository
         extends AbstractFileResourceObjectProvider<FileResourceObjectRepository>

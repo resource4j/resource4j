@@ -1,18 +1,13 @@
 package com.github.resource4j.values;
 
+import com.github.resource4j.*;
+import com.github.resource4j.converters.TypeCastException;
+import com.github.resource4j.converters.TypeConverter;
+
 import java.text.Format;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import com.github.resource4j.MandatoryString;
-import com.github.resource4j.MissingValueException;
-import com.github.resource4j.OptionalString;
-import com.github.resource4j.OptionalValue;
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.ValueNotAcceptableException;
-import com.github.resource4j.converters.TypeCastException;
-import com.github.resource4j.converters.TypeConverter;
 
 /**
  * Generic implementation of {@link OptionalString}.

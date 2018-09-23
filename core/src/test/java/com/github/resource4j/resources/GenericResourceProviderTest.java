@@ -1,16 +1,13 @@
 package com.github.resource4j.resources;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.*;
+import com.github.resource4j.AbstractResource4JTest;
+import com.github.resource4j.ResourceKey;
+import org.junit.Test;
 
 import java.util.Locale;
 
-import com.github.resource4j.AbstractResource4JTest;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static org.junit.Assert.assertEquals;
 
 public class GenericResourceProviderTest extends AbstractResource4JTest {
 

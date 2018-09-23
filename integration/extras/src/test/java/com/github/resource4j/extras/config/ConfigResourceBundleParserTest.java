@@ -1,17 +1,16 @@
 package com.github.resource4j.extras.config;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.net.URL;
-import java.util.Map;
-
+import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.URIResourceObject;
 import org.junit.Test;
 
-import com.github.resource4j.ResourceKey;
+import java.net.URL;
+import java.util.Map;
+
+import static com.github.resource4j.ResourceKey.bundle;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ConfigResourceBundleParserTest {
 

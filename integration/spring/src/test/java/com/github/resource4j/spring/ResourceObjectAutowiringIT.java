@@ -1,8 +1,7 @@
 package com.github.resource4j.spring;
 
-import static org.junit.Assert.assertEquals;
-
 import com.github.resource4j.spring.test.TestConfiguration;
+import example.document.DocumentTemplate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -12,7 +11,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import example.document.DocumentTemplate;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)

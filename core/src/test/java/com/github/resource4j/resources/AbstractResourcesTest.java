@@ -1,21 +1,17 @@
 package com.github.resource4j.resources;
 
-import static com.github.resource4j.ResourceKey.key;
-import static com.github.resource4j.objects.parsers.ResourceParsers.string;
-import static org.hamcrest.CoreMatchers.endsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.util.Locale;
-
+import com.github.resource4j.MandatoryString;
 import com.github.resource4j.OptionalString;
+import example.impl.ConcreteAction;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.resource4j.MandatoryString;
+import java.util.Locale;
 
-import example.impl.ConcreteAction;
+import static com.github.resource4j.ResourceKey.key;
+import static com.github.resource4j.objects.parsers.ResourceParsers.string;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.junit.Assert.*;
 
 public abstract class AbstractResourcesTest {
 

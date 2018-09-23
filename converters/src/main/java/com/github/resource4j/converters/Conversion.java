@@ -1,6 +1,5 @@
 package com.github.resource4j.converters;
 
-import java.util.Optional;
 import java.util.Set;
 
 public interface Conversion<F,T> {

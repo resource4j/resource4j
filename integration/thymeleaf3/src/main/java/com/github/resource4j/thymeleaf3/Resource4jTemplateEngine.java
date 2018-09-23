@@ -1,6 +1,9 @@
 package com.github.resource4j.thymeleaf3;
 
-import org.thymeleaf.*;
+import org.thymeleaf.IEngineConfiguration;
+import org.thymeleaf.ITemplateEngine;
+import org.thymeleaf.IThrottledTemplateProcessor;
+import org.thymeleaf.TemplateSpec;
 import org.thymeleaf.context.IContext;
 
 import java.io.Writer;

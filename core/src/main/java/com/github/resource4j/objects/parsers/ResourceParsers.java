@@ -1,9 +1,8 @@
 package com.github.resource4j.objects.parsers;
 
-import java.util.Properties;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import javax.swing.*;
+import java.util.Properties;
 
 /**
  * Namespace class for functions returning various parser instances.

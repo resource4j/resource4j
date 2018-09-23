@@ -1,6 +1,8 @@
 package com.github.resource4j.objects.providers;
 
-import static java.util.regex.Pattern.compile;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
+import com.github.resource4j.resources.context.ResourceResolutionContext;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -8,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
-import com.github.resource4j.resources.context.ResourceResolutionContext;
+import static java.util.regex.Pattern.compile;
 
 /**
  * This resource object provider provides a mechanism to load resource objects from different contexts parameterized pattern

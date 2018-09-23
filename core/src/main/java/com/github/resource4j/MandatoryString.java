@@ -1,9 +1,9 @@
 package com.github.resource4j;
 
+import com.github.resource4j.converters.TypeCastException;
+
 import java.text.Format;
 import java.text.MessageFormat;
-
-import com.github.resource4j.converters.TypeCastException;
 
 /**
  * Specialized representation of {@link MandatoryValue} for values of type String.

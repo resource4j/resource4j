@@ -1,11 +1,7 @@
 package com.github.resource4j.util;
 
-import javax.naming.SizeLimitExceededException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
 
 public final class IO {

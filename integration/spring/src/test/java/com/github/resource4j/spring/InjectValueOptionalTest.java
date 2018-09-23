@@ -1,11 +1,7 @@
 package com.github.resource4j.spring;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Optional;
-
+import com.github.resource4j.spring.annotations.InjectBundle;
+import com.github.resource4j.spring.annotations.InjectValue;
 import com.github.resource4j.spring.test.TestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +11,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.resource4j.spring.annotations.InjectBundle;
-import com.github.resource4j.spring.annotations.InjectValue;
+import java.util.Optional;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)

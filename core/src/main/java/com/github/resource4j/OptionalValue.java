@@ -1,16 +1,16 @@
 package com.github.resource4j;
 
+import com.github.resource4j.converters.TypeCastException;
+import com.github.resource4j.converters.TypeConverter;
+import com.github.resource4j.values.GenericOptionalString;
+import com.github.resource4j.values.GenericOptionalValue;
+
 import java.text.Format;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import com.github.resource4j.values.GenericOptionalString;
-import com.github.resource4j.values.GenericOptionalValue;
-import com.github.resource4j.converters.TypeCastException;
-import com.github.resource4j.converters.TypeConverter;
 
 /**
  * Resource value explicitly defined as nullable.

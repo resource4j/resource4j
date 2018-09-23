@@ -1,11 +1,14 @@
 package com.github.resource4j.objects.parsers;
 
+import com.github.resource4j.OptionalValue;
+import com.github.resource4j.ResourceKey;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.ResourceObjectException;
+import com.github.resource4j.values.GenericOptionalValue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.github.resource4j.*;
-import com.github.resource4j.values.GenericOptionalValue;
 
 public class ByteArrayParser extends AbstractParser<byte[], OptionalValue<byte[]>> {
 

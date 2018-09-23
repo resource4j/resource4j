@@ -1,14 +1,10 @@
 package com.github.resource4j.spring.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 import com.github.resource4j.spring.context.EmptyResolutionContextProvider;
 import com.github.resource4j.spring.context.ResolutionContextProvider;
+
+import java.lang.annotation.*;
 
 /**
  * Injects value of annotated field parameterized Resource4J framework.

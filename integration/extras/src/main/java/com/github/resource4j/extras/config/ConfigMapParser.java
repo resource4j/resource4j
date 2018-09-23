@@ -1,14 +1,5 @@
 package com.github.resource4j.extras.config;
 
-import static com.github.resource4j.extras.config.ConfigParser.config;
-import static com.typesafe.config.ConfigParseOptions.defaults;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.parsers.AbstractValueParser;
@@ -18,6 +9,15 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.ConfigSyntax;
 import com.typesafe.config.ConfigValue;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static com.github.resource4j.extras.config.ConfigParser.config;
+import static com.typesafe.config.ConfigParseOptions.defaults;
 
 @SuppressWarnings("WeakerAccess")
 @ContentType(extension = ".config", mimeType = "text/x-java-properties")

@@ -3,7 +3,6 @@ package com.github.resource4j.objects.providers;
 import com.github.resource4j.MissingValueException;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.objects.exceptions.MissingResourceObjectException;
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.ResourceValueRepository;
 import org.junit.Test;

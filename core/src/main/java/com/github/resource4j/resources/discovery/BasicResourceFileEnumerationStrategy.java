@@ -1,10 +1,10 @@
 package com.github.resource4j.resources.discovery;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.resource4j.resources.context.ResourceResolutionComponent;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Supports only resolution contexts of form {Locale, String}

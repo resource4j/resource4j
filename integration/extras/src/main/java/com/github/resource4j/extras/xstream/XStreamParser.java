@@ -1,7 +1,5 @@
 package com.github.resource4j.extras.xstream;
 
-import java.io.IOException;
-
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.parsers.AbstractValueParser;
@@ -9,6 +7,8 @@ import com.github.resource4j.objects.parsers.ResourceObjectFormatException;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+
+import java.io.IOException;
 
 public class XStreamParser<T> extends AbstractValueParser<T> {
 

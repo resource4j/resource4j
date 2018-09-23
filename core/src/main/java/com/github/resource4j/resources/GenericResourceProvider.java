@@ -1,13 +1,13 @@
 package com.github.resource4j.resources;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-
-import java.util.Locale;
-
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
+
+import java.util.Locale;
+
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 
 
 public class GenericResourceProvider implements ResourceProvider {

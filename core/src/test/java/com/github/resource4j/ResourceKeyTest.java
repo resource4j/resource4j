@@ -1,15 +1,12 @@
 package com.github.resource4j;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static com.github.resource4j.ResourceKey.key;
-import static com.github.resource4j.ResourceKey.plain;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-
 import example.api.Action;
 import example.api.ExampleEnum;
+import org.junit.Test;
+
+import static com.github.resource4j.ResourceKey.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ResourceKeyTest {
 

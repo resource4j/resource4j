@@ -1,8 +1,9 @@
 package com.github.resource4j.converters;
 
-import static com.github.resource4j.converters.TypeConverter.convert;
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeNotNull;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import java.lang.reflect.Array;
 import java.time.*;
@@ -11,10 +12,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.function.BiFunction;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import static com.github.resource4j.converters.TypeConverter.convert;
+import static org.junit.Assert.*;
+import static org.junit.Assume.assumeNotNull;
 
 @RunWith(Parameterized.class)
 public class IdenticalTypeCastTest {

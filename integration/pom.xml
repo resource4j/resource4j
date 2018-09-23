@@ -14,7 +14,6 @@
 
 	<modules>
 		<module>spring</module>
-		<module>thymeleaf</module>
 		<module>thymeleaf3</module>
 		<module>extras</module>
 	</modules>

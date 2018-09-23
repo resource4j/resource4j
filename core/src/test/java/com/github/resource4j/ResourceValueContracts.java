@@ -1,9 +1,9 @@
 package com.github.resource4j;
 
+import org.junit.Test;
+
 import static com.github.resource4j.ResourceKey.key;
 import static org.junit.Assert.assertSame;
-
-import org.junit.Test;
 
 public abstract class ResourceValueContracts {
 

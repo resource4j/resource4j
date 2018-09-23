@@ -1,6 +1,6 @@
 package com.github.resource4j;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public abstract class MandatoryStringContracts extends MandatoryValueContracts {
 

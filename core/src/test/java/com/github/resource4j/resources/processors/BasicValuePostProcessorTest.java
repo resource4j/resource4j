@@ -1,11 +1,9 @@
 package com.github.resource4j.resources.processors;
 
-import com.github.resource4j.resources.context.ResourceResolutionContext;
 import org.junit.Test;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.with;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 

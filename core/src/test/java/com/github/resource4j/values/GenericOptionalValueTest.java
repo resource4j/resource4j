@@ -3,7 +3,6 @@ package com.github.resource4j.values;
 import com.github.resource4j.OptionalValue;
 import com.github.resource4j.OptionalValueContracts;
 import com.github.resource4j.ResourceKey;
-import com.github.resource4j.values.GenericOptionalValue;
 
 public class GenericOptionalValueTest extends OptionalValueContracts {
 

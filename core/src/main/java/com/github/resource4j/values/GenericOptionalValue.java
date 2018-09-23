@@ -1,14 +1,10 @@
 package com.github.resource4j.values;
 
+import com.github.resource4j.*;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import com.github.resource4j.MandatoryValue;
-import com.github.resource4j.MissingValueException;
-import com.github.resource4j.OptionalValue;
-import com.github.resource4j.ResourceKey;
-import com.github.resource4j.ValueNotAcceptableException;
 
 /**
  * Generic implementation of {@link OptionalValue}.

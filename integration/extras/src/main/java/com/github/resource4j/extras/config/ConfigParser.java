@@ -1,17 +1,13 @@
 package com.github.resource4j.extras.config;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.parsers.AbstractValueParser;
 import com.github.resource4j.objects.parsers.ResourceObjectFormatException;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigException;
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigParseOptions;
-import com.typesafe.config.ConfigSyntax;
+import com.typesafe.config.*;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 @SuppressWarnings("WeakerAccess")
 public class ConfigParser extends AbstractValueParser<Config> {

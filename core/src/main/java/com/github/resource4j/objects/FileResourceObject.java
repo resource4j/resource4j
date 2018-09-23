@@ -2,7 +2,10 @@ package com.github.resource4j.objects;
 
 import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class FileResourceObject extends AbstractResourceObject {
 

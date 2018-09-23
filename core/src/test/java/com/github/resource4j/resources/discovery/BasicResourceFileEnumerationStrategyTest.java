@@ -1,15 +1,14 @@
 package com.github.resource4j.resources.discovery;
 
-import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.assertEquals;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 import java.util.Locale;
 
-import com.github.resource4j.resources.discovery.BasicResourceFileEnumerationStrategy;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
+import static org.junit.Assert.assertEquals;
 
 public class BasicResourceFileEnumerationStrategyTest {
 

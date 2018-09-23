@@ -1,15 +1,12 @@
 package com.github.resource4j.objects.parsers;
 
-import static com.github.resource4j.ResourceKey.bundle;
-import static org.junit.Assert.assertEquals;
+import com.github.resource4j.ResourceObject;
+import com.github.resource4j.objects.ByteArrayResourceObject;
+import org.junit.Test;
 
 import java.io.IOException;
 
-import com.github.resource4j.ResourceObject;
-import com.github.resource4j.objects.parsers.StringParser;
-import org.junit.Test;
-
-import com.github.resource4j.objects.ByteArrayResourceObject;
+import static org.junit.Assert.assertEquals;
 
 public class StringParserTest {
 

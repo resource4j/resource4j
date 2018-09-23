@@ -1,7 +1,7 @@
 package com.github.resource4j.i18n.plural_rules.ldml;
 
-import com.github.resource4j.i18n.plural_rules.PluralCategory;
 import com.github.resource4j.i18n.plural_rules.PluralCase;
+import com.github.resource4j.i18n.plural_rules.PluralCategory;
 import com.github.resource4j.i18n.plural_rules.PluralRule;
 import com.github.resource4j.i18n.plural_rules.PluralRuleBuilder;
 import org.w3c.dom.Document;

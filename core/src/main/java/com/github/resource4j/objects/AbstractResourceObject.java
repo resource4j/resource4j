@@ -1,6 +1,6 @@
 package com.github.resource4j.objects;
 
-import com.github.resource4j.*;
+import com.github.resource4j.ResourceObject;
 
 import java.util.Objects;
 
