@@ -6,7 +6,7 @@
 
 	<groupId>com.github.resource4j</groupId>
 	<artifactId>resource4j-parent</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.0</version>
 	<packaging>pom</packaging>
 
 	<name>Resource4J</name>
@@ -34,8 +34,6 @@
 		<developer>
 			<name>Ivan Gammel</name>
 			<email>ivan.gammel@gmail.com</email>
-			<organization>Align Technology, Inc.</organization>
-			<organizationUrl>http://www.aligntech.com</organizationUrl>
 		</developer>
 	</developers>
 
