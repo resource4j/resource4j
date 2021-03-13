@@ -2,12 +2,12 @@ package com.github.resource4j.resources;
 
 import com.github.resource4j.AbstractResource4JTest;
 import com.github.resource4j.ResourceKey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GenericResourceProviderTest extends AbstractResource4JTest {
 

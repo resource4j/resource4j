@@ -1,11 +1,11 @@
 package com.github.resource4j.resources.processors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.with;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static java.util.stream.Collectors.joining;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BasicValuePostProcessorTest {
 

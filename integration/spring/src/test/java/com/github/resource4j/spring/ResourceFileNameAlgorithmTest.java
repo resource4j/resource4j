@@ -2,9 +2,9 @@ package com.github.resource4j.spring;
 
 import com.github.resource4j.spring.annotations.support.FileNamePattern;
 import example.document.DocumentTemplate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ResourceFileNameAlgorithmTest {
 

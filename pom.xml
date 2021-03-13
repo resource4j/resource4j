@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
     <prerequisites>
-        <maven>3.0</maven>
+        <maven>3.6.3</maven>
     </prerequisites>
 
 	<groupId>com.github.resource4j</groupId>
 	<artifactId>resource4j-parent</artifactId>
-	<version>3.2.0</version>
+	<version>3.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Resource4J</name>
@@ -33,7 +33,6 @@
 	<developers>
 		<developer>
 			<name>Ivan Gammel</name>
-			<email>ivan.gammel@gmail.com</email>
 		</developer>
 	</developers>
 
@@ -41,7 +40,7 @@
 		<connection>scm:git:git@github.com:resource4j/resource4j.git</connection>
 		<developerConnection>scm:git:git@github.com:resource4j/resource4j.git</developerConnection>
 		<url>git@github.com:resource4j/resource4j.git</url>
-	  <tag>release-3.0.0</tag>
+	  	<tag>release-3.3.0</tag>
   </scm>
 
 	<distributionManagement>
@@ -57,17 +56,18 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<junit.jupiter.version>5.7.0</junit.jupiter.version>
 
 		<!-- Logging -->
-		<slf4j.version>1.7.21</slf4j.version>
-		<logback.version>1.1.7</logback.version>
+		<slf4j.version>1.7.30</slf4j.version>
+		<logback.version>1.2.3</logback.version>
 
 		<!-- Integration -->
-		<springframework.version>5.0.9.RELEASE</springframework.version>
-		<spring-boot.version>2.0.5.RELEASE</spring-boot.version>
+		<springframework.version>5.3.4</springframework.version>
+		<spring-boot.version>2.4.3</spring-boot.version>
 		<aspectj.version>1.8.6</aspectj.version>
 
-		<thymeleaf-spring5.version>3.0.9.RELEASE</thymeleaf-spring5.version>
+		<thymeleaf-spring5.version>3.0.12.RELEASE</thymeleaf-spring5.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -78,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -87,10 +87,28 @@
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
+                <version>3.0.0-M1</version><!--$NO-MVN-MAN-VER$ -->
                 <configuration>
                     <tagNameFormat>@{project.version}</tagNameFormat>
                     <remoteTagging>false</remoteTagging>
@@ -100,6 +118,79 @@
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<configuration>
+					<argLine>${surefireArgLine}</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<argLine>${failsafeArgLine}</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.6</version>
+				<executions>
+					<execution>
+						<id>pre-unit-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>/${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+							<propertyName>surefireArgLine</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-unit-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+							<outputDirectory>${project.build.directory}/jacoco-ut</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pre-integration-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>/${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+							<propertyName>failsafeArgLine</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-integration-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+							<outputDirectory>${project.build.directory}/jacoco-it</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -125,7 +216,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.2.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -138,7 +229,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.4</version>
+                        <version>3.2.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -151,7 +242,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.6.8</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -162,92 +253,6 @@
                 </plugins>
             </build>
         </profile>
-	   <profile>
-	       <id>quality-report</id>
-	       <activation>
-	           <property>
-	               <name>sqa</name>
-	               <value>true</value>
-	           </property>
-	       </activation>
-	       <build>
-	           <plugins>
-	               <plugin>
-	                   <groupId>org.apache.maven.plugins</groupId>
-	                   <artifactId>maven-surefire-plugin</artifactId>
-	                   <version>2.19.1</version>
-	                   <configuration>
-	                       <argLine>${surefireArgLine}</argLine>
-	                   </configuration>
-	               </plugin>
-	               <plugin>
-	                   <groupId>org.apache.maven.plugins</groupId>
-	                   <artifactId>maven-failsafe-plugin</artifactId>
-	                   <version>2.19.1</version>
-	                   <executions>
-	                       <execution>
-	                           <goals>
-	                               <goal>integration-test</goal>
-	                               <goal>verify</goal>
-	                           </goals>
-	                       </execution>
-	                   </executions>
-	                   <configuration>
-	                       <argLine>${failsafeArgLine}</argLine>
-	                   </configuration>
-	               </plugin>
-	               <plugin>
-	                   <groupId>org.jacoco</groupId>
-	                   <artifactId>jacoco-maven-plugin</artifactId>
-	                   <version>0.7.6.201602180812</version>
-	                   <executions>
-	                       <execution>
-	                           <id>pre-unit-test</id>
-	                           <goals>
-	                               <goal>prepare-agent</goal>
-	                           </goals>
-	                           <configuration>
-	                               <destFile>/${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-	                               <propertyName>surefireArgLine</propertyName>
-	                           </configuration>
-	                       </execution>
-	                       <execution>
-	                           <id>post-unit-test</id>
-	                           <phase>test</phase>
-	                           <goals>
-	                               <goal>report</goal>
-	                           </goals>
-	                           <configuration>
-	                               <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-	                               <outputDirectory>${project.build.directory}/jacoco-ut</outputDirectory>
-	                           </configuration>
-	                       </execution>
-                           <execution>
-                               <id>pre-integration-test</id>
-                               <goals>
-                                   <goal>prepare-agent</goal>
-                               </goals>
-                               <configuration>
-                                   <destFile>/${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                                   <propertyName>failsafeArgLine</propertyName>
-                               </configuration>
-                           </execution>
-                           <execution>
-                               <id>post-integration-test</id>
-                               <phase>test</phase>
-                               <goals>
-                                   <goal>report</goal>
-                               </goals>
-                               <configuration>
-                                   <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                                   <outputDirectory>${project.build.directory}/jacoco-it</outputDirectory>
-                               </configuration>
-                           </execution>
-	                   </executions>
-	               </plugin>
-	           </plugins>
-	       </build>
-	   </profile>
 	</profiles>
 
 	<dependencyManagement>
@@ -306,6 +311,12 @@
 
             <dependency>
                 <groupId>org.thymeleaf</groupId>
+                <artifactId>thymeleaf</artifactId>
+                <version>${thymeleaf-spring5.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.thymeleaf</groupId>
                 <artifactId>thymeleaf-spring5</artifactId>
                 <version>${thymeleaf-spring5.version}</version>
             </dependency>
@@ -324,9 +335,15 @@
 			</dependency>
 
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.12</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit.jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-library</artifactId>
+				<version>2.2</version>
 				<scope>test</scope>
 			</dependency>
 

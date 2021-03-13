@@ -9,6 +9,7 @@ import com.thoughtworks.xstream.XStreamException;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class XStreamParser<T> extends AbstractValueParser<T> {
 
@@ -34,8 +35,8 @@ public class XStreamParser<T> extends AbstractValueParser<T> {
 	@Override
 	protected T parse(ResourceObject file) throws IOException, ResourceObjectException {
 		Object object = null;
-		try {
-			object = xstream.fromXML(file.asStream());
+		try (InputStream stream = file.asStream()) {
+			object = xstream.fromXML(stream);
 			return type.cast(object);
 		} catch (XStreamException e) {
 			throw new ResourceObjectFormatException(file, "Cannot parse resource object");

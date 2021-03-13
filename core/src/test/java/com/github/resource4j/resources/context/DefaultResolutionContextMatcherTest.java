@@ -1,14 +1,13 @@
 package com.github.resource4j.resources.context;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultResolutionContextMatcherTest {
 	
@@ -20,7 +19,7 @@ public class DefaultResolutionContextMatcherTest {
 		List<ResourceResolutionContext> matches = matcher.matches(single);
 		assertEquals(2, matches.size());
 		assertEquals("A", matches.get(0).toString());
-		assertTrue(matches.get(1).components().length == 0);
+		assertEquals(0, matches.get(1).components().length);
 	}
 
 	@Test
@@ -30,7 +29,7 @@ public class DefaultResolutionContextMatcherTest {
 		assertEquals(3, matches.size());
 		assertEquals("A_B", matches.get(0).toString());
 		assertEquals("A", matches.get(1).toString());
-		assertTrue(matches.get(2).components().length == 0);
+		assertEquals(0, matches.get(2).components().length);
 	}
 	
 	@Test
@@ -46,7 +45,7 @@ public class DefaultResolutionContextMatcherTest {
 		assertEquals("en_US", matches.get(2).toString());
 		assertEquals("en", matches.get(3).toString());
 		assertEquals("web", matches.get(4).toString());
-		assertTrue(matches.get(5).components().length == 0);
+		assertEquals(0, matches.get(5).components().length);
 	}
 	
 	@Test
@@ -60,7 +59,7 @@ public class DefaultResolutionContextMatcherTest {
 		assertEquals("env-ctx", matches.get(3).toString());
 		assertEquals("env", matches.get(4).toString());
 		assertEquals("ctx", matches.get(5).toString());
-		assertTrue(matches.get(6).components().length == 0);
+		assertEquals(0, matches.get(6).components().length);
 	}	
 
 }

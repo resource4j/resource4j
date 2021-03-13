@@ -2,11 +2,11 @@ package com.github.resource4j;
 
 import example.api.Action;
 import example.api.ExampleEnum;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.resource4j.ResourceKey.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ResourceKeyTest {
 

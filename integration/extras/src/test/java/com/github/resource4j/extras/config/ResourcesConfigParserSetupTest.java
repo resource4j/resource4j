@@ -3,13 +3,14 @@ package com.github.resource4j.extras.config;
 import com.github.resource4j.OptionalString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.RefreshableResources;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.resource4j.extras.config.ConfigMapParser.configMap;
 import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ResourcesConfigParserSetupTest {
 

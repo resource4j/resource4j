@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 
 public class ResourceObjectRepositoryLogger implements ResourceObjectRepositoryListener {
 
-    private List<ResourceObjectRepositoryEvent> events = new ArrayList<>();
+    private final List<ResourceObjectRepositoryEvent> events = new ArrayList<>();
 
     @Override
     public void repositoryUpdated(ResourceObjectRepositoryEvent event) {
@@ -28,7 +28,7 @@ public class ResourceObjectRepositoryLogger implements ResourceObjectRepositoryL
             @Override
             public boolean matches(Object o) {
                 ResourceObjectRepositoryLogger logger = (ResourceObjectRepositoryLogger) o;
-                return logger.events.stream().filter(matcher).findAny().isPresent();
+                return logger.events.stream().anyMatch(matcher);
             }
             @Override
             public void describeTo(Description description) {

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.3.0-SNAPSHOT</version>
 	</parent>
 
     <artifactId>resource4j-core</artifactId>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>25.1-jre</version>
+            <version>30.1-jre</version>
             <optional>true</optional>
         </dependency>
 
@@ -61,8 +61,14 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
         </dependency>
 

@@ -1,6 +1,6 @@
 package com.github.resource4j.resources.context;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ResourceResolutionContextTest {
 

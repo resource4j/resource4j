@@ -130,10 +130,6 @@ public class BasicValueParserStateMachine implements StateMachineListener<BasicV
             key.append(ID_COMPONENT_DELIMITER).append(entry.getValue());
         }
         Object value = resolver.resolve(key.toString(), property, params);
-//        Object value = resourceResolver.get(key.toString(), params);
-//        if (property != null) {
-//            value = propertyResolver.resolve(value, property, resourceResolver);
-//        }
         return TypeConverter.convert(value, String.class);
     }
 

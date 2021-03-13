@@ -3,14 +3,13 @@ package com.github.resource4j.extras.config;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.URIResourceObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 import java.util.Map;
 
 import static com.github.resource4j.ResourceKey.bundle;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConfigResourceBundleParserTest {
 

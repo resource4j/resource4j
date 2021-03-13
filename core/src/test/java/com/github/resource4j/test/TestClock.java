@@ -1,16 +1,12 @@
 package com.github.resource4j.test;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-
 import java.io.Serializable;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 
-public class TestClock extends Clock implements Serializable, TestRule {
+public class TestClock extends Clock implements Serializable  {
     private static final long serialVersionUID = 7430389292664866958L;
     private final Instant instant;
     private final ZoneId zone;
@@ -64,22 +60,7 @@ public class TestClock extends Clock implements Serializable, TestRule {
         return new DSL(duration);
     }
 
-    @Override
-    public Statement apply(Statement base, Description description) {
-        return statement(base);
-    }
-
-    private Statement statement(final Statement base) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                reset();
-                base.evaluate();
-            }
-        };
-    }
-
-    protected void reset() {
+    public void reset() {
         this.duration = Duration.ZERO;
     }
 

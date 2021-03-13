@@ -6,7 +6,7 @@ import com.github.resource4j.resources.RefreshableResources;
 import com.github.resource4j.resources.Resources;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.resources.discovery.PropertyBundleBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.time.Clock;
@@ -18,7 +18,7 @@ import static com.github.resource4j.resources.cache.impl.GuavaCache.guava;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
 import static com.github.resource4j.resources.discovery.PropertyBundleBuilder.aPropertiesBundle;
 import static com.google.common.cache.CacheBuilder.newBuilder;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GuavaCacheConfigurationTest {
 

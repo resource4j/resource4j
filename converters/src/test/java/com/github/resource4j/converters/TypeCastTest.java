@@ -1,108 +1,105 @@
 package com.github.resource4j.converters;
 
-import org.junit.Test;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TypeCastTest {
 
 	@Test
-	public void convertNullToAnything() throws ParseException {
+	public void convertNullToAnything() {
 		assertNull(TypeConverter.convert(null, Object.class));
 	}
 	
 	@Test
-	public void testParseIntInLocale() throws ParseException {
+	public void testParseIntInLocale() {
 		Long value = TypeConverter.convert("3,000,000", Long.class, DecimalFormat.getNumberInstance(Locale.US));
 		assertNotNull(value);
 		assertEquals(3000000L, value.longValue());
 	}
 	
     @Test
-    public void testParseLong() throws ParseException {
+    public void testParseLong() {
         Long value = TypeConverter.convert("12345", Long.TYPE);
         assertNotNull(value);
         assertEquals(12345L, value.longValue());
     }
     
     @Test
-    public void testParseInt() throws ParseException {
+    public void testParseInt() {
         Integer value = TypeConverter.convert("12345", Integer.TYPE);
         assertNotNull(value);
         assertEquals(12345, value.intValue());
     }
 
     @Test
-    public void testParseShort() throws ParseException {
+    public void testParseShort() {
         Short value = TypeConverter.convert("12345", Short.TYPE);
         assertNotNull(value);
         assertEquals((short) 12345, value.shortValue()); // NOPMD by igammel whenRequested 30.03.12 15:39
     }
 
     @Test
-    public void testParseByte() throws ParseException {
+    public void testParseByte() {
         Byte value = TypeConverter.convert("123", Byte.TYPE);
         assertNotNull(value);
         assertEquals((byte) 123, value.byteValue());
     }
 
     @Test
-    public void testParseDouble() throws ParseException {
+    public void testParseDouble() {
         Double value = TypeConverter.convert("12345.67", Double.TYPE);
         assertNotNull(value);
-        assertEquals(12345.67, value.doubleValue(), 0.00000001);
+        assertEquals(12345.67, value, 0.00000001);
     }
 
     @Test
-    public void testParseFloat() throws ParseException {
+    public void testParseFloat() {
         Float value = TypeConverter.convert("12345.67", Float.TYPE);
         assertNotNull(value);
-        assertEquals(12345.67f, value.floatValue(), 0.00000001);
+        assertEquals(12345.67f, value, 0.00000001);
     }
     
     @Test
-    public void testParseBoolean() throws ParseException {
+    public void testParseBoolean() {
         Boolean value = TypeConverter.convert("true", Boolean.TYPE);
         assertNotNull(value);
-        assertTrue(value.booleanValue());
+        assertTrue(value);
     }
     
     @Test
-    public void testParseChar() throws ParseException {
+    public void testParseChar() {
         Character value = TypeConverter.convert("y", Character.TYPE);
         assertNotNull(value);
         assertEquals('y', value.charValue());
     }
 
     @Test
-    public void testParseDate() throws ParseException {
+    public void testParseDate() {
         Calendar expected = new GregorianCalendar(1997, Calendar.JULY, 16);
         Date date = TypeConverter.convert("1997-07-16", Date.class, new SimpleDateFormat("yyyy-MM-dd"));
         assertEquals(expected.getTime(), date);
     }
     
     @Test
-    public void testCastBooleanToPrimitive() throws ParseException {
-        Boolean value = Boolean.TRUE;
-        Boolean result = TypeConverter.convert(value, Boolean.TYPE);
-        assertSame(value, result);
+    public void testCastBooleanToPrimitive() {
+        Boolean result = TypeConverter.convert(Boolean.TRUE, Boolean.TYPE);
+        assertSame(Boolean.TRUE, result);
     }
 
     @Test
-    public void testCastIntegerToPrimitive() throws ParseException {
-        Integer value = Integer.valueOf(0);
+    public void testCastIntegerToPrimitive() {
+        Integer value = 0;
         Integer result = TypeConverter.convert(value, Integer.TYPE);
         assertSame(value, result);
     }
 
     @Test
-    public void testCastUtilDateToSQLDate() throws ParseException {
+    public void testCastUtilDateToSQLDate() {
         GregorianCalendar calendar = new GregorianCalendar(2012, Calendar.JANUARY, 10);
         long millis = calendar.getTimeInMillis();
         java.util.Date value = new java.util.Date(millis);
@@ -111,7 +108,7 @@ public class TypeCastTest {
     }
 
     @Test
-    public void testCastSQLDateToUtilDate() throws ParseException {
+    public void testCastSQLDateToUtilDate() {
         GregorianCalendar calendar = new GregorianCalendar(2012, Calendar.JANUARY, 10);
         long millis = calendar.getTimeInMillis();
         java.sql.Date value = new java.sql.Date(millis);
@@ -120,7 +117,7 @@ public class TypeCastTest {
     }
 
     @Test
-    public void testCastSQLDateToCalendar() throws ParseException {
+    public void testCastSQLDateToCalendar() {
         GregorianCalendar calendar = new GregorianCalendar(2012, Calendar.JANUARY, 10);
         long millis = calendar.getTimeInMillis();
         java.sql.Date value = new java.sql.Date(millis);
@@ -138,7 +135,7 @@ public class TypeCastTest {
     }
 
     @Test
-    public void testCastCalendarToSQLDate() throws ParseException {
+    public void testCastCalendarToSQLDate() {
         GregorianCalendar calendar = new GregorianCalendar(2012, Calendar.JANUARY, 10);
         long millis = calendar.getTimeInMillis();
         java.sql.Date value = new java.sql.Date(millis);

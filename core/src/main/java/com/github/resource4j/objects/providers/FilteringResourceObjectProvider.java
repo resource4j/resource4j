@@ -20,7 +20,10 @@ public class FilteringResourceObjectProvider implements ResourceObjectProvider, 
 
     @Override
     public ResourceObject get(String name, ResourceResolutionContext context) throws ResourceObjectAccessException {
-        String realName = basePath + (name.startsWith("/") ? name : '/' + name);
+        int idx = name.indexOf(':');
+        String schema = idx >= 0 ? name.substring(0, idx + 1) : "";
+        String path = idx >= 0 ? name.substring(idx + 1) : name;
+        String realName = schema + basePath + (path.startsWith("/") ? path : '/' + path);
         return provider.get(realName, context);
     }
 

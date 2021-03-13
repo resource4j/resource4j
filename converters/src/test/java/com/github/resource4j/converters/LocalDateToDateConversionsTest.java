@@ -1,13 +1,12 @@
 package com.github.resource4j.converters;
 
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LocalDateToDateConversionsTest {
 

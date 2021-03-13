@@ -1,27 +1,24 @@
 package com.github.resource4j.converters;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.lang.reflect.Array;
 import java.time.*;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 import static com.github.resource4j.converters.TypeConverter.convert;
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-@RunWith(Parameterized.class)
 public class IdenticalTypeCastTest {
 
-    @Parameters(name = "\"{3}\" of {1} as {2}")
- 	public static Iterable<Object[]> data() {
- 		return Arrays.asList(new Object[][] {
+ 	public static Stream<Arguments> parameters() {
+ 		return Stream.of(new Object[][] {
  				{ (byte) 1, Byte.class, Byte.TYPE, "1", null },
  				{ (short) 1, Short.class, Short.TYPE, "1", null },
  				{ 1, Integer.class, Integer.TYPE, "1", null },
@@ -41,7 +38,7 @@ public class IdenticalTypeCastTest {
                 { time().toLocalDateTime(), LocalDateTime.class, null, "2015-01-01T11:59:23", null },
                 { time().toLocalDate(), LocalDate.class, null, "2015-01-01", null },
                 { new Object(), Object.class, null, null, null },
-		});
+		}).map(Arguments::of);
      }
 
     private static <T> BiFunction<T, T, Boolean> compare(BiFunction<T,T,Boolean> fn) {
@@ -57,51 +54,66 @@ public class IdenticalTypeCastTest {
         return ZonedDateTime.of(2015, 1, 1, 11, 59, 23, 0, ZoneOffset.UTC);
     }
 
-	private Object value;
-	private Class<?> sameType;
-	private Class<?> toType;
-	private String string;
-    private final BiFunction<Object, Object, Boolean> comparator;
-
-    public IdenticalTypeCastTest(Object value, Class<?> sameType, Class<?> toType, String string, BiFunction<Object,Object,Boolean> comparator) {
-		super();
-		this.value = value;
-		this.sameType = sameType;
-		this.toType = toType;
-		this.string = string;
-        this.comparator = comparator;
-	}
-
-	@Test
-	public void testConversionToSameType() {
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void testConversionToSameType(
+			Object value,
+			Class<?> sameType,
+			Class<?> toType,
+			String string,
+			BiFunction<Object, Object, Boolean> comparator) {
 		assertSame(value, convert(value, sameType));
 	}
-	
-	@Test
-	public void testConversionOfNullToType() {
+
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void testConversionOfNullToType(
+			Object value,
+			Class<?> sameType,
+			Class<?> toType,
+			String string,
+			BiFunction<Object, Object, Boolean> comparator) {
 		assertNull(convert(null, sameType));
 	}
 
-	@Test
-	public void testConversionToPrimitiveOrSupertype() {
-		assumeNotNull(toType);
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void testConversionToPrimitiveOrSupertype(
+			Object value,
+			Class<?> sameType,
+			Class<?> toType,
+			String string,
+			BiFunction<Object, Object, Boolean> comparator) {
+		assumeTrue(toType != null);
 		assertEquals(value, convert(value, toType));
 	}
 
-	@Test
-	public void testConversionToString() {
-		assumeNotNull(string);
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void testConversionToString(
+			Object value,
+			Class<?> sameType,
+			Class<?> toType,
+			String string,
+			BiFunction<Object, Object, Boolean> comparator) {
+		assumeTrue(string != null);
 		assertEquals(string, convert(value, String.class));
 	}
 
-	@Test
-	public void testConversionFromString() {
-		assumeNotNull(string);
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void testConversionFromString(
+			Object value,
+			Class<?> sameType,
+			Class<?> toType,
+			String string,
+			BiFunction<Object, Object, Boolean> comparator) {
+		assumeTrue(string != null);
 		Object converted = convert(string, sameType);
-        assertEqualsByCompare(value, converted);
+        assertEqualsByCompare(value, converted, comparator);
 	}
 
-    private void assertEqualsByCompare(Object expected, Object actual) {
+    private void assertEqualsByCompare(Object expected, Object actual, BiFunction<Object, Object, Boolean> comparator) {
         if (comparator == null) {
             assertEquals(expected, actual);
         } else {
@@ -109,9 +121,15 @@ public class IdenticalTypeCastTest {
         }
     }
 
-	@Test
-	public void testConversionFromStringArray() {
-		assumeNotNull(string);
+	@ParameterizedTest
+	@MethodSource("parameters")
+	public void testConversionFromStringArray(
+			Object value,
+			Class<?> sameType,
+			Class<?> toType,
+			String string,
+			BiFunction<Object, Object, Boolean> comparator) {
+		assumeTrue(string != null);
 		StringBuilder origin = new StringBuilder();
         Object array = Array.newInstance(sameType, 10);
         for (int i = 0; i < 10; i++) {
@@ -123,7 +141,7 @@ public class IdenticalTypeCastTest {
         assertEquals(array.getClass(), converted.getClass());
         assertEquals(10, Array.getLength(converted));
         for (int i = 0; i < 10; i++) {
-            assertEqualsByCompare(Array.get(array, i), Array.get(converted, i));
+            assertEqualsByCompare(Array.get(array, i), Array.get(converted, i), comparator);
         }
 	}
 

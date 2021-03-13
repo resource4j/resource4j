@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.3.0-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>resource4j-integration</artifactId>
@@ -15,6 +15,7 @@
 	<modules>
 		<module>spring</module>
 		<module>thymeleaf3</module>
+		<module>spring-thymeleaf3</module>
 		<module>extras</module>
 	</modules>
 

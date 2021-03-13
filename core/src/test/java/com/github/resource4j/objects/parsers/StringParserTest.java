@@ -2,11 +2,11 @@ package com.github.resource4j.objects.parsers;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.ByteArrayResourceObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StringParserTest {
 

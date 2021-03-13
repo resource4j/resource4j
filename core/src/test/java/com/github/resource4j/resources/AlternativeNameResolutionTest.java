@@ -1,6 +1,6 @@
 package com.github.resource4j.resources;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
@@ -12,7 +12,7 @@ import static com.github.resource4j.objects.providers.resolvers.DefaultObjectNam
 import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AlternativeNameResolutionTest {
 

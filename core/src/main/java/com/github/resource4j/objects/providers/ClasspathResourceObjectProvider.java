@@ -50,7 +50,10 @@ public class ClasspathResourceObjectProvider
 
     @Override
     public ResourceObject get(String name, String resolvedName) throws MissingResourceObjectException {
-        try {
+        if (resolvedName.startsWith("classpath:")) {
+            resolvedName = resolvedName.substring(10);
+        }
+	    try {
             URL url = loader.getResource(resolvedName);
             if (url == null) {
                 throw new MissingResourceObjectException(name, resolvedName);

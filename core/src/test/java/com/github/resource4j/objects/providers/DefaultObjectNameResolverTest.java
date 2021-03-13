@@ -2,28 +2,31 @@ package com.github.resource4j.objects.providers;
 
 import com.github.resource4j.objects.providers.resolvers.DefaultObjectNameResolver;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultObjectNameResolverTest {
 
     public final static String EXAMPLE_FILE = "/folder/file.name";
 
-    @Test(expected =  NullPointerException.class)
+    @Test
     public void testNullFileNameResolutionWithoutContext() {
-        DefaultObjectNameResolver resolver = new DefaultObjectNameResolver();
-        resolver.resolve(null, withoutContext());
+        assertThrows(NullPointerException.class, () -> {
+            DefaultObjectNameResolver resolver = new DefaultObjectNameResolver();
+            resolver.resolve(null, withoutContext());
+        });
     }
 
-
-    @Test(expected =  IllegalArgumentException.class)
+    @Test
     public void testEmptyFileNameResolutionWithoutContext() {
-        DefaultObjectNameResolver resolver = new DefaultObjectNameResolver();
-        resolver.resolve("", withoutContext());
+        assertThrows(IllegalArgumentException.class, () -> {
+            DefaultObjectNameResolver resolver = new DefaultObjectNameResolver();
+            resolver.resolve("", withoutContext());
+        });
     }
 
     @Test

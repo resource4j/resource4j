@@ -1,11 +1,11 @@
 package com.github.resource4j;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class OptionalValueContracts extends ResourceValueContracts {
 	
@@ -37,23 +37,29 @@ public abstract class OptionalValueContracts extends ResourceValueContracts {
 		assertSame(value.key(), mandatoryValue.key());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testOrThrowsNullPointerExceptionIfDefaultValueIsNull() throws Exception {
-		OptionalValue<String> value = createValue(anyKey(), someContent());
-		value.or((String) null);
+		assertThrows(NullPointerException.class, () -> {
+			OptionalValue<String> value = createValue(anyKey(), someContent());
+			value.or((String) null);
+		});
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testOrThrowsNullPointerExceptionIfSupplierIsNull() throws Exception {
-		OptionalValue<String> value = createValue(anyKey(), someContent());
-		value.orElseGet((Supplier) null);
+		assertThrows(NullPointerException.class, () -> {
+			OptionalValue<String> value = createValue(anyKey(), someContent());
+			value.orElseGet((Supplier) null);
+		});
 	}
 	
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testOrDefaultNullPointerExceptionIfDefaultValueIsNull() throws Exception {
-		OptionalValue<String> value = createValue(anyKey(), someContent());
-		value.orDefault(null);
+		assertThrows(NullPointerException.class, () -> {
+			OptionalValue<String> value = createValue(anyKey(), someContent());
+			value.orDefault(null);
+		});
 	}
 
 	@Test
@@ -65,16 +71,20 @@ public abstract class OptionalValueContracts extends ResourceValueContracts {
 		assertSame(value.key(), mandatoryValue.key());
 	}
 
-	@Test(expected = MissingValueException.class)
+	@Test
 	public void testNotNullThrowsMissingValueExceptionWhenNull() throws Exception {
-		OptionalValue<String> value = createValue(anyKey(), null);
-		value.notNull();
+		assertThrows(MissingValueException.class, () -> {
+			OptionalValue<String> value = createValue(anyKey(), null);
+			value.notNull();
+		});
+
 	}
 
 	@Test
 	public void testStdReturnsJavaUtilOptional() {
 		OptionalValue<String> value = createValue(anyKey(), someContent());
 		Optional<String> s = value.std();
+		assertTrue(s.isPresent());
 		assertEquals(s.get(), value.asIs());
 	}
 	

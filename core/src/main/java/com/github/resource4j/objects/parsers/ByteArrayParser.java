@@ -22,8 +22,7 @@ public class ByteArrayParser extends AbstractParser<byte[], OptionalValue<byte[]
 
 	@Override
 	protected byte[] parse(ResourceObject object) throws IOException, ResourceObjectException {
-		InputStream is = object.asStream();
-		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+		try (InputStream is = object.asStream(); ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 			byte[] buffer = new byte[0xFFFF];
 			for (int len; (len = is.read(buffer)) != -1;) {
 				os.write(buffer, 0, len);

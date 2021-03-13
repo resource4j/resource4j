@@ -3,7 +3,7 @@ package com.github.resource4j.resources;
 import com.github.resource4j.MandatoryString;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.resources.processors.BasicValuePostProcessor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
@@ -12,7 +12,7 @@ import static com.github.resource4j.objects.providers.ResourceObjectProviders.cl
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.with;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ParamValueResolutionTest {
 

@@ -2,12 +2,12 @@ package com.github.resource4j.extras.json;
 
 import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.github.resource4j.resources.RefreshableResources;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JacksonBundleParserTest {
 

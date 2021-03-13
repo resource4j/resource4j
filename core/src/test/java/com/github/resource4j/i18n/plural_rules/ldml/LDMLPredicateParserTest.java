@@ -1,38 +1,37 @@
 package com.github.resource4j.i18n.plural_rules.ldml;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
 
 import static com.github.resource4j.i18n.plural_rules.ldml.LDMLPredicateParser.parse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LDMLPredicateParserTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailIfIncorrectFormat() {
-        parse("wrong");
+        assertThrows(IllegalArgumentException.class, () -> parse("wrong"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailIfErrorInExpression() {
-        parse("i == 1");
+        assertThrows(IllegalArgumentException.class, () -> parse("i == 1"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailIfIncompleteOrExpression() {
-        parse("i = 1 or");
+        assertThrows(IllegalArgumentException.class, () -> parse("i = 1 or"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailIfIncompleteAndExpression() {
-        parse("i = 1 and");
+        assertThrows(IllegalArgumentException.class, () -> parse("i = 1 and"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailWhenEmpty() {
-        parse("");
+        assertThrows(IllegalArgumentException.class, () -> parse(""));
     }
 
     @Test

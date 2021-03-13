@@ -7,6 +7,7 @@ import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.parsers.AbstractValueParser;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Parser for values in JSON format. Example:
@@ -61,12 +62,14 @@ public class JacksonParser<T> extends AbstractValueParser {
 
     @Override
     protected T parse(ResourceObject object) throws IOException, ResourceObjectException {
-        if (contentType != null) {
-            return this.mapper.readValue(object.asStream(), contentType);
-        } else {
-            @SuppressWarnings({ "unchecked", "raw" })
-            T tree = (T) this.mapper.readTree(object.asStream());
-            return tree;
+        try (InputStream stream = object.asStream()) {
+            if (contentType != null) {
+                return this.mapper.readValue(stream, contentType);
+            } else {
+                @SuppressWarnings({"unchecked", "raw"})
+                T tree = (T) this.mapper.readTree(stream);
+                return tree;
+            }
         }
     }
 

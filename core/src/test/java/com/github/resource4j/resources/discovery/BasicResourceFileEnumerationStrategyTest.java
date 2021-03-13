@@ -1,25 +1,25 @@
 package com.github.resource4j.resources.discovery;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
 
 import static com.github.resource4j.resources.context.ResourceResolutionContext.in;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BasicResourceFileEnumerationStrategyTest {
 
     private BasicResourceFileEnumerationStrategy strategy;
 
-    @Before
+    @BeforeEach
     public void setup() {
         strategy = new BasicResourceFileEnumerationStrategy();
     }
 
-    @After
+    @AfterEach
     public void shutdown() {
         strategy = null;
     }

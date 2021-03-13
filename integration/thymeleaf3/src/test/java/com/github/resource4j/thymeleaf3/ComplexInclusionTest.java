@@ -1,15 +1,11 @@
 package com.github.resource4j.thymeleaf3;
 
+import com.github.resource4j.resources.RefreshableResources;
 import com.github.resource4j.resources.RefreshableResourcesConfigurator;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.thymeleaf.ITemplateEngine;
+import com.github.resource4j.resources.Resources;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.HashMap;
@@ -24,30 +20,28 @@ import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.processors.BasicValuePostProcessor.macroSubstitution;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes={
-        ComplexInclusionTest.class
-})
-@Configuration
-@EnableAutoConfiguration
 public class ComplexInclusionTest {
 
-    @Bean
     public static RefreshableResourcesConfigurator configurator() {
         return configure()
                 .sources(bind(classpath())
-                            .to("complex/pages")
+                            .to("complex/templates")
                             .objectsLike(name(".\\.html$")),
                          bind(classpath())
-                            .to("complex/resources")
+                            .to("complex/strings")
                             .objectsLike(name(".\\.properties$")))
                 .formats(format(propertyMap(), ".properties"))
                 .postProcessingBy(macroSubstitution())
                 .get();
     }
 
-    @Autowired
-    private ITemplateEngine engine;
+    private Resource4jTemplateEngine engine;
+
+    @BeforeEach
+    public void setupEngine() {
+        Resources resources = new RefreshableResources(configurator());
+        engine = new Resource4jTemplateEngine(resources, templates -> templates.setSuffix(".html"));
+    }
 
     @Test
     public void testRenderWithInclusions() {
@@ -56,6 +50,7 @@ public class ComplexInclusionTest {
         map.put("count", 1);
         context.setVariable("model", map);
         String content = engine.process("index", context);
+        System.out.println(content);
     }
 
 }

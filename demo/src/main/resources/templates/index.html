@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="${locale}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello World!</title>
+</head>
+<body>
+<h1 th:text="#{index.greeting(${#httpServletRequest.remoteHost})}">(Greeting placeholder)</h1>
+<ul>
+    <li><a href="?lang=en" th:text="#{index.english}">English</a></li>
+    <li><a href="?lang=de" th:text="#{index.german}">German</a></li>
+    <li><a href="?lang=ru" th:text="#{index.russian}">Russian</a></li>
+</ul>
+<p th:text="#{index.message}">(Placeholder)</p>
+</body>
+</html>

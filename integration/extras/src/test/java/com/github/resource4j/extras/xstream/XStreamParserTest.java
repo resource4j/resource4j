@@ -5,12 +5,12 @@ import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.ByteArrayResourceObject;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static com.github.resource4j.extras.xstream.XStreamParser.xml;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class XStreamParserTest {
 

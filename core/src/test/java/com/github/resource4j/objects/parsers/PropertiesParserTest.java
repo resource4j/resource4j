@@ -2,12 +2,12 @@ package com.github.resource4j.objects.parsers;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.ByteArrayResourceObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PropertiesParserTest {
 

@@ -3,27 +3,31 @@ package com.github.resource4j.resources;
 import com.github.resource4j.MandatoryString;
 import com.github.resource4j.OptionalString;
 import example.impl.ConcreteAction;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.objects.parsers.ResourceParsers.string;
 import static org.hamcrest.CoreMatchers.endsWith;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class AbstractResourcesTest {
 
     protected Resources resources;
 
-    @Before
+    @BeforeEach
     public void setup() {
         resources = createResources();
     }
 
     protected abstract Resources createResources();
 
+    @AfterEach
     public void shutdown() {
         resources = null;
     }

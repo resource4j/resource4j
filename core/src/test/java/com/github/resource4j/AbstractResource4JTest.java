@@ -6,7 +6,7 @@ import com.github.resource4j.resources.RefreshableResources;
 import com.github.resource4j.resources.Resources;
 import com.github.resource4j.resources.ResourcesConfigurationBuilder;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.time.Clock;
 
@@ -18,7 +18,7 @@ public abstract class AbstractResource4JTest {
 
     private ResourceValueRepository repository;
 
-    @Before
+    @BeforeEach
     public void init() {
         ResourcesConfigurationBuilder builder = configure();
         repository = doInit(builder);

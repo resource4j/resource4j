@@ -6,10 +6,11 @@ import com.github.resource4j.objects.providers.events.ResourceObjectEventType;
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
 import com.github.resource4j.test.TestClock;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.Locale;
 
@@ -21,21 +22,22 @@ import static com.github.resource4j.resources.context.ResourceResolutionContext.
 import static com.github.resource4j.test.Builders.given;
 import static com.github.resource4j.test.TestClock.testFixed;
 import static java.time.Clock.systemUTC;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractResourceObjectRepositoryTest {
 
-    @Rule
     public TestClock clock = testFixed(systemUTC());
 
     private ResourceObjectRepository objects;
 
-    @Before
-    public void init() {
-        objects = createRepository(clock);
+    @BeforeEach
+    public void init(@TempDir Path path) {
+        objects = createRepository(clock, path);
+        clock.reset();
     }
 
-    protected abstract ResourceObjectRepository createRepository(Clock clock);
+    protected abstract ResourceObjectRepository createRepository(Clock clock, Path tmp);
 
     protected ResourceObjectRepository repository() {
         return objects;
@@ -131,18 +133,18 @@ public abstract class AbstractResourceObjectRepositoryTest {
 
         ResourceObject found = objects.get(original.name(), withoutContext());
 
-        assertEquals("object name", original.name(), found.name());
-        assertTrue(found.actualName() + " ends with " + original.actualName(),
-                found.actualName().endsWith(original.actualName()));
-        assertEquals("object size", original.size(), found.size());
-        assertTrue("last modified", Math.abs(found.lastModified() - millis) < 1000);
-        assertEquals("object key", original.key(), found.key());
+        assertEquals(original.name(), found.name(), "object name");
+        assertTrue(found.actualName().endsWith(original.actualName()),
+                found.actualName() + " ends with " + original.actualName());
+        assertEquals(original.size(), found.size(),"object size");
+        assertTrue(Math.abs(found.lastModified() - millis) < 1000, "last modified");
+        assertEquals(original.key(), found.key(), "object key");
 
         byte[] content = original.parsedTo(binary()).asIs();
         byte[] parsed = found.parsedTo(binary()).asIs();
-        assertEquals("actual content size", content.length, parsed.length);
+        assertEquals(content.length, parsed.length, "actual content size");
         for (int i = 0; i < parsed.length; i++) {
-            assertEquals("content", content[i], parsed[i]);
+            assertEquals(content[i], parsed[i], "content");
         }
     }
 
@@ -155,31 +157,33 @@ public abstract class AbstractResourceObjectRepositoryTest {
 
         ResourceObject found = objects.get(original.name(), in(Locale.US));
 
-        assertEquals("object name", original.name(), found.name());
-        assertTrue(found.actualName() + " ends with " + original.actualName(),
-                found.actualName().endsWith(original.actualName()));
-        assertEquals("object size", original.size(), found.size());
-        assertTrue("last modified", Math.abs(found.lastModified() - millis) < 1000);
-        assertEquals("object key", original.key(), found.key());
+        assertEquals(original.name(), found.name(), "object name");
+        assertTrue(found.actualName().endsWith(original.actualName()),
+                found.actualName() + " ends with " + original.actualName());
+        assertEquals(original.size(), found.size(), "object size");
+        assertTrue(Math.abs(found.lastModified() - millis) < 1000, "last modified");
+        assertEquals(original.key(), found.key(), "object key");
 
         byte[] content = original.parsedTo(binary()).asIs();
         byte[] parsed = found.parsedTo(binary()).asIs();
-        assertEquals("actual content size", content.length, parsed.length);
+        assertEquals(content.length, parsed.length, "actual content size");
         for (int i = 0; i < parsed.length; i++) {
-            assertEquals("content", content[i], parsed[i]);
+            assertEquals(content[i], parsed[i], "content");
         }
     }
 
-    @Test(expected=MissingResourceObjectException.class)
+    @Test
     public void testRepositoryThrowsExceptionIfRequestedObjectNotExist() throws Exception {
         String testFile = "nonexistent";
-        objects.get(testFile, withoutContext());
+        assertThrows(MissingResourceObjectException.class,
+                () -> objects.get(testFile, withoutContext()));
     }
 
-    @Test(expected=MissingResourceObjectException.class)
+    @Test
     public void testRepositoryThrowsExceptionIfRequestedObjectNameInvalid() throws Exception {
         String testFile = ":invalid:";
-        objects.get(testFile, withoutContext());
+        assertThrows(MissingResourceObjectException.class,
+                () -> objects.get(testFile, withoutContext()));
     }
 
 }

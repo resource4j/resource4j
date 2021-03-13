@@ -8,14 +8,14 @@ import com.github.resource4j.objects.providers.mutable.ResourceValueRepository;
 import com.github.resource4j.resources.processors.BasicValuePostProcessor;
 import com.github.resource4j.resources.processors.CyclicReferenceException;
 import com.github.resource4j.resources.processors.ValuePostProcessingException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 
 import static com.github.resource4j.ResourceKey.bundle;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ValueSubstitutionResourcesTest {
 

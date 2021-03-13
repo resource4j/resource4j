@@ -7,6 +7,7 @@ import com.github.resource4j.objects.parsers.ResourceObjectFormatException;
 import com.typesafe.config.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 @SuppressWarnings("WeakerAccess")
@@ -36,8 +37,8 @@ public class ConfigParser extends AbstractValueParser<Config> {
 	@Override
 	protected Config parse(ResourceObject file) throws IOException,
 			ResourceObjectException {
-		try {
-			InputStreamReader reader = new InputStreamReader(file.asStream());
+		try (InputStream stream = file.asStream()) {
+			InputStreamReader reader = new InputStreamReader(stream);
             return ConfigFactory.parseReader(reader, options);
 		} catch (ConfigException e) {
 			throw new ResourceObjectFormatException(file, e);

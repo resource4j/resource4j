@@ -9,7 +9,7 @@ import com.github.resource4j.objects.providers.mutable.HeapResourceObjectReposit
 import com.github.resource4j.objects.providers.mutable.ResourceObjectRepository;
 import com.github.resource4j.objects.providers.mutable.ResourceValueRepository;
 import com.github.resource4j.resources.context.ResourceResolutionContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.util.Locale;
@@ -24,7 +24,7 @@ import static com.github.resource4j.resources.context.ResourceResolutionContext.
 import static com.github.resource4j.resources.context.ResourceResolutionContext.withoutContext;
 import static com.github.resource4j.resources.discovery.PropertyBundleBuilder.aPropertiesBundle;
 import static com.github.resource4j.test.Builders.given;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RefreshableResourcesTest extends AbstractResourcesTest {
 

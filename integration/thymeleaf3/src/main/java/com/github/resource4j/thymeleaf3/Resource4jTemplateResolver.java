@@ -29,4 +29,6 @@ public class Resource4jTemplateResolver extends AbstractConfigurableTemplateReso
         String string = resources.contentOf(resourceName, locale).parsedTo(string()).asIs();
         return new StringTemplateResource(string);
     }
+
+
 }

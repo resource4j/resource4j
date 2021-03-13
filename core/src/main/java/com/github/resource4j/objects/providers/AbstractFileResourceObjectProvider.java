@@ -27,7 +27,7 @@ public abstract class AbstractFileResourceObjectProvider<P extends AbstractFileR
         return self();
     }
 
-    protected ObjectNameResolver resolver() {
+    public ObjectNameResolver resolver() {
         return resolver;
     }
 

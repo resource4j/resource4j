@@ -6,6 +6,7 @@ import com.github.resource4j.ResourceObject;
 import com.github.resource4j.values.GenericOptionalString;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +51,8 @@ public class StringParser extends AbstractParser<String, OptionalString> {
     @Override
     public String parse(ResourceObject object) throws IOException {
         // Here's the nice solution from StackOverflow: http://stackoverflow.com/a/5445161
-    	try (java.util.Scanner s = new java.util.Scanner(object.asStream(), charsetName)) {
+    	try (InputStream stream = object.asStream();
+             java.util.Scanner s = new java.util.Scanner(stream, charsetName)) {
     		s.useDelimiter("\\A");
             return s.hasNext() ? s.next() : "";
     	}

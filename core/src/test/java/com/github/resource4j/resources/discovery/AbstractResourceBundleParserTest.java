@@ -2,19 +2,20 @@ package com.github.resource4j.resources.discovery;
 
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.test.Builders;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static com.github.resource4j.test.Builders.given;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractResourceBundleParserTest {
 
     private ResourceBundleParser parser;
 
-    @Before
+    @BeforeEach
     public void initParser() {
         this.parser = aParser();
     }

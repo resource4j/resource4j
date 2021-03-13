@@ -26,6 +26,10 @@ public class DefaultObjectNameResolver implements ObjectNameResolver {
         return new Builder();
     }
 
+    public static Builder javaPropertiesLocaleResolver() {
+        return new Builder().withFileNameSeparator("_");
+    }
+
     public DefaultObjectNameResolver() {
     }
 

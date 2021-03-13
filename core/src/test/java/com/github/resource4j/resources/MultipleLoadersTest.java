@@ -1,13 +1,14 @@
 package com.github.resource4j.resources;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.objects.parsers.ResourceParsers.propertyMap;
 import static com.github.resource4j.objects.providers.ResourceObjectProviders.*;
 import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MultipleLoadersTest {
 

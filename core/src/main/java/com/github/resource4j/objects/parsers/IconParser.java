@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class IconParser extends AbstractValueParser<Icon> {
 
@@ -17,11 +18,13 @@ public class IconParser extends AbstractValueParser<Icon> {
 
     @Override
     public Icon parse(ResourceObject object) throws IOException, ResourceObjectFormatException {
-        BufferedImage image = ImageIO.read(object.asStream());
-        if (image == null) {
-        	throw new ResourceObjectFormatException(object, "Unknown image format in file {0}");
+        try (InputStream stream = object.asStream()) {
+            BufferedImage image = ImageIO.read(stream);
+            if (image == null) {
+                throw new ResourceObjectFormatException(object, "Unknown image format in file {0}");
+            }
+            return new ImageIcon(image);
         }
-        return new ImageIcon(image);
     }
 
 }
