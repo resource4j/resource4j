@@ -19,6 +19,10 @@ public class XStreamParser<T> extends AbstractValueParser<T> {
 	
 	public static <T> XStreamParser<T> xml(Class<T> type) {
 		XStream xstream = new XStream(new StaxDriver());
+		XStream.setupDefaultSecurity(xstream);
+		xstream.allowTypesByWildcard(new String[] {
+				type.getPackage().getName() + ".**"
+		});
 		xstream.processAnnotations(type);
 		return new XStreamParser<>(type, xstream);
 	}

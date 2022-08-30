@@ -40,6 +40,7 @@ public class XStreamParserTest {
 		
 		ResourceObject file = new ByteArrayResourceObject("test", "test", xml.getBytes(), 0);
 		Model object = file.parsedTo(xml(Model.class)).asIs();
+		assertNotNull(object);
 		assertEquals("Lorem ipsum", object.getMessage());
 		assertEquals(1, object.getValue());
 	}
