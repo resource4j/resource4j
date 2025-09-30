@@ -5,6 +5,7 @@ import com.github.resource4j.spring.Resource4jMessageSource;
 import com.github.resource4j.spring.config.Resource4jAutoConfiguration;
 import com.github.resource4j.thymeleaf3.Resource4jTemplateResolver;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -17,13 +18,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.util.MimeType;
 import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.spring5.ISpringTemplateEngine;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring6.ISpringTemplateEngine;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.util.LinkedHashMap;
 
-@Configuration
+@AutoConfiguration
 @ConditionalOnBean({
         Resources.class
 })

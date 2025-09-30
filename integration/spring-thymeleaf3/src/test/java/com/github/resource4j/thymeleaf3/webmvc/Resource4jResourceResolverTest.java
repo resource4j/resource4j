@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.ISpringTemplateEngine;
 
 import java.util.Locale;
 
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class Resource4jResourceResolverTest {
 
 	@Autowired
-	private ITemplateEngine engine;
+	private ISpringTemplateEngine engine;
 	
 	@Test
 	public void testRenderGermanPage() {
