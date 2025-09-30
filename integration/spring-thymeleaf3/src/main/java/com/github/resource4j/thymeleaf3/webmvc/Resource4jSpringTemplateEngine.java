@@ -6,8 +6,8 @@ import com.github.resource4j.thymeleaf3.Resource4jTemplateEngine;
 import com.github.resource4j.thymeleaf3.Resource4jTemplateResolver;
 import org.springframework.context.MessageSource;
 import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.spring5.ISpringTemplateEngine;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.ISpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 

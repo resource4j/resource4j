@@ -17,6 +17,8 @@ import java.util.Locale;
 import static com.github.resource4j.ResourceKey.key;
 import static com.github.resource4j.objects.ByteArrayResourceObjectBuilder.anObject;
 import static com.github.resource4j.objects.parsers.ResourceParsers.propertyMap;
+import static com.github.resource4j.objects.providers.ResourceObjectProviders.classpath;
+import static com.github.resource4j.objects.providers.resolvers.DefaultObjectNameResolver.javaPropertiesLocaleResolver;
 import static com.github.resource4j.objects.providers.resolvers.ResourceObjectProviderPredicates.name;
 import static com.github.resource4j.resources.BundleFormat.format;
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
@@ -42,6 +44,20 @@ public class RefreshableResourcesTest extends AbstractResourcesTest {
             String value = resources.get(key("big", "value" + idx)).asIs();
             assertNotNull(value);
         }
+    }
+
+    @Test
+    public void pick_most_specific_bundle() {
+        RefreshableResources resources = new RefreshableResources(configure());
+        var value = resources.get(key("messages", "greeting"), Locale.GERMANY).asIs();
+        assertEquals("Hallo", value);
+    }
+
+    @Test
+    public void pick_most_specific_bundle_with_classic_component_separator() {
+        RefreshableResources resources = new RefreshableResources(configure().sources(classpath().with(javaPropertiesLocaleResolver())));
+        var value = resources.get(key("classic", "greeting"), Locale.GERMANY).asIs();
+        assertEquals("Hallo", value);
     }
 
     @Test

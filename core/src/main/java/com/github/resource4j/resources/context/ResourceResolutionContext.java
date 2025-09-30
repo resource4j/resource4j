@@ -12,6 +12,9 @@ public final class ResourceResolutionContext implements Serializable {
     public static final String DEFAULT_COMPONENT_SEPARATOR = "-";
     public static final String DEFAULT_SECTION_SEPARATOR = "_";
 
+    public static final String CLASSIC_COMPONENT_SEPARATOR = "_";
+    public static final String CLASSIC_SECTION_SEPARATOR = "-";
+
     /**
      * Helper method to wrap varags into array with {@link #context(ResourceResolutionComponent[],Map)}
      * @param resolutionParams

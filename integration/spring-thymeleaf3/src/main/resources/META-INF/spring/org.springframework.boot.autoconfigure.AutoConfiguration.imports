@@ -1,2 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.github.resource4j.thymeleaf3.webmvc.ThymeleafResourceAutoConfiguration

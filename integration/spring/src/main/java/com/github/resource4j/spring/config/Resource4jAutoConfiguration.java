@@ -9,10 +9,10 @@ import com.github.resource4j.spring.ResourceValueBeanPostProcessor;
 import com.github.resource4j.spring.SpringELValuePostProcessor;
 import com.github.resource4j.spring.SpringResourceObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import static com.github.resource4j.objects.providers.resolvers.DefaultObjectNam
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.resources.processors.BasicValuePostProcessor.macroSubstitution;
 
-@Configuration
+@AutoConfiguration
 public class Resource4jAutoConfiguration {
 
     private RefreshableResourcesConfigurator configuration;
