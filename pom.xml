@@ -3,7 +3,7 @@
 
 	<groupId>com.github.resource4j</groupId>
 	<artifactId>resource4j-parent</artifactId>
-	<version>3.4.1-SNAPSHOT</version>
+	<version>3.3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Resource4J</name>
