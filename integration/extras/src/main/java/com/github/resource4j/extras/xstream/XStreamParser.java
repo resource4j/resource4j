@@ -13,13 +13,12 @@ import java.io.InputStream;
 
 public class XStreamParser<T> extends AbstractValueParser<T> {
 
-	private Class<T> type;
+	private final Class<T> type;
 	
-	private XStream xstream;
+	private final XStream xstream;
 	
 	public static <T> XStreamParser<T> xml(Class<T> type) {
 		XStream xstream = new XStream(new StaxDriver());
-		XStream.setupDefaultSecurity(xstream);
 		xstream.allowTypesByWildcard(new String[] {
 				type.getPackage().getName() + ".**"
 		});

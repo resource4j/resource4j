@@ -64,7 +64,7 @@ resource4j/
 2. `ResourceBundleParser` parses files into key-value maps (`.properties`, `.conf`, `.json`)
 3. `ResourceValuePostProcessor` applies macro substitution via a state-machine parser
 4. `TypeConverter` (converters module) handles value type conversion
-5. Results are cached in `Cache<K,V>` implementations (basic, Guava, or no-op)
+5. Results are cached in `Cache<K,V>` implementations (basic or no-op)
 
 ### Configuration Pattern
 
@@ -96,7 +96,6 @@ new RefreshableResources(configure()
 | Dependency | Version | Scope |
 |-----------|---------|-------|
 | Java | 17+ | required |
-| Guava | 33.4.8-jre | optional (caching) |
 | Spring Framework | 6.2.11 | provided (integration) |
 | Spring Boot | 3.5.6 | optional (auto-config) |
 | Thymeleaf | 3.1.3.RELEASE | provided (integration) |

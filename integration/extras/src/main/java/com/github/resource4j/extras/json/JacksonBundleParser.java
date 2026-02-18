@@ -1,12 +1,12 @@
 package com.github.resource4j.extras.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.github.resource4j.ResourceKey;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.parsers.AbstractValueParser;
 import com.github.resource4j.objects.parsers.BundleParser;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeType;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,10 +36,10 @@ public class JacksonBundleParser extends AbstractValueParser<Map<String, String>
 
     private void processNode(Map<String, String> bundle, JsonNode current, String key) {
         if (current.isValueNode()) {
-            bundle.put(key, current.asText());
+            bundle.put(key, current.asString());
         } else if (current.getNodeType() == JsonNodeType.OBJECT) {
-            current.fields().forEachRemaining(entry -> {
-                String childKey = (key.length() > 0 ? key + "." : "") + entry.getKey();
+            current.properties().forEach(entry -> {
+                String childKey = (!key.isEmpty() ? key + "." : "") + entry.getKey();
                 processNode(bundle, entry.getValue(), childKey);
             });
         } else if (current.getNodeType() == JsonNodeType.ARRAY) {

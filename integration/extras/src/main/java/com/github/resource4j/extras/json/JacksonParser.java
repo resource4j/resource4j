@@ -1,10 +1,10 @@
 package com.github.resource4j.extras.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.ResourceObjectException;
 import com.github.resource4j.objects.parsers.AbstractValueParser;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,14 +21,14 @@ import java.io.InputStream;
  * @since 3.1
  * @param <T> type of parsed object, if specified.
  */
-public class JacksonParser<T> extends AbstractValueParser {
+public class JacksonParser<T> extends AbstractValueParser<T> {
 
-    private Class<T> contentType;
+    private final Class<T> contentType;
 
-    private ObjectMapper mapper;
+    private final JsonMapper mapper;
 
     /**
-     * Creates typed parser
+     * Creates typed parser using shared instance of JsonMapper
      * @param contentType class of parsed object
      * @param <T> type of parsed object
      * @return parser of objects of given type
@@ -38,8 +38,19 @@ public class JacksonParser<T> extends AbstractValueParser {
     }
 
     /**
-     * Creates generic parser
-     * @return parser that produces Jackson JsonNode objects
+     * Creates typed parser using given json mapper from Jackson
+     * @param mapper the mapper used to create the parser and parse the object
+     * @param contentType class of parsed object
+     * @param <T> type of parsed object
+     * @return parser of objects of given type
+     */
+    public static <T> JacksonParser<T> json(JsonMapper mapper, Class<T> contentType) {
+        return new JacksonParser<>(mapper, contentType);
+    }
+
+    /**
+     * Creates generic parser using shared instance of JsonMapper
+     * @return parser that produces JsonNode objects
      */
     public static JacksonParser<JsonNode> json() {
         return new JacksonParser<>();
@@ -49,26 +60,19 @@ public class JacksonParser<T> extends AbstractValueParser {
         this(null, null);
     }
 
-    JacksonParser(ObjectMapper mapper, Class<T> contentType) {
-        this.mapper = mapper == null ? createMapper() : mapper;
+    JacksonParser(JsonMapper mapper, Class<T> contentType) {
+        this.mapper = mapper != null ? mapper : JsonMapper.shared();
         this.contentType = contentType;
     }
 
-    private static ObjectMapper createMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        return mapper;
-    }
-
     @Override
+    @SuppressWarnings("unchecked")
     protected T parse(ResourceObject object) throws IOException, ResourceObjectException {
         try (InputStream stream = object.asStream()) {
             if (contentType != null) {
-                return this.mapper.readValue(stream, contentType);
+                return mapper.readValue(stream, contentType);
             } else {
-                @SuppressWarnings({"unchecked", "raw"})
-                T tree = (T) this.mapper.readTree(stream);
-                return tree;
+                return (T) mapper.readTree(stream);
             }
         }
     }

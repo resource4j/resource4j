@@ -3,7 +3,7 @@ module com.github.resource4j.core {
     requires static java.xml;
     requires static java.desktop;
     requires static org.slf4j;
-    requires static com.google.common;
+
 
     // Public API
     exports com.github.resource4j;
