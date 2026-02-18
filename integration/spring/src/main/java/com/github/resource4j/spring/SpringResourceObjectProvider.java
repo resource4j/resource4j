@@ -9,6 +9,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
+import org.springframework.lang.NonNull;
 
 import static org.springframework.core.io.ResourceLoader.CLASSPATH_URL_PREFIX;
 
@@ -31,13 +32,13 @@ public class SpringResourceObjectProvider
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
+	public void setApplicationContext(@NonNull ApplicationContext applicationContext)
 			throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
     @Override
-	public ResourceObject get(String name, String actualName)
+	public ResourceObject get(@NonNull String name, @NonNull String actualName)
 			throws MissingResourceObjectException {
 		if (applicationContext == null) {
 			throw new IllegalStateException("SpringResourceObjectProvider not initialized: application context required.");

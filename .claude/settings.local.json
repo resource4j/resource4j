@@ -8,7 +8,9 @@
       "Bash(git diff:*)",
       "Bash(git config:*)",
       "Bash(git commit:*)",
-      "Bash(mvn clean verify:*)"
+      "Bash(mvn clean verify:*)",
+      "Bash(mvn install:*)",
+      "Bash(mvn test:*)"
     ]
   }
 }

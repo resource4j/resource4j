@@ -78,7 +78,7 @@ public class ResourceValueBeanPostProcessor implements BeanPostProcessor, BeanFa
 
 		String name = clazz.getPackage().getName();
 		String[] components = name.split("\\.");
-		
+
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < components.length; i++) {
 			if (builder.length() > 0) {

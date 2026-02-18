@@ -13,6 +13,7 @@ import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.lang.NonNull;
 
 import static com.github.resource4j.converters.TypeConverter.convert;
 import static java.util.Collections.emptyMap;
@@ -24,7 +25,7 @@ public class SpringELValuePostProcessor implements ResourceValuePostProcessor, B
     private BeanFactoryResolver beanFactoryResolver;
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         this.beanFactoryResolver = new BeanFactoryResolver(beanFactory);
     }
 

@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,8 +29,12 @@ public class Resource4jMessageSource implements MessageSource {
         this.resources = resources;
     }
 
+    @Nullable
     @Override
-    public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
+    public String getMessage(@NonNull String code,
+                             @Nullable Object[] args,
+                             @Nullable String defaultMessage,
+                             @Nullable Locale locale) {
         try {
             return getMessage(code, args, locale);
         } catch (NoSuchMessageException e) {
@@ -36,17 +42,23 @@ public class Resource4jMessageSource implements MessageSource {
         }
     }
 
+    @NonNull
     @Override
-    public String getMessage(String key, Object[] messageParameters, Locale locale) throws NoSuchMessageException {
+    @SuppressWarnings({ "unchecked" })
+    public String getMessage(@NonNull String key,
+                             @Nullable Object[] messageParameters,
+                             @Nullable Locale locale) throws NoSuchMessageException {
         try {
             Map<String, Object> params = new HashMap<>();
-            for (int i = 0; i < messageParameters.length; i++) {
-                if (messageParameters[i] instanceof Map) {
-                    // it's safe, because it's intended only for the read-only
-                    // access by String key
-                    params.putAll((Map) messageParameters[i]);
-                } else {
-                    params.put(String.valueOf(i), messageParameters[i]);
+            if (messageParameters != null) {
+                for (int i = 0; i < messageParameters.length; i++) {
+                    if (messageParameters[i] instanceof Map) {
+                        // it's safe, because it's intended only for the read-only
+                        // access by String key
+                        params.putAll((Map<String, ?>) messageParameters[i]);
+                    } else {
+                        params.put(String.valueOf(i), messageParameters[i]);
+                    }
                 }
             }
             ResourceResolutionContext resolutionContext = context(resolve(locale), params);
@@ -58,8 +70,9 @@ public class Resource4jMessageSource implements MessageSource {
         }
     }
 
+    @NonNull
     @Override
-    public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
+    public String getMessage(@NonNull MessageSourceResolvable resolvable, @Nullable Locale locale) throws NoSuchMessageException {
         String[] codes = resolvable.getCodes();
         if (codes == null || codes.length == 0) {
             throw new IllegalArgumentException("At least one message code must be provided");

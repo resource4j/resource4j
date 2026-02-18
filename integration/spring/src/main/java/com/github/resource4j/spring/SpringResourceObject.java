@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 public class SpringResourceObject extends AbstractResourceObject {
 
-	private Resource resource;
+	private final Resource resource;
 
 	public SpringResourceObject(String name, Resource resource) {
 		super(name, resource.getFilename());
