@@ -3,13 +3,7 @@ package com.github.resource4j.resources.cache;
 import com.github.resource4j.ResourceObject;
 import com.github.resource4j.objects.exceptions.InaccessibleResourceObjectException;
 
-public class CachedObject implements CachedResult {
-
-	private ResourceObject object;
-
-	public CachedObject(ResourceObject object) {
-		this.object = object;
-	}
+public record CachedObject(ResourceObject object) implements CachedResult {
 
 	public ResourceObject get() {
 		return this.object;

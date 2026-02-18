@@ -1,7 +1,5 @@
 package com.github.resource4j.objects.parsers;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.util.Properties;
 
 /**
@@ -13,7 +11,7 @@ public final class ResourceParsers {
 
 	private ResourceParsers() {
 	}
-	
+
     /**
      * Returns an instance of {@link StringParser} that uses default charset (UTF-8).
      * @return a string parser configured to use UTF-8 charset
@@ -31,11 +29,12 @@ public final class ResourceParsers {
     public static StringParser string(String charsetName) {
         return new StringParser(charsetName);
     }
-    
+
     /**
-     * Returns an instance of parser that loads an image in any of the formats 
-     * supported by {@link ImageIO} into {@link ImageIcon} object.
+     * Returns an instance of parser that loads an image into an icon object.
+     * Requires the {@code java.desktop} module to be present at runtime.
      * @return an instance of parser that loads image files
+     * @throws NoClassDefFoundError if {@code java.desktop} module is not available
      */
     public static IconParser icon() {
         return IconParser.getInstance();

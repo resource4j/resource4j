@@ -59,6 +59,7 @@ public class ThymeleafResourceAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = "messageSource")
 	public Resource4jMessageSource messageSource() {
 	    return new Resource4jMessageSource(resources);
 	}

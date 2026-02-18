@@ -2,7 +2,8 @@ package com.github.resource4j.objects.exceptions;
 
 import com.github.resource4j.ResourceObjectException;
 
-public class ResourceObjectAccessException extends ResourceObjectException {
+public abstract sealed class ResourceObjectAccessException extends ResourceObjectException
+        permits MissingResourceObjectException, InvalidResourceObjectException, InaccessibleResourceObjectException {
 
     private static final long serialVersionUID = 1;
 

@@ -34,13 +34,13 @@ public class ResourcesConfigurationBuilder implements Supplier<ResourcesConfigur
     private ParametrizedKeyBuilder keyBuilder = null;
 
     private Supplier<Cache<ResolvedKey, CachedValue>> valueCache = Caches.always();
-    private Supplier<ExecutorService> valueExecutor = () -> buildThreadPool("value");
+    private Supplier<ExecutorService> valueExecutor = Executors::newVirtualThreadPerTaskExecutor;
 
     private Supplier<Cache<ResolvedName, CachedBundle>> bundleCache = Caches.always();
-    private Supplier<ExecutorService> bundleExecutor = () -> buildThreadPool("bundle");
+    private Supplier<ExecutorService> bundleExecutor = Executors::newVirtualThreadPerTaskExecutor;
 
     private Supplier<Cache<ResolvedName, ResourceObject>> objectCache = Caches.always();
-    private Supplier<ExecutorService> objectExecutor = () -> buildThreadPool("object");
+    private Supplier<ExecutorService> objectExecutor = Executors::newVirtualThreadPerTaskExecutor;
 
     private int poolSize = 2;
 

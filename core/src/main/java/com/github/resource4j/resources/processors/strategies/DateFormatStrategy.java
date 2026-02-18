@@ -11,14 +11,13 @@ import java.util.Collections;
 public class DateFormatStrategy implements PropertyResolver {
     @Override
     public Object resolve(Object value, String property, ResourceResolutionContext context, ResourceResolver resolver) {
-        if (value instanceof TemporalAccessor) {
-            TemporalAccessor temporal = (TemporalAccessor) value;
+        if (value instanceof TemporalAccessor temporal) {
             Object format = resolver.get(property, Collections.emptyMap());
-            if (format instanceof java.time.format.DateTimeFormatter) {
-                return ((DateTimeFormatter) format).format(temporal);
-            } else if (format instanceof String) {
+            if (format instanceof DateTimeFormatter dtf) {
+                return dtf.format(temporal);
+            } else if (format instanceof String s) {
                 return new DateTimeFormatterBuilder()
-                            .appendPattern((String) format)
+                            .appendPattern(s)
                             .toFormatter()
                             .format(temporal);
             }

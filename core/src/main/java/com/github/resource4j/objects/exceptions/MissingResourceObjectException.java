@@ -1,6 +1,6 @@
 package com.github.resource4j.objects.exceptions;
 
-public class MissingResourceObjectException extends ResourceObjectAccessException {
+public final class MissingResourceObjectException extends ResourceObjectAccessException {
 
     private static final long serialVersionUID = 1L;
 

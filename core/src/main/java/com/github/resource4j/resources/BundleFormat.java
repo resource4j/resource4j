@@ -4,13 +4,7 @@ import com.github.resource4j.objects.parsers.BundleParser;
 import com.github.resource4j.resources.discovery.ContentType;
 import com.github.resource4j.resources.impl.ResolvedName;
 
-public class BundleFormat {
-
-    private final String extension;
-
-    private final String mimeType;
-
-    private final BundleParser parser;
+public record BundleFormat(BundleParser parser, String extension, String mimeType) {
 
     public static BundleFormat format(BundleParser parser) {
         ContentType contentType = contentTypeOf(parser);
@@ -35,29 +29,12 @@ public class BundleFormat {
         return contentType;
     }
 
-    public BundleFormat(BundleParser parser, String extension, String mimeType) {
-        this.parser = parser;
-        this.extension = extension;
-        this.mimeType = mimeType;
-    }
-
     public ResolvedName applyTo(ResolvedName bundleName) {
         String name = bundleName.name() + (extension() != null ? extension() : "");
         return new ResolvedName(name, bundleName.context());
     }
 
-    public BundleParser parser() {
-        return parser;
-    }
-
-    public String mimeType() {
-        return mimeType;
-    }
-
-    public String extension() {
-        return extension;
-    }
-
+    @Override
     public String toString() {
         return parser.getClass().getSimpleName() +
                 (extension() != null && mimeType() != null ?

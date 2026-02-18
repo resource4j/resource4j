@@ -8,7 +8,7 @@ import com.github.resource4j.resources.Resources;
  * @since 1.0
  * @see Resources
  */
-public class MissingValueException extends ResourceException {
+public final class MissingValueException extends ResourceException {
 
     private static final long serialVersionUID = 1L;
 

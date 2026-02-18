@@ -8,7 +8,7 @@ import com.github.resource4j.ResourceObjectException;
  * @author Ivan Gammel
  * @since 2.0.2
  */
-public class ResourceObjectFormatException extends ResourceObjectException {
+public final class ResourceObjectFormatException extends ResourceObjectException {
 
 	private static final long serialVersionUID = 1L;
 

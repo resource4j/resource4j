@@ -61,52 +61,66 @@ String eulaText = resources.contentOf("/docs/EULA.txt", in(Locale.US))
 			.asIs();
 ```			
 
-Dependency management
+Pluralization
+-------------
+Resource4j supports locale-aware pluralization based on [CLDR plural rules](https://cldr.unicode.org/index/cldr-spec/plural-rules).
+The `:pluralize` property in a macro expression selects the correct plural form for a given number.
+
+Given a bundle `messages.properties`:
+```properties
+item_count={count} {item;count:pluralize}
+item_one=item
+item_other=items
+```
+
+The `{item;count:pluralize}` expression works as follows:
+1. The value of parameter `count` is read (passed via the resolution context)
+2. The `:pluralize` property applies CLDR rules for the current locale to determine the plural category (`one`, `other`, `few`, `many`, `zero`, `two`)
+3. The result (e.g. `other`) is appended to the key `item` to form `item_other`
+4. The value of `item_other` is resolved and substituted
+
+```Java
+Resources resources = new RefreshableResources(configure()
+        .sources(classpath())
+        .postProcessingBy(new BasicValuePostProcessor())
+        .get());
+
+// English: "1 item"
+resources.get(key("messages", "item_count"), in(Locale.ENGLISH).with("count", 1))
+        .notNull().asIs();
+
+// English: "5 items"
+resources.get(key("messages", "item_count"), in(Locale.ENGLISH).with("count", 5))
+        .notNull().asIs();
+```
+
+Languages with more plural forms (e.g. Russian, Arabic, Polish) work the same way — just provide
+the keys for each CLDR category that the language uses:
+
+```properties
+# Russian: one, few, many, other
+file_count={count} {file;count:pluralize}
+file_one=файл
+file_few=файла
+file_many=файлов
+file_other=файлов
+```
+
+Modules
 ---------------------
-If you are using Maven, please, add following lines to your POM file:
 
-```xml
-	<dependency>
-		<groupId>com.github.resource4j</groupId>
-		<artifactId>resource4j-core</artifactId>
-		<version>3.4.0</version>
-	</dependency>
-```
-
-For integration with Spring and (optionally) Thymeleaf, add following:
-
-```xml
-	<dependency>
-		<groupId>com.github.resource4j</groupId>
-		<artifactId>resource4j-spring</artifactId>
-		<version>3.4.0</version>
-	</dependency>
-```
-
-For using Resource4j as message provider in Thymeleaf, add following:
-
-```xml
-	<dependency>
-		<groupId>com.github.resource4j</groupId>
-		<artifactId>resource4j-thymeleaf3</artifactId>
-		<version>3.4.0</version>
-	</dependency>
-```
-
-To add support of HOCON or XStream configuration files add Extras library:
-
-```xml
-    <dependency>
-        <groupId>com.github.resource4j</groupId>
-        <artifactId>resource4j-extras</artifactId>
-        <version>3.4.0</version>
-    </dependency>
-```
+ * resource4j-core
+ * resource4j-spring - integration with Spring Framework 7
+ * resource4j-thymeleaf3 - integration with Thymeleaf 3.1
+ * resource4j-autoconfigure-thymeleaf3 - integration with Spring Boot 4/Thymeleaf 3.1
+ * resource4j-extras - bundle parsers supporting JSON (via Jackson), XML (via XStream) and HOCON
 
 Learn more
 ----------
 1. [Basics](docs/Basics.md)
 2. [Configuring resources](docs/Configuration.md)
+3. [Expression language](docs/BasicEL.md)
 3. [Integration with Spring Framework](docs/SpringIntegration.md)
 4. [Integration with Thymeleaf](docs/ThymeleafIntegration.md)
+5. [Auto-configuration with Spring Boot 4](docs/AutoConfiguration.md)
 5. [Extras](docs/Extras.md)

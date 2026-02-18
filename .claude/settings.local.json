@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(xargs:*)",
+      "Bash(mvn clean test:*)",
+      "Bash(git add:*)",
+      "Bash(git diff:*)",
+      "Bash(git config:*)",
+      "Bash(git commit:*)",
+      "Bash(mvn clean verify:*)"
+    ]
+  }
+}

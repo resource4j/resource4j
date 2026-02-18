@@ -1,13 +1,20 @@
 package com.github.resource4j;
 
-public abstract class ResourceObjectException extends ResourceException {
+import com.github.resource4j.objects.exceptions.ResourceObjectAccessException;
+import com.github.resource4j.objects.exceptions.ResourceObjectRepositoryException;
+import com.github.resource4j.objects.parsers.ResourceObjectFormatException;
+import com.github.resource4j.objects.providers.mutable.ResourceObjectIsNotBundleException;
+
+public abstract sealed class ResourceObjectException extends ResourceException
+        permits ResourceObjectAccessException, ResourceObjectRepositoryException,
+                ResourceObjectFormatException, ResourceObjectIsNotBundleException {
 
 	private static final long serialVersionUID = 1L;
 
     private String name;
 
 	private String actualName;
-    
+
     protected ResourceObjectException(String name) {
     	this(name, null, null, null);
     }
@@ -15,11 +22,11 @@ public abstract class ResourceObjectException extends ResourceException {
 	protected ResourceObjectException(String name, String actualName) {
 		this(name, actualName, null, null);
 	}
-	
+
 	protected ResourceObjectException(Throwable cause, String name) {
 		this(name, null, null, cause);
 	}
-	
+
 	protected ResourceObjectException(Throwable cause, String name, String actualName) {
 		this(name, actualName, null, cause);
 	}

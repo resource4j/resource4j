@@ -10,14 +10,14 @@ public class StringCaseStrategy implements PropertyResolver {
 
     @Override
     public Object resolve(Object value, String property, ResourceResolutionContext context, ResourceResolver resolver) {
-        if (value != null && value instanceof String) {
-            String string = (String) value;
-            switch (property) {
-                case "upper": return string.toUpperCase();
-                case "lower": return string.toLowerCase();
-                case "upperFirst": return first(string, Character::toUpperCase);
-                case "lowerFirst": return first(string, Character::toLowerCase);
-            }
+        if (value instanceof String string) {
+            return switch (property) {
+                case "upper" -> string.toUpperCase();
+                case "lower" -> string.toLowerCase();
+                case "upperFirst" -> first(string, Character::toUpperCase);
+                case "lowerFirst" -> first(string, Character::toLowerCase);
+                default -> null;
+            };
         }
         return null;
     }

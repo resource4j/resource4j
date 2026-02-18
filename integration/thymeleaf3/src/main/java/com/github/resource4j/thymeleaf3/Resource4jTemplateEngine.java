@@ -24,15 +24,14 @@ public class Resource4jTemplateEngine implements ITemplateEngine {
         this(configureEngine(resources, resolverConfig));
     }
 
-    protected static Resource4jTemplateEngine configureEngine(Resources resources,
-                                                              Consumer<AbstractConfigurableTemplateResolver> resolverConfig) {
+    protected static ITemplateEngine configureEngine(Resources resources,
+                                                     Consumer<AbstractConfigurableTemplateResolver> resolverConfig) {
         TemplateEngine delegate = new TemplateEngine();
         delegate.setMessageResolver(new Resource4jMessageResolver(resources));
         Resource4jTemplateResolver resolver = new Resource4jTemplateResolver(resources);
         resolverConfig.accept(resolver);
         delegate.setTemplateResolver(resolver);
-        Resource4jTemplateEngine e = new Resource4jTemplateEngine(delegate);
-        return e;
+        return delegate;
     }
 
     protected ITemplateEngine engine() {

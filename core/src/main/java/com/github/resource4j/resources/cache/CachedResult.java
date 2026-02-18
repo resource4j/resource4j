@@ -1,6 +1,6 @@
 package com.github.resource4j.resources.cache;
 
-public interface CachedResult {
+public sealed interface CachedResult permits CachedValue, CachedBundle, CachedObject {
 
 	boolean exists();
 

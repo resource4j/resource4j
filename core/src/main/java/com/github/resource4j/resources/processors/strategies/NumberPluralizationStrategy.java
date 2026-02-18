@@ -24,8 +24,8 @@ public class NumberPluralizationStrategy implements PropertyResolver {
         // detect locale:
         Locale locale = Locale.getDefault();
         for (ResourceResolutionComponent component : context.components()) {
-            if (component instanceof LocaleResolutionComponent) {
-                locale = ((LocaleResolutionComponent) component).locale();
+            if (component instanceof LocaleResolutionComponent lrc) {
+                locale = lrc.locale();
             }
         }
         PluralRule rule = ruleIndex.get(locale);

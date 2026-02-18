@@ -109,8 +109,9 @@ public class RefreshableResources implements Resources {
                     .filter(provider -> provider instanceof ResourceObjectRepository)
                     .distinct()
                     .forEach(provider -> {
-                        ResourceObjectRepository repository = (ResourceObjectRepository) provider;
-                        repository.addListener(listener);
+                        if (provider instanceof ResourceObjectRepository repo) {
+                            repo.addListener(listener);
+                        }
                     });
         });
         configurator.configureMaxDepth(d -> this.maxDepth = d);
@@ -139,8 +140,8 @@ public class RefreshableResources implements Resources {
     }
 
     private static List<ResourceObjectProvider> unwrap(ResourceObjectProvider provider) {
-        return provider instanceof ResourceObjectProviderAdapter
-                ? ((ResourceObjectProviderAdapter) provider).unwrap()
+        return provider instanceof ResourceObjectProviderAdapter adapter
+                ? adapter.unwrap()
                 : singletonList(provider);
     }
 
@@ -264,21 +265,13 @@ public class RefreshableResources implements Resources {
     }
 
     private OptionalString toOptionalString(ResolvedKey resolvedKey, CacheRecord<CachedValue> record) {
-        OptionalString string;
         final ResourceKey key = resolvedKey.key();
-        switch (record.state()) {
-            case EXISTS:
-                string = new GenericOptionalString(record.get().source(), key, record.get().value());
-                break;
-            case MISSING:
-                string = new GenericOptionalString(null, key, null);
-                break;
-            case ERROR:
-                string = new GenericOptionalString(null, key, null, record.error());
-                break;
-            default:
-                throw new IllegalStateException(String.valueOf(record.state()));
-        }
+        OptionalString string = switch (record.state()) {
+            case EXISTS -> new GenericOptionalString(record.get().source(), key, record.get().value());
+            case MISSING -> new GenericOptionalString(null, key, null);
+            case ERROR -> new GenericOptionalString(null, key, null, record.error());
+            case PENDING -> throw new IllegalStateException(String.valueOf(record.state()));
+        };
         LOG.debug("Returning {} -> {}", resolvedKey, string);
         return string;
     }
@@ -358,9 +351,9 @@ public class RefreshableResources implements Resources {
 
     private Future<CachedValue> loadSingleValue(Future<CachedValue> future, ResolvedKey parentKey) {
         for (ResourceObjectProvider provider : providers) {
-            if (provider instanceof ResourceValueProvider) {
+            if (provider instanceof ResourceValueProvider vp) {
                 future = fireRequest(future, valueQueue,
-                        () -> this.loadSingleValue((ResourceValueProvider) provider, parentKey),
+                        () -> this.loadSingleValue(vp, parentKey),
                         CachedResult::exists);
                 valueRequests.put(parentKey, future);
             }
@@ -402,19 +395,13 @@ public class RefreshableResources implements Resources {
     }
 
 	private ResourceObject toResourceObject(ResolvedName resolvedName, CacheRecord<ResourceObject> record) {
-		ResourceObject object;
 		String name = resolvedName.name();
-		switch (record.state()) {
-			case EXISTS:
-				object = record.get();
-				break;
-			case MISSING:
-				throw new MissingResourceObjectException(name);
-			case ERROR:
-				throw new MissingResourceObjectException(record.error(), name);
-			default:
-				throw new IllegalStateException(String.valueOf(record.state()));
-		}
+		ResourceObject object = switch (record.state()) {
+			case EXISTS -> record.get();
+			case MISSING -> throw new MissingResourceObjectException(name);
+			case ERROR -> throw new MissingResourceObjectException(record.error(), name);
+			case PENDING -> throw new IllegalStateException(String.valueOf(record.state()));
+		};
         LOG.debug("Returning {} -> {}", resolvedName, object);
 		return object;
 	}
