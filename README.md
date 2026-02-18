@@ -69,7 +69,7 @@ If you are using Maven, please, add following lines to your POM file:
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-core</artifactId>
-		<version>3.1.3</version>
+		<version>3.4.0</version>
 	</dependency>
 ```
 
@@ -79,7 +79,7 @@ For integration with Spring and (optionally) Thymeleaf, add following:
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-spring</artifactId>
-		<version>3.1.3</version>
+		<version>3.4.0</version>
 	</dependency>
 ```
 
@@ -89,7 +89,7 @@ For using Resource4j as message provider in Thymeleaf, add following:
 	<dependency>
 		<groupId>com.github.resource4j</groupId>
 		<artifactId>resource4j-thymeleaf3</artifactId>
-		<version>3.1.3</version>
+		<version>3.4.0</version>
 	</dependency>
 ```
 
@@ -99,7 +99,7 @@ To add support of HOCON or XStream configuration files add Extras library:
     <dependency>
         <groupId>com.github.resource4j</groupId>
         <artifactId>resource4j-extras</artifactId>
-        <version>3.1.3</version>
+        <version>3.4.0</version>
     </dependency>
 ```
 

@@ -16,7 +16,7 @@ public class StringCaseStrategy implements PropertyResolver {
                 case "upper": return string.toUpperCase();
                 case "lower": return string.toLowerCase();
                 case "upperFirst": return first(string, Character::toUpperCase);
-                case "lowerFirst": return first(string, Character::toUpperCase);
+                case "lowerFirst": return first(string, Character::toLowerCase);
             }
         }
         return null;

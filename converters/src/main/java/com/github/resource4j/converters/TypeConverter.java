@@ -197,7 +197,11 @@ public class TypeConverter {
             result = (T) String.valueOf(fromValue);
         }
         if (result == null) {
-            result = fromFactoryMethod(toType, fromValue);
+            try {
+                result = fromFactoryMethod(toType, fromValue);
+            } catch (Exception e) {
+                throw new TypeCastException(fromValue, fromType, toType, e);
+            }
         }
         if (result != null) {
             return result;
@@ -210,19 +214,21 @@ public class TypeConverter {
         try {
             Constructor<?> ctor = target.getConstructor(value.getClass());
             return (T) ctor.newInstance(value);
+        } catch (NoSuchMethodException e) {
+            // no matching constructor, try factory methods
         } catch (Exception e) {
-            // ignore all failures
+            throw new RuntimeException("Constructor " + target.getName() + "(" + value.getClass().getName() + ") failed", e);
         }
         for (Method method : target.getMethods()) {
-            try {
-                if (Modifier.isStatic(method.getModifiers())
-                        && target.isAssignableFrom(method.getReturnType())
-                        && method.getParameterCount() == 1
-                        && method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
+            if (Modifier.isStatic(method.getModifiers())
+                    && target.isAssignableFrom(method.getReturnType())
+                    && method.getParameterCount() == 1
+                    && method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
+                try {
                     return (T) method.invoke(null, value);
+                } catch (Exception e) {
+                    throw new RuntimeException("Factory method " + target.getName() + "." + method.getName() + "(" + value.getClass().getName() + ") failed", e);
                 }
-            } catch (Exception e) {
-                // ignore all failures
             }
         }
         return null;
