@@ -2,7 +2,7 @@ resource4j - resource loader for Java
 =====================================
 Overview
 --------
-Resource4j library is a replacement for Java ResourceBundle mechanism that supports complex i18n scenarios of large and legacy applications and provides safe access to key/value application configuration and arbitrary resource files. 
+Resource4j library is a replacement for Java ResourceBundle mechanism that supports complex i18n scenarios of large and legacy applications and provides safe access to key/value application configuration and arbitrary resource files.
 With well-designed API based on fluent DSL it is a solution for i18n just like SLF4J is a solution for logging
 abstraction.
 
@@ -13,7 +13,7 @@ Key features of this library:
  * Locale-based and custom resolution of values
  * **Spring Framework** and **Thymeleaf** integration, including Spring EL and JavaConfig.
  * Full support of **Test-Driven Development**
- * **Modular architecture** allows to use only the part of implementation you really need 
+ * **Modular architecture** allows to use only the part of implementation you really need
 
 
 Quick Start
@@ -28,7 +28,7 @@ Resources resources = new RefreshableResources();
 
  * in  `/com/mycompany/data/Country-en_US.properties`
 
-```  
+```
 discount=0.1
 
 # Formatting
@@ -46,7 +46,7 @@ years_other=years
 ```
 Lorem ipsum dolorem sit amet.
 ```
-	         	
+
 4. Get some value:
 
 ```Java
@@ -76,17 +76,29 @@ Modules
 
  * converters
  * resource4j-core
- * resource4j-spring - integration with Spring Framework 7
- * resource4j-thymeleaf3 - integration with Thymeleaf 3.1
- * resource4j-autoconfigure-thymeleaf3 - integration with Spring Boot 4/Thymeleaf 3.1
+ * resource4j-spring - integration with Spring Framework
+ * resource4j-thymeleaf3 - integration with Thymeleaf
+ * resource4j-autoconfigure-thymeleaf3 - Spring Boot auto-configuration for Thymeleaf
  * resource4j-parsers - bundle parsers supporting JSON (via Jackson), XML (via XStream) and HOCON
+
+JPMS Module Names
+-----------------
+
+If your project uses the Java Platform Module System, add the following to your `module-info.java`:
+
+```java
+requires com.github.resource4j.converters;  // converters module
+requires com.github.resource4j.core;        // core module
+```
+
+Integration modules do not provide JPMS module descriptors.
 
 Learn more
 ----------
-1. [Basics](docs/Basics.md)
-2. [Configuring resources](docs/Configuration.md)
-3. [Expression language](docs/BasicEL.md)
-3. [Integration with Spring Framework](docs/SpringIntegration.md)
-4. [Integration with Thymeleaf](docs/ThymeleafIntegration.md)
-5. [Auto-configuration with Spring Boot 4](docs/AutoConfiguration.md)
-5. [Parsers](docs/Parsers.md)
+ * [Basics](docs/Basics.md)
+ * [Configuring resources](docs/Configuration.md)
+ * [Expression language](docs/BasicEL.md)
+ * [Integration with Spring Framework](docs/SpringIntegration.md)
+ * [Integration with Thymeleaf](docs/ThymeleafIntegration.md)
+ * [Auto-configuration with Spring Boot](docs/AutoConfiguration.md)
+ * [Parsers](docs/Parsers.md)

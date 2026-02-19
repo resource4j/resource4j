@@ -1,22 +1,24 @@
-Resource4j Parsers
+Parsers
 =================================
 
 The resource4j-parsers library is a collection of small integrations with other APIs, which currently includes:
 1. HOCON format support
-2. XStream XML parser support
+2. Jackson JSON parser support
+3. XStream XML parser support
 
 HOCON
 -------------
 HOCON is a convenient configuration format,
 [described here](https://github.com/typesafehub/config/blob/master/HOCON.md).
-You can use ConfigParser to parse values to Config objects:
-```Java
+You can use `ConfigParser` to parse values to Config objects:
+
+```java
 import static com.github.resource4j.parsers.config.ConfigParser.config;
 
 Config myConfig = resources.get("my.config", in("debug")).parsedTo(config()).asIs();
 ```
 
-Besides that, ConfigMapParser treats HOCON config files as bundles, so that each configuration
+Besides that, `ConfigMapParser` treats HOCON config files as bundles, so that each configuration
 value can be extracted via resource key.
 
 **Example:**
@@ -33,7 +35,7 @@ mail {
 }
 ```
 Following test will pass:
-```Java
+```java
 RefreshableResources resources = new RefreshableResources(
                 configure()
                         .formats(format(configMap(), ".conf"))
@@ -42,10 +44,35 @@ String host = resources.get(key("app","mail.server.host"), withoutContext()).asI
 assertEquals("localhost", host); // true
 ```
 
+Jackson JSON
+-------------
+Integration with Jackson provides a bundle parser for JSON resource files. You can use
+`JacksonBundleParser` to treat JSON files as key-value bundles:
+
+```java
+import static com.github.resource4j.parsers.json.JacksonBundleParser.jsonMap;
+
+Resources resources = new RefreshableResources(
+                configure()
+                        .formats(format(jsonMap(), ".json"))
+                        .get());
+```
+
+Or use `JacksonParser` to parse JSON into typed objects:
+
+```java
+import static com.github.resource4j.parsers.json.JacksonParser.json;
+
+MyModel model = resources.contentOf("data.json", withoutContext())
+        .parsedTo(json(MyModel.class))
+        .notNull().asIs();
+```
+
 XStream
 -------------
 Integration with XStream provides a parser for resource objects in XML format, as shown in this example:
-```Java
+
+```java
 @XStreamAlias("model")
 public class Model {
     @XStreamAsAttribute
@@ -65,20 +92,14 @@ public class Model {
         this.value = value;
     }
 }
-...
+```
+
+```java
 import static com.github.resource4j.parsers.xstream.XStreamParser.xml;
-...
+
 Model object = resources.get("my.xml", withoutContext()).parsedTo(xml(Model.class)).asIs();
 ```
 
-What's next?
-----------
-5. [Try our Demo application](../demo/README.md)
+---
 
-Previous sections
------------------
-1. [Basics](Basics.md)
-2. [Configuring resources](Configuration.md)
-3. [Integration with Spring Framework](SpringIntegration.md)
-4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
-
+Previous: [Auto-configuration with Spring Boot](AutoConfiguration.md)

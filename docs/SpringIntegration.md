@@ -16,10 +16,10 @@ Configuration
 Resource4j supports Spring Boot auto-configuration. By adding **resource4j-spring** library
 as a dependency you will automatically get pre-configured Resource4j bean.
 
-You can customize Resource4j configuration by adding a RefreshableResourcesConfigurator bean,
+You can customize Resource4j configuration by adding a `RefreshableResourcesConfigurator` bean,
 as shown in example below:
 
-```Java
+```java
 import static com.github.resource4j.resources.ResourcesConfigurationBuilder.configure;
 import static com.github.resource4j.objects.providers.ResourceObjectProviders.bind;
 import static com.github.resource4j.objects.providers.ResourceObjectProviders.patternMatching;
@@ -37,83 +37,77 @@ public RefreshableResourcesConfigurator resourcesConfiguration(SpringResourceObj
 
 Annotation-driven injection
 ---------------------------
-With ResourceValueBeanPostProcessor bean configured, it is possible to inject resource providers,
+With `ResourceValueBeanPostProcessor` bean configured, it is possible to inject resource providers,
 resource value references and even the values of any type that can be instantiated from a string.
 Below is an example:
 
-```Java
-	public class MyService {
+```java
+public class MyService {
 
-		/*
-		 * injected value is a provider for bundle(MyService.class)
-		 */
-		@InjectValue
-		private ResourceProvider resources;
+    /*
+     * injected value is a provider for bundle(MyService.class)
+     */
+    @InjectValue
+    private ResourceProvider resources;
 
-		/* Value is injected for key(MyService.class, "date") 
-		 * and request-scoped resolution context 
-		 */
-		@InjectValue(value="date", 
-		             resolvedBy = RequestResolutionContextProvider.class)
-		private MandatoryString dateFormat; 
+    /* Value is injected for key(MyService.class, "date")
+     * and request-scoped resolution context
+     */
+    @InjectValue(value="date",
+                 resolvedBy = RequestResolutionContextProvider.class)
+    private MandatoryString dateFormat;
 
-		/* 
-		 * Value is injected for key(MyService.class, "applicationName")
-		 */
-		@InjectValue
-		private String applicationName;
+    /*
+     * Value is injected for key(MyService.class, "applicationName")
+     */
+    @InjectValue
+    private String applicationName;
 
-	} 
+}
 ```
 
-Class **ResourceValueReference** is particularly useful in this scenario:
+Class `ResourceValueReference` is particularly useful in this scenario:
 
-```Java		
-	/* 
-	 * value is injected for key(MyService.class, "population") 
-	 */
-	@InjectValue
-	private ResourceValueReference population;
-	...	
-	System.out.println(population.fetch(in(Locale.US)).notNull().asIs());
+```java
+/*
+ * value is injected for key(MyService.class, "population")
+ */
+@InjectValue
+private ResourceValueReference population;
+...
+System.out.println(population.fetch(in(Locale.US)).notNull().asIs());
 
-	// or simply...
-	System.out.println(population.in(Locale.US).notNull().asIs());
+// or simply...
+System.out.println(population.in(Locale.US).notNull().asIs());
 ```
 
 You may even inject file content:
 
-```Java
+```java
 package com.mycompany.legal;
 
 @Component
 class EULA {
-    /* 
+    /*
      * Injected binary content of file /logo.jpg
      */
     @InjectResource("/logo.jpg")
     private byte[] logo;
-	
-	/* 
+
+    /*
      * Content will be loaded on demand from /com/mycompany/legal/EULA.html
      */
     @InjectResource("*.html")
-    private ResourceFileReference content;
+    private ResourceObjectReference content;
 }
 ...
-    @Autowire
+    @Autowired
     private EULA eula;
     ...
     pdfGenerator.generateEULA(eula);
 ```
 
+---
 
-What's next?
-----------
-4. [Integration with Thymeleaf 3.1](ThymeleafIntegration.md)
-5. [Parsers](Parsers.md)
-
-Previous sections
------------------
-1. [Basics](Basics.md)
-2. [Configuring resources](Configuration.md)
+Previous: [Expression language](BasicEL.md)
+Next: [Integration with Thymeleaf](ThymeleafIntegration.md)
