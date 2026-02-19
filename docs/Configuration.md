@@ -73,7 +73,7 @@ discovery of resources via Spring Framework.
 Formats
 -------
 The core library supports only standard .properties files,
-however you can use our [extras](Extras.md) component to support HOCON configs.
+however you can use our [extras](Parsers.md) component to support HOCON configs.
 
 Post-processing
 ---------------
@@ -114,7 +114,7 @@ What's next?
 ------------
 3. [Integration with Spring Framework](SpringIntegration.md)
 4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
-5. [Extras](Extras.md)
+5. [Extras](Parsers.md)
 
 Previous sections
 -----------------

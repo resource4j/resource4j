@@ -93,11 +93,17 @@ public final class ResourceResolutionContext implements Serializable {
     private final Map<String, Object> parameters;
 
     public ResourceResolutionContext(ResourceResolutionComponent[] components) {
+        if (components == null) {
+            throw new NullPointerException("components");
+        }
         this.components = components;
         this.parameters = Collections.emptyMap();
     }
 
 	public ResourceResolutionContext(ResourceResolutionComponent[] components, Map<String, Object> parameters) {
+        if (components == null) {
+            throw new NullPointerException("components");
+        }
 		this.components = components;
 		this.parameters = parameters == null ? null : Collections.unmodifiableMap(parameters);
 	}
@@ -134,7 +140,16 @@ public final class ResourceResolutionContext implements Serializable {
         }
 		return new ResourceResolutionContext(components, parameters);
 	}
-	
+
+    public Locale locale() {
+        for (var component : components) {
+            if (component instanceof LocaleResolutionComponent c) {
+                return c.locale();
+            }
+        }
+        return null;
+    }
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

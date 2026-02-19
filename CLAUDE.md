@@ -41,8 +41,8 @@ resource4j/
 ├── integration/
 │   ├── spring/          # Spring Framework: @InjectValue, @InjectBundle, MessageSource adapter
 │   ├── thymeleaf3/      # Thymeleaf 3 template engine integration
-│   ├── spring-thymeleaf3/  # Combined Spring+Thymeleaf auto-configuration
-│   └── extras/          # Additional parsers: Jackson JSON, Typesafe HOCON, XStream XML
+│   ├── autoconfigure-thymeleaf3/  # Combined Spring+Thymeleaf auto-configuration
+│   └── parsers/         # Additional parsers: Jackson JSON, Typesafe HOCON, XStream XML
 └── demo/                # Spring Boot demo app (not part of main build)
 ```
 

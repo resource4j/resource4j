@@ -110,8 +110,8 @@ class EULA {
 
 What's next?
 ----------
-4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
-5. [Extras](Extras.md)
+4. [Integration with Thymeleaf 3.1](ThymeleafIntegration.md)
+5. [Parsers](Parsers.md)
 
 Previous sections
 -----------------

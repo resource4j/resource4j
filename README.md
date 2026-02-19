@@ -113,7 +113,7 @@ Modules
  * resource4j-spring - integration with Spring Framework 7
  * resource4j-thymeleaf3 - integration with Thymeleaf 3.1
  * resource4j-autoconfigure-thymeleaf3 - integration with Spring Boot 4/Thymeleaf 3.1
- * resource4j-extras - bundle parsers supporting JSON (via Jackson), XML (via XStream) and HOCON
+ * resource4j-parsers - bundle parsers supporting JSON (via Jackson), XML (via XStream) and HOCON
 
 Learn more
 ----------
@@ -123,4 +123,4 @@ Learn more
 3. [Integration with Spring Framework](docs/SpringIntegration.md)
 4. [Integration with Thymeleaf](docs/ThymeleafIntegration.md)
 5. [Auto-configuration with Spring Boot 4](docs/AutoConfiguration.md)
-5. [Extras](docs/Extras.md)
+5. [Parsers](docs/Parsers.md)

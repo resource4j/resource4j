@@ -10,7 +10,8 @@
       "Bash(git commit:*)",
       "Bash(mvn clean verify:*)",
       "Bash(mvn install:*)",
-      "Bash(mvn test:*)"
+      "Bash(mvn test:*)",
+      "Bash(git mv:*)"
     ]
   }
 }

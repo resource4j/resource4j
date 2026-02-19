@@ -89,7 +89,7 @@ You can even implement your own parser (below is the example that uses XStream f
 		.parsedTo(configuration())
 		.notNull().asIs();
 
-Oh, by the way, we already have XStream parser in [Extras](Extras.md) library!
+Oh, by the way, we already have XStream parser in [Extras](Parsers.md) library!
 
 Resolution contexts
 -------------------
@@ -149,4 +149,4 @@ What's next?
 2. [Configuring resources](Configuration.md)
 3. [Integration with Spring Framework](SpringIntegration.md)
 4. [Integration with Thymeleaf 2.1](ThymeleafIntegration.md)
-5. [Extras](Extras.md)
+5. [Extras](Parsers.md)
