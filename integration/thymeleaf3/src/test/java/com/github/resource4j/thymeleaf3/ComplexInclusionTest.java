@@ -40,7 +40,7 @@ public class ComplexInclusionTest {
     @BeforeEach
     public void setupEngine() {
         Resources resources = new RefreshableResources(configurator());
-        engine = new Resource4jTemplateEngine(resources, templates -> templates.setSuffix(".html"));
+        engine = Resource4jTemplateEngine.createEngine(resources, templates -> templates.setSuffix(".html"));
     }
 
     @Test

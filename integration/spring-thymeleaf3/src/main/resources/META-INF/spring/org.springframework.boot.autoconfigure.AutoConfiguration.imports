@@ -1,1 +1,1 @@
-com.github.resource4j.thymeleaf3.webmvc.ThymeleafResourceAutoConfiguration
+com.github.resource4j.thymeleaf3.autoconfigure.Resource4jThymeleafAutoConfiguration

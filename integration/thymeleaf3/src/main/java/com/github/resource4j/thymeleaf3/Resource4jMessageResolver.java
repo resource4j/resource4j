@@ -22,19 +22,22 @@ public class Resource4jMessageResolver extends AbstractMessageResolver {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public String resolveMessage(ITemplateContext context,
                                  Class<?> origin,
                                  String key,
                                  Object[] messageParameters) {
         Locale locale = context.getLocale();
         Map<String, Object> params = new HashMap<>();
-        for (int i = 0; i < messageParameters.length; i++) {
-            if (messageParameters[i] instanceof Map) {
-                // it's safe, because it's intended only for the read-only
-                // access by String key
-                params.putAll((Map) messageParameters[i]);
-            } else {
-                params.put(String.valueOf(i), messageParameters[i]);
+        if (messageParameters != null) {
+            for (int i = 0; i < messageParameters.length; i++) {
+                if (messageParameters[i] instanceof Map) {
+                    // it's safe, because it's intended only for the read-only
+                    // access by String key
+                    params.putAll((Map<String, ?>) messageParameters[i]);
+                } else {
+                    params.put(String.valueOf(i), messageParameters[i]);
+                }
             }
         }
         ResourceResolutionContext resolutionContext = locale != null

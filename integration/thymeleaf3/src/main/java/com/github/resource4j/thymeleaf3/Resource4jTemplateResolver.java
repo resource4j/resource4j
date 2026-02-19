@@ -13,7 +13,7 @@ import static com.github.resource4j.objects.parsers.ResourceParsers.string;
 
 public class Resource4jTemplateResolver extends AbstractConfigurableTemplateResolver {
 
-    private Resources resources;
+    private final Resources resources;
 
     public Resource4jTemplateResolver(Resources resources) {
         this.resources = resources;

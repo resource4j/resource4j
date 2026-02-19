@@ -1,4 +1,4 @@
-package com.github.resource4j.thymeleaf3.webmvc;
+package com.github.resource4j.thymeleaf3.autoconfigure;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
