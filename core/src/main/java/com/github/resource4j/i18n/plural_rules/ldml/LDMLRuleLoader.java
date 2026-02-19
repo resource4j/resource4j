@@ -52,6 +52,12 @@ public final class LDMLRuleLoader {
                     if (idx > 0) {
                         text = text.substring(0, idx).trim();
                     }
+                    // Skip rules using 'e' or 'c' operands (compact decimal exponent):
+                    // these only apply in compact number formatting context, which
+                    // pluralize(int) does not support
+                    if (text.matches(".*\\b[ec]\\s*[!=].*")) {
+                        continue;
+                    }
                     cases.add(aCase(text.isEmpty() ? (number -> true) : LDMLPredicateParser.parse(text), PluralCategory.valueOf(count)));
                 }
                 for (String locale : locales) {

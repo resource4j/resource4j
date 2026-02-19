@@ -21,6 +21,9 @@ public final class PluralRules {
         } catch (NoClassDefFoundError e) {
             LOG.warn("Pluralization rules not loaded: java.xml module is not available");
             rules = Collections.emptyMap();
+        } catch (Exception e) {
+            LOG.error("Unsupported plurals.xml format", e);
+            rules = Collections.emptyMap();
         }
         RULES_INDEXED_BY_LOCALE = rules;
     }

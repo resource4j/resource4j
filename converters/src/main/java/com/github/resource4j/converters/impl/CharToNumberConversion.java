@@ -16,7 +16,7 @@ public class CharToNumberConversion implements PrimitiveTypeConversion<Character
     public Set<ConversionPair> acceptedTypes() {
         Set<ConversionPair> conversionPairs = new HashSet<>();
         for (Map.Entry<Class<?>,Class<?>> entry : PRIMITIVE_TYPE_MAPPING.entrySet()) {
-            if (Number.class.isAssignableFrom(entry.getKey())) {
+            if (Number.class.isAssignableFrom(entry.getValue())) {
                 conversionPairs.add(new ConversionPair(Character.class, entry.getKey()));
                 conversionPairs.add(new ConversionPair(Character.class, entry.getValue()));
                 conversionPairs.add(new ConversionPair(Character.TYPE, entry.getKey()));
@@ -30,6 +30,12 @@ public class CharToNumberConversion implements PrimitiveTypeConversion<Character
     public Number convert(Character fromValue, Class<Number> toType, Object format) throws TypeCastException {
         int value = numbers.indexOf(fromValue);
         if (value >= 0) {
+            Class<?> target = toType;
+            if (target == Byte.class || target == Byte.TYPE) return (byte) value;
+            if (target == Short.class || target == Short.TYPE) return (short) value;
+            if (target == Long.class || target == Long.TYPE) return (long) value;
+            if (target == Float.class || target == Float.TYPE) return (float) value;
+            if (target == Double.class || target == Double.TYPE) return (double) value;
             return value;
         }
         throw new TypeCastException(fromValue, fromValue.getClass(), toType, "character is not hex digit");

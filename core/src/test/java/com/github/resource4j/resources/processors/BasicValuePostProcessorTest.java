@@ -258,4 +258,190 @@ public class BasicValuePostProcessorTest {
         assertEquals("[name_[:]:[:]]", result);
     }
 
+    // --- Escape combinations ---
+
+    @Test
+    public void shouldCorrectlyHandleEscapedBackslashBeforeMacro() {
+        // Input chars: \, \, {, n, a, m, e, }
+        // \\ → \, then {name} → [name]
+        String result = processor.process("Value \\\\{name}", withoutContext(), RESOLVER);
+        assertEquals("Value \\[name]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyHandleEscapeInMacroNameProducingBackslash() {
+        // Input chars: {, a, \, \, b, }
+        // In NAME: a, then \ → ESCAPE_NAME, then \ → ACCEPT(\) → name="a\", then b → name="a\b"
+        String result = processor.process("{a\\\\b}", withoutContext(), RESOLVER);
+        assertEquals("[a\\b]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyHandleEscapeInLiteral() {
+        // Input chars: {, :, a, \, \, b, }
+        // In LITERAL: a, then \\ → \, then b → literal="a\b"
+        String result = processor.process("{:a\\\\b}", withoutContext(), RESOLVER);
+        assertEquals("{a\\b}", result);
+    }
+
+    // --- Multiple macros ---
+
+    @Test
+    public void shouldCorrectlyResolveThreeMacrosWithText() {
+        String result = processor.process("{a} and {b} and {c}", withoutContext(), RESOLVER);
+        assertEquals("[a] and [b] and [c]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyResolveMacroAtStart() {
+        String result = processor.process("{name} world", withoutContext(), RESOLVER);
+        assertEquals("[name] world", result);
+    }
+
+    @Test
+    public void shouldCorrectlyResolveMacroAtEnd() {
+        String result = processor.process("hello {name}", withoutContext(), RESOLVER);
+        assertEquals("hello [name]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyResolveSingleCharMacro() {
+        String result = processor.process("{a}", withoutContext(), RESOLVER);
+        assertEquals("[a]", result);
+    }
+
+    // --- Unmatched braces ---
+
+    @Test
+    public void shouldFailOnUnmatchedClosingBrace() {
+        String result = null;
+        try {
+            processor.process("text } more", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("text } more", result);
+    }
+
+    // --- Unicode ---
+
+    @Test
+    public void shouldCorrectlyResolveUnicodeInMacroName() {
+        String result = processor.process("{café}", withoutContext(), RESOLVER);
+        assertEquals("[café]", result);
+    }
+
+    @Test
+    public void shouldCorrectlyHandleUnicodeInText() {
+        String result = processor.process("Héllo {name}", withoutContext(), RESOLVER);
+        assertEquals("Héllo [name]", result);
+    }
+
+    // --- Whitespace in macros ---
+
+    @Test
+    public void shouldPreserveSpacesInMacroName() {
+        String result = processor.process("{a b}", withoutContext(), RESOLVER);
+        assertEquals("[a b]", result);
+    }
+
+    @Test
+    public void shouldPreserveSpacesInParam() {
+        // {key; p } → name="key", param=" p " (spaces preserved)
+        String result = processor.process("{key; p }", withoutContext(), RESOLVER);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void shouldHandleEscapeOfNormalCharInMacro() {
+        // {a\tb} → \ escapes t → name="atb"
+        String result = processor.process("{a\\tb}", withoutContext(), RESOLVER);
+        assertEquals("[atb]", result);
+    }
+
+    // --- Parameters ---
+
+    @Test
+    public void shouldCorrectlyParseThreeParams() {
+        final String alias = "{key;p1;p2;p3}";
+        String result = processor.process(alias, withoutContext(), RESOLVER);
+        assertNotNull(result);
+        // Resolver receives key="key" and 3 params
+        assertTrue(result.contains("[key"));
+    }
+
+    @Test
+    public void shouldCorrectlyParseEscapedSemicolonInParam() {
+        // {name;a\;b} → \ escapes ;, so param = "a;b"
+        final String alias = "{name;a\\;b}";
+        String result = processor.process(alias, withoutContext(), RESOLVER);
+        assertNotNull(result);
+    }
+
+    // --- Literals ---
+
+    @Test
+    public void shouldCorrectlyParseLiteralWithContent() {
+        String result = processor.process("{:hello world}", withoutContext(), RESOLVER);
+        assertEquals("{hello world}", result);
+    }
+
+    @Test
+    public void shouldCorrectlyParseEscapedBraceInLiteral() {
+        // Input chars: {, :, \, }, }
+        // In LITERAL: \ → ESCAPE_LITERAL, } → ACCEPT(}) → literal="}", } → close
+        // Output: "{" + "}" + "}" = "{}}"
+        String result = processor.process("{:\\}}", withoutContext(), RESOLVER);
+        assertEquals("{}}", result);
+    }
+
+    // --- Plain text ---
+
+    @Test
+    public void shouldHandlePlainTextWithSpecialCharsOutsideMacros() {
+        // Semicolons and colons are not special outside macros
+        String result = processor.process("just text; with: chars", withoutContext(), RESOLVER);
+        assertEquals("just text; with: chars", result);
+    }
+
+    // --- Property syntax via escape ---
+
+    @Test
+    public void shouldHandleEscapedColonInMacroName() {
+        // {key\:value} → \ escapes : → name="key:value"
+        // Resolve splits on first ':', key="key", property="value"
+        // Then RESOLVER gets called with key="key" and property resolved
+        String result = processor.process("{key\\:value}", withoutContext(), RESOLVER);
+        assertNotNull(result);
+    }
+
+    // --- Second macro incomplete ---
+
+    @Test
+    public void shouldFailWithPartialResultWhenSecondMacroIsIncomplete() {
+        String result = null;
+        try {
+            processor.process("{ok} and {bad", withoutContext(), RESOLVER);
+        } catch (ValuePostProcessingException e) {
+            result = e.getPartialResult();
+        }
+        assertEquals("[ok] and {bad", result);
+    }
+
+    // --- Multiple consecutive macros ---
+
+    @Test
+    public void shouldCorrectlyResolveThreeConsecutiveMacros() {
+        String result = processor.process("{a}{b}{c}", withoutContext(), RESOLVER);
+        assertEquals("[a][b][c]", result);
+    }
+
+    // --- Whitespace only ---
+
+    @Test
+    public void shouldCorrectlyHandleWhitespaceAroundMacro() {
+        String result = processor.process(" {name} ", withoutContext(), RESOLVER);
+        assertEquals(" [name] ", result);
+    }
+
 }

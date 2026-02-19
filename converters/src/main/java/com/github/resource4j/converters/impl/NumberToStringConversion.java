@@ -4,8 +4,10 @@ import com.github.resource4j.converters.ConversionPair;
 import com.github.resource4j.converters.TypeCastException;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ public class NumberToStringConversion implements PrimitiveTypeConversion<Number,
     public Set<ConversionPair> acceptedTypes() {
         Set<ConversionPair> conversionPairs = new HashSet<>();
         for (Map.Entry<Class<?>,Class<?>> entry : PRIMITIVE_TYPE_MAPPING.entrySet()) {
-            if (Number.class.isAssignableFrom(entry.getKey())) {
+            if (Number.class.isAssignableFrom(entry.getValue())) {
                 conversionPairs.add(new ConversionPair(entry.getKey(), String.class));
                 conversionPairs.add(new ConversionPair(entry.getValue(), String.class));
             }
@@ -29,13 +31,13 @@ public class NumberToStringConversion implements PrimitiveTypeConversion<Number,
         NumberFormat formatter = null;
         if (format != null) {
             if (format instanceof String) {
-                formatter = new DecimalFormat((String) format);
+                formatter = new DecimalFormat((String) format, DecimalFormatSymbols.getInstance(Locale.ROOT));
             } else if (format instanceof NumberFormat) {
                 formatter = (NumberFormat) format;
             }
         }
         if (formatter == null) {
-            formatter = NumberFormat.getInstance();
+            return String.valueOf(fromValue);
         }
         return formatter.format(fromValue);
     }
