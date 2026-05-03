@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.spring6.ISpringTemplateEngine;
 
+import java.util.Collection;
 import java.util.List;
 
 public record ContextAwareSpringTemplateEngine(ISpringTemplateEngine engine,
@@ -21,6 +22,16 @@ public record ContextAwareSpringTemplateEngine(ISpringTemplateEngine engine,
     @Override
     public void setTemplateEngineMessageSource(MessageSource templateEngineMessageSource) {
         engine.setTemplateEngineMessageSource(templateEngineMessageSource);
+    }
+
+    @Override
+    public Collection<Class<?>> getAllowedClassOverridesForViews() {
+        return engine.getAllowedClassOverridesForViews();
+    }
+
+    @Override
+    public void setAllowedClassOverridesForViews(Collection<Class<?>> allowedClassOverridesForViews) {
+        engine.setAllowedClassOverridesForViews(allowedClassOverridesForViews);
     }
 
     @Override

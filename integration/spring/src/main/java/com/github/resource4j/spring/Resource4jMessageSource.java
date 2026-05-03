@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -29,12 +27,11 @@ public class Resource4jMessageSource implements MessageSource {
         this.resources = resources;
     }
 
-    @Nullable
     @Override
-    public String getMessage(@NonNull String code,
-                             @Nullable Object[] args,
-                             @Nullable String defaultMessage,
-                             @Nullable Locale locale) {
+    public String getMessage(String code,
+                             Object[] args,
+                             String defaultMessage,
+                             Locale locale) {
         try {
             return getMessage(code, args, locale);
         } catch (NoSuchMessageException e) {
@@ -42,12 +39,11 @@ public class Resource4jMessageSource implements MessageSource {
         }
     }
 
-    @NonNull
     @Override
     @SuppressWarnings({ "unchecked" })
-    public String getMessage(@NonNull String key,
-                             @Nullable Object[] messageParameters,
-                             @Nullable Locale locale) throws NoSuchMessageException {
+    public String getMessage(String key,
+                             Object[] messageParameters,
+                             Locale locale) throws NoSuchMessageException {
         try {
             Map<String, Object> params = new HashMap<>();
             if (messageParameters != null) {
@@ -70,9 +66,8 @@ public class Resource4jMessageSource implements MessageSource {
         }
     }
 
-    @NonNull
     @Override
-    public String getMessage(@NonNull MessageSourceResolvable resolvable, @Nullable Locale locale) throws NoSuchMessageException {
+    public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
         String[] codes = resolvable.getCodes();
         if (codes == null || codes.length == 0) {
             throw new IllegalArgumentException("At least one message code must be provided");

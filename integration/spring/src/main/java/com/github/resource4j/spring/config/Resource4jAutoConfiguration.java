@@ -73,6 +73,7 @@ public class Resource4jAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(MessageSource.class)
     public MessageSource messageSource(Resources resources) {
         return new Resource4jMessageSource(resources);
     }
