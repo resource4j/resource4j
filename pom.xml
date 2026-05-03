@@ -3,7 +3,7 @@
 
 	<groupId>com.github.resource4j</groupId>
 	<artifactId>resource4j-parent</artifactId>
-	<version>4.0.1</version>
+	<version>4.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Resource4J</name>
@@ -37,7 +37,7 @@
 		<connection>scm:git:git@github.com:resource4j/resource4j.git</connection>
 		<developerConnection>scm:git:git@github.com:resource4j/resource4j.git</developerConnection>
 		<url>git@github.com:resource4j/resource4j.git</url>
-	  	<tag>4.0.1</tag>
+	  	<tag>4.0.0</tag>
   </scm>
 
 	<distributionManagement>
